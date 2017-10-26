@@ -9,8 +9,6 @@ COPY ./voracity.conf  /etc/apache2/sites-available/
 COPY ./hosts  /etc/hosts
 #RUN a2enmod rewrite
 
-RUN apt-get -y install php5-mysql 
-
 RUN service apache2 restart
 WORKDIR /etc/apache2/sites-available/
 RUN a2ensite voracity.conf 

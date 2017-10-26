@@ -6,6 +6,4 @@ MAINTAINER Denys Sedchenko <dsedchenko@llnw.com>
 ENV MYSQL_DATABASE=voracity \
 MYSQL_ROOT_PASSWORD=root
 
-ADD ./data.sql /docker-entrypoint-initdb.d
-# ADD ./user.sql /docker-entrypoint-initdb.d
 EXPOSE 3306
