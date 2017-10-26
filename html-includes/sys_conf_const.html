@@ -1,0 +1,147 @@
+<?php $title = $title = PROJECT_NAME." | "."Sysconfig | Constants"; include('header.inc.html'); ?>
+
+<h1><strong><?php echo Localization::$s_sys_configuration?></strong></h1>
+
+<h3><b><?php echo Localization::$s_system_constants?>|
+<a href="sys_conf.php?sys_cat">
+		<?php echo Localization::$s_system_categories?>
+</a>
+</b></h3>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+
+		<?php if (!empty($configList)) {
+			$configArray = array();
+			foreach ($configList as $value){
+				$configArray[$value['cat_selected']][$value['id']] = $value;
+			}?>
+
+			<form name="config_form" action="sys_conf.php" method="post">
+
+			
+			<?php foreach($configArray as $cat=>$configList){ ?>
+				<table class="data">
+				
+				
+				<td colspan=6><b>
+					<?php if ($catList[$cat]){
+						if ($loc_var=$catList[$cat]['localization_var']){
+							if ($$loc_var){
+								echo $$loc_var;
+							}
+							else{
+								echo htmlspecialchars($catList[$cat]['name']);
+							}
+						}else{
+							echo htmlspecialchars($catList[$cat]['name']);
+						}
+					}
+					else{
+						echo Localization::$s_default;
+					}?>
+				</b></td>
+				</tr>
+
+				<tr>
+					<td><?php echo Localization::$s_name?></td>
+					<td><?php echo Localization::$s_type?></td>
+					<td><?php echo Localization::$s_value?></td>
+					<td><?php echo Localization::$s_use?></td>
+					<td><?php echo Localization::$s_actions?></td>
+				</tr>
+				<?php foreach($configList AS $id=>$item) {?>
+					<tr>
+						<td><acronym title="<?php echo $item['comment']?>">
+							<?php if ($item['localization_var']){
+								$loc_var = $item['localization_var'];
+								if ($$loc_var){
+									echo $$loc_var;
+								}
+								else{
+									echo htmlspecialchars($item['name']);
+								}
+							}
+							else{
+								echo htmlspecialchars($item['name']);
+							}?>
+						</acronym></td>
+						<td>
+						<input type="hidden" name="varArray[<?php echo $id?>][type]"
+									value="<?php echo $item['type']?>"><?php echo $type_list[$item['type']]?></td>
+						<input type="hidden" name="varArray[<?php echo $id?>][active]" value="0">
+
+
+						<td>
+						<?php if ($item['type'] == 'text'){
+							echo '<input type="text" name="varArray['.$id.'][value]"'.
+														' value="' . htmlspecialchars($item["value"]) .'" />';
+						}elseif ($item['type'] == 'int'){
+							echo '<input type="text" size="3" name="varArray['.$id.'][value]"'.
+														'maxlength="3" value="' . htmlspecialchars($item["value"]) .'" />';
+						}elseif ($item['type'] == 'bool'){
+							echo '<input type="radio" name="varArray['.$id.'][value]" '.
+																											'value="false"';
+							if ($item["value"]=="false"){
+								echo ' checked="checked" ';
+							}
+							echo '>' . Localization::$s_no;
+							echo '<input type="radio" name="varArray['.$id.'][value]" '.
+							'value="true"';
+							if ($item["value"]=="true"){
+								echo ' checked="checked" ';
+							}
+							echo '>' . $s_yes;
+						}
+						?>
+						</td>
+
+						<td>
+							<input type="checkbox" name="varArray[<?php echo $id?>][active]" value="1023"
+							<?php if ($item['active']){
+								echo ' checked="checked" ';
+							}?>
+							/>
+						</td>
+						<td align="center" width="250">
+							<a href="sys_conf.php?edit=<?php echo $id?>"><img src="img/edit.png" alt="<?php echo Localization::$s_edit?>" border="0"  title="<?php echo Localization::$s_edit?>"/></a>
+							&nbsp;
+							<a href="sys_conf.php?delete=<?php echo $id?>">
+								<img src="img/drop.png" alt="<?php echo Localization::$s_delete?>" border="0"
+									title="<?php echo Localization::$s_delete?>" onclick="return confirm('<?php echo Localization::$m_are_you_sure_to_delete_item?>')"
+								/>
+							</a>
+						</td>
+					</tr>
+				<?php } ?>
+					<tr>
+						<td class="category" colspan="6">
+							<br />
+						</td>
+					</tr>
+				</table>
+			<?php }?>
+			
+			<br />
+			<input type="submit" name="save_values" value="<?php echo Localization::$s_save;?>" />
+			</form>
+			<?php }
+			 else {?>
+			<tr>
+				<td colspan="4"><?php echo Localization::$e_no_config?></td>
+			</tr>
+		<?php }?>
+		<br />
+<a href="sys_conf.php?add"><img src="img/edit-add.png"
+	 title="<?php echo Localization::$s_sys_configuration_add?>" alt="<?php echo Localization::$s_sys_configuration_add?>" border="0" /></a>
+
+<?php include_once ('footer.inc.html'); ?>
+

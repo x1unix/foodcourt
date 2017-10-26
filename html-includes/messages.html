@@ -1,0 +1,16 @@
+<?php $title = PROJECT_NAME; include_once('header.inc.html'); ?>
+<b>!</b>
+<?php if (!empty($error)) {?>
+<?php foreach ($error AS $item){?>
+<font color="red"><?php echo($item); ?></font><br />
+<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+<?php foreach ($message AS $item){?>
+<font color="green"><?php echo($item); ?></font><br />
+<?php }?>
+<?php }?>
+
+<br />
+<a href="<?php echo($_SERVER['HTTP_REFERER']); ?>"><?php echo(Localization::$s_bask); ?></a>
+<?php include_once('footer.inc.html'); ?>

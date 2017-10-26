@@ -1,0 +1,48 @@
+<?php $title = PROJECT_NAME." | ".Localization::$s_company_list; include_once ('header.inc.html'); ?>
+<h1><strong><?php echo(Localization::$s_company_list); ?></strong></h1>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo htmlspecialchars($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo(htmlspecialchars($item)); ?></font><br />
+	<?php }?>
+<?php }?>
+
+<hr />
+
+<table align="center" border="1" class="data">
+	<tr>
+		<td>
+			<?php echo Localization::$s_company_name?>
+		</td>
+		<td>
+			<?php echo Localization::$s_actions?>
+		</td>
+	</tr>
+	
+	<?php if (!empty($companyList)) {?>
+		<?php foreach ($companyList as $companyItem) {?>
+			<tr>
+				<td><?php echo $companyItem['company_name']?></td>
+				<td align="center" width="250">
+						<a href="companies.php?edit=<?php echo($companyItem['company_id']); ?>"><img src="img/edit.png" alt="<?php echo(Localization::$s_edit); ?>" border="0"  title="<?php echo(Localization::$s_edit); ?>"/></a>
+						&nbsp;
+						<a href="companies.php?delete=<?php echo($companyItem['company_id']); ?>"><img src="img/drop.png" alt="<?php echo(Localization::$s_delete); ?>" border="0" title="<?php echo(Localization::$s_delete); ?>" onclick="return confirm('<?php echo Localization::$m_are_you_sure_you_want_to_delete?> <?php echo $companyItem['comnapy_name']?>?')" /></a>
+					</td>
+			</tr>
+		<?php }?>
+	<?php } else {?>
+		<tr>
+			<td colspan="2"><?php echo Localization::$m_company_list_is_empty?> </td>
+		</tr>
+	
+	<?php }?>
+	
+</table>
+
+<a href="companies.php?add"><img src="img/edit-add.png" title="<?php echo($s_company_add); ?>" alt="<?php echo(Localization::$s_company_add); ?>" border="0" /></a>
+<?php include_once ('footer.inc.html'); ?> 

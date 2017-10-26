@@ -1,0 +1,218 @@
+<?php $title = $title = PROJECT_NAME." | "."Sysconfig Constants edit"; include('header.inc.html'); ?>
+
+<h1><strong><?php echo Localization::$s_sys_configuration?></strong></h1>
+<h3><b><?php echo Localization::$s_system_constants;?></b></h3>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+<br />
+
+		<form name="add_config_form" action="sys_conf.php" method="post" class="cssform">
+			<p>
+				<td><label><?php echo Localization::$s_name;?><font color="red">*</font></label></td>
+				<td><input type="text" name="name" value="<?php echo htmlspecialchars($sysConfig['name'])?>" /></td>
+			</p>
+			<p>
+				<td><label><?php echo Localization::$s_type?></label>	</td>
+				<td><select name="type" onChange="foo()">
+					<?php
+					foreach ($type_list as $type=>$local_var){
+						echo " <option value=\"$type\" ";
+						if ($sysConfig['type']==$type){
+							echo ' selected="selected" ';
+						}?>
+						><?php echo Localization::$local_var?></option>
+					<?php }?>
+				</select></td>
+
+				<script type="text/javascript">
+					var old_type = ""
+
+					function getCheckedValue(radioObj) {
+						var radioLength = radioObj.length;
+						if(radioLength == undefined)
+							if(radioObj.checked)
+								return radioObj.value;
+							else
+								return "";
+						for(var i = 0; i < radioLength; i++) {
+							if(radioObj[i].checked) {
+								return radioObj[i].value;
+							}
+						}
+						return ""
+					}
+
+					function foo() {
+						var value = document.add_config_form.value!=undefined ?
+								(document.add_config_form.value.value!=undefined ?
+								document.add_config_form.value.value :
+								getCheckedValue(document.add_config_form.value)) :
+							"<?php echo htmlspecialchars($sysConfig['value'])?>";
+
+						if (old_type=="password"){
+							value=""
+						}
+
+						var valueInputs = new Array();
+
+						var input_int = document.createElement("input");
+						input_int.id = "value_id"
+						input_int.type = "text"
+						input_int.maxlength = "3"
+						input_int.name = "value"
+						input_int.value = value
+
+						var input_radio_true = document.createElement("input")
+						input_radio_true.type = "radio"
+						input_radio_true.name = "value"
+						input_radio_true.value = "true"
+						if (value=="true"){
+							input_radio_true.checked = "checked"
+						}
+						var input_radio_true_label = document.createElement("span")
+						input_radio_true_label.innerHTML = "<?=$s_yes?>"
+
+						var input_radio_false = document.createElement("input")
+						input_radio_false.type = "radio"
+						input_radio_false.name = "value"
+						input_radio_false.value = "false"
+						if (value=="false"){
+							input_radio_false.checked = "checked"
+						}
+						var input_radio_false_label = document.createElement("span")
+						input_radio_false_label.innerHTML = "<?=$s_no?>"
+						var input_radio = document.createElement("div")
+						input_radio.id = "value_id"
+						input_radio.appendChild(input_radio_false)
+						input_radio.appendChild(input_radio_false_label)
+						input_radio.appendChild(input_radio_true)
+						input_radio.appendChild(input_radio_true_label)
+
+						var input_password_field = document.createElement("input");
+						input_password_field.type = "password"
+						input_password_field.id = "password_field"
+						input_password_field.name = "value"
+						input_password_field.value = value
+						var input_checkbox = document.createElement("input");
+						input_checkbox.type = "checkbox";
+						input_checkbox.id = "show_passwd";
+						input_checkbox.onclick = showPassword;
+						var input_checkbox_label = document.createElement("span")
+						input_checkbox_label.innerHTML="<?=$s_show_password?>"
+						var input_password = document.createElement("div")
+						input_password.id = "value_id"
+						input_password.appendChild(input_password_field)
+						input_password.appendChild(input_checkbox)
+						input_password.appendChild(input_checkbox_label)
+
+						valueInputs["password"] = input_password
+						valueInputs["int"] = input_int
+						valueInputs["bool"] = input_radio
+
+						var input_text = document.createElement("textarea");
+						input_text.id = "value_id"
+						input_text.name = "value"
+						input_text.innerHTML = value
+
+						old_value = document.getElementById("value_id")
+
+						if (old_value!=undefined){
+							document.getElementById("span_value").removeChild(old_value)
+						}
+
+						if (valueInputs[document.add_config_form.type.value]){
+							document.getElementById("span_value").appendChild(valueInputs[document.add_config_form.type.value])
+						}else{
+							document.getElementById("span_value").appendChild(input_text)
+						}
+						old_type = document.add_config_form.type.value
+					}
+
+					function showPassword(){
+						show_passwd = document.getElementById("show_passwd")
+						if (show_passwd.checked){
+							document.getElementById("password_field").type="edit"
+						}else{
+							document.getElementById("password_field").type="password"
+						}
+					}
+
+				</script>
+
+			</p>
+			<p>
+				<td><label><?php echo Localization::$s_value;?><font color="red">*</font></label></td>
+				<td>
+					<span id="span_value">
+					</span>
+					<script type="text/javascript">
+						foo()
+					</script>
+				</td>
+			</p>
+			<p>
+				<td><label><?php echo Localization::$s_category;?></label></td>
+				<td>
+					<select name="cat_selected">
+						<?php
+							$checked=false;
+							foreach ($catList as $item){?>
+								<option value="<?php echo $item['id']?>"
+								<?php
+									if ($sysConfig['cat_selected']==$item['id']){
+										$checked=true;?>
+										selected="selected"
+								<?php }?>
+							><?php echo $item['name']?></option>
+						<?php }?>
+						<option value="0"
+						<?php if (!$checked) {?>
+							selected="selected"
+						<?php }?>>
+							<?php echo Localization::$s_default;?>
+						</option>
+					</select>
+				</td>
+			</p>
+			<p>
+				<td><label><?php echo Localization::$s_comment;?></label></td>
+				<td><textarea name="comment"><?php echo htmlspecialchars($sysConfig['comment'])?></textarea></td>
+			</p>
+			<p>
+				<td><label><?php echo Localization::$s_localization_variable;?></label></td>
+				<td><input type="text" name="localization_var" value="<?=htmlspecialchars($sysConfig['localization_var'])?>" /></td>
+			</p>
+			<p>
+				<td><label><?php echo Localization::$s_active;?></label></td>
+				<td>
+					<select name="active">
+						<option value=0><?php echo Localization::$s_do_not_use;?></option>
+						<option value=1023
+						<?php if ($sysConfig['active']){
+							echo ' selected="selected"';
+						}?>>
+							<?php echo Localization::$s_use?>
+						</option>
+					</select>
+				</td>
+			</p>
+			<?php if ($edit_id) {?>
+				<input type="hidden" name="edit_id" value="<?php echo Localization::$edit_id?>" />
+			<?php }?>
+			<p>
+				<input type="submit" name="save_cfg" value="<?php echo Localization::$s_save;?>" />
+			</p>
+		</form>
+
+<?php include('footer.inc.html'); ?>
+
+

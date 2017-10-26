@@ -1,0 +1,56 @@
+<?php $title = PROJECT_NAME." | ".($edit_id ? Localization::$s_edit_provider : Localization::$s_provider_add); include('header.inc.html'); ?>
+
+<h1><strong>
+	<?php echo $edit_id ? Localization::$s_edit_provider : Localization::$s_provider_add; ?>
+</strong></h1>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+
+<form name="provider_form" method="post" action="providers.php" class="cssform">
+	<p>
+		<label for="name"><?php echo(Localization::$s_name); ?><font color="red">*</font></label>
+		<input type="text" name="name" value="<?php echo(htmlspecialchars($providerInfo['name'])); ?>" />
+	</p>
+	<p>
+		<label for="info"><?php echo(Localization::$s_info); ?></label>
+		<textarea name="info"><?php echo(htmlspecialchars($providerInfo['info'])); ?></textarea>
+	</p>
+	<p>
+		<label for="first_price"><?php echo(Localization::$s_first_price); ?></label>
+		<input type="text" name="first_price"  value="<?php echo($providerInfo['first_price']); ?>" style="width: 50px;" />&nbsp;<?php echo(PRICE_CURRENCY); ?>
+	</p>
+	<p>
+		<label for="second_price"><?php echo(Localization::$s_second_price); ?></label>
+		<input type="text" name="second_price"  value="<?php echo($providerInfo['second_price']); ?>" style="width: 50px;" />&nbsp;<?php echo(PRICE_CURRENCY); ?>
+	</p>
+	<p>
+		<label for="third_price"><?php echo(Localization::$s_third_price); ?></label>
+		<input type="text" name="third_price"  value="<?php echo($providerInfo['third_price']); ?>" style="width: 50px;" />&nbsp;<?php echo(PRICE_CURRENCY); ?>
+	</p>
+	<p>
+		<label for="multichoice"><?php echo(Localization::$s_multi_choice); ?></label>
+		<?php echo(Localization::$s_yes); ?><input type="radio" name="multichoice" value="1" <?php if ($providerInfo['multichoice'] != 0) {?>checked="checked"<?php }?> />&nbsp;
+		<?php echo(Localization::$s_no); ?><input type="radio" name="multichoice" value="0" <?php if ($providerInfo['multichoice'] == 0) {?>checked="checked"<?php }?>  />
+	</p>
+	<p>
+		<label for="multiitem"><?php echo(Localization::$s_multi_item); ?></label>
+		<?php echo(Localization::$s_yes); ?><input type="radio" name="multiitem" value="1" <?php if ($providerInfo['multiitem'] != 0) {?>checked="checked"<?php }?> />&nbsp;
+		<?php echo(Localization::$s_no); ?><input type="radio" name="multiitem" value="0" <?php if ($providerInfo['multiitem'] == 0) {?>checked="checked"<?php }?> />
+	</p>
+	<p>
+		<input type="submit" name="do_save" value="<?php echo(Localization::$s_save); ?>" />
+		<?php if ($edit_id) {?>
+			<input type="hidden" name="edit_id" value="<?php echo($edit_id); ?>" />
+		<?php }?>
+	</p>
+</form>
+<?php include('footer.inc.html'); ?>

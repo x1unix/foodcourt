@@ -1,0 +1,57 @@
+<?php $title = PROJECT_NAME." | ".Localization::$s_cash_managment; include_once('header.inc.html'); ?>
+<h1><strong><?php echo(Localization::$s_cash_managment); ?></strong></h1>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+
+
+<?php if (!empty($tranzactionInfo) && !empty($userInfo)) {?>
+<form name="cash_tranzaction" method="post" action="cash.php" class="cssform">
+	<p>
+		<label for="user"><?php echo(Localization::$s_user); ?>:</label>
+		<?php echo($userInfo['login']); ?>&nbsp;&lt;<?php echo($userInfo['user_name']); ?>&gt;
+		<input type="hidden" name="user_id" value="<?php echo($userInfo['user_id']); ?>" />
+	</p>
+	<p>
+		<label for="tranzaction_type"><?php echo(Localization::$s_tranzaction_type); ?></label>
+		<?php switch ($tranzactionInfo['tranzaction_type']) {
+			case 'add':
+				echo Localization::$s_add;
+				break;
+			case 'remove':
+				echo Localization::$s_remove;
+				break;
+			case 'return':
+				echo Localization::$s_return;
+				break;
+		}?>
+		<input type="hidden" name="tranzaction_type" value="<?php echo($tranzactionInfo['tranzaction_type']); ?>" />
+	</p>
+	<p>
+		<label for="sum"><?php echo(Localization::$s_sum); ?></label>
+		<input type="hidden" name="tranzaction_sum" value="<?php echo($tranzactionInfo['tranzaction_sum']); ?>"  />
+		<?php echo($tranzactionInfo['tranzaction_sum']); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?>
+	</p>
+	<p>
+		<label for="tranzaction_comment"><?php echo(Localization::$s_comment); ?></label>
+		<input type="hidden" name="tranzaction_comment" value="<?php echo($tranzactionInfo['tranzaction_comment']); ?>" />
+		<?php echo(htmlspecialchars($tranzactionInfo['tranzaction_comment'])); ?>
+	</p>
+	<p>
+		<input type="hidden" name="confirmation" value="ok" />
+		<input type="submit" name="do_tranzaction" value="<?php echo(Localization::$s_send); ?>" />
+	</p>
+</form>
+<?php } else {?>
+	<?php echo(Localization::$m_no_any_tranzaction_info); ?>
+<?php }?>
+
+<?php include_once('footer.inc.html'); ?> 

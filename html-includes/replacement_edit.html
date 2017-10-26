@@ -1,0 +1,55 @@
+<?php $title = PROJECT_NAME." | ".Localization::$s_replacement_list; include_once ('header.inc.html'); ?>
+	
+	<h1><strong><?php echo(Localization::$s_replacement_list); ?></strong></h1>
+
+<hr />
+	<a href="profile.php"><?php echo Localization::$s_edit_profile;?></a>
+		&nbsp;|&nbsp;
+	<b><?php echo Localization::$s_replacement_list?></b>
+<hr />
+<br />
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+	
+	<form name="replacement_list" action="profile.php" method="post" class="cssform">
+			<h3><?php echo(Localization::$s_your_replacement_list); ?></h3>
+		<?php if (!empty($userReplacementList)) {?>
+			<?php foreach ($userReplacementList AS $userReplacement) {?>
+				<p>
+					<label for="replacement_<?php echo($userReplacement['replacement_id']); ?>"><?php echo($userReplacementIdInfo[$userReplacement['replacement_id']]['user_name']); ?>&nbsp;&lt;<?php echo($userReplacementIdInfo[$userReplacement['replacement_id']]['login']); ?>&gt;</label>
+					<a href="profile.php?delete_replacement=<?php echo($userReplacement['replacement_id']); ?>"><img src="img/drop.png" alt="<?php echo(Localization::$s_delete); ?>" border="0" title="<?php echo(Localization::$s_delete); ?>" onclick="return confirm('Are you shure you want to delete this item?')" /></a>
+				</p>
+			<?php }?>
+		<?php } else {?>
+			<?php echo(Localization::$m_you_have_no_replacements); ?>
+		<?php }?>
+		<p>
+			<label for="add_replacement"><?php echo(Localization::$s_replacement_login); ?><font color="red">*</font></label>
+			<input type="text" name="replacement_name" value="<?php echo(htmlspecialchars($replacement_name)); ?>" />
+			<input type="submit" name="do_add_replacement" value="<?php echo(Localization::$s_add); ?>" />
+		</p>
+	</form>
+	<hr />
+	<form name="dummy" action="" method="post" class="cssform">
+			<h3><?php echo(Localization::$s_replacementing_list); ?></h3>
+		<?php if (!empty($replacementingUserList)) {?>
+			<?php foreach ($replacementingUserList AS $replacementingUser) {?>
+				<p>
+					<label for="replacementing_<?php echo($replacementingUser['user_id']); ?>"><?php echo(htmlspecialchars($replacementingUserIdInfo[$replacementingUser['user_id']]['user_name'])); ?>&nbsp;&lt;<?php echo(htmlspecialchars($replacementingUserIdInfo[$replacementingUser['user_id']]['login'])); ?>&gt;</label>
+					<a href="orders.php?order_id=<?php echo($replacementingUser['user_id']); ?>"><img src="img/dinner.png" alt="<?php echo(Localization::$s_do_order); ?>" border="0" title="<?php echo(Localization::$s_do_order); ?>" width="20" height="20"/></a>
+					&nbsp;
+					<a href="profile.php?delete_replacementing=<?php echo($replacementingUser['user_id']); ?>"><img src="img/drop.png" alt="<?php echo(Localization::$s_delete); ?>" border="0" title="<?php echo(Localization::$s_delete); ?>" onclick="return confirm('Are you shure you want to delete this item?')" /></a>
+				</p>
+			<?php }?>
+		<?php } else {?>
+			<?php echo(Localization::$m_you_are_not_replacement); ?>
+		<?php }?>
+	</form>

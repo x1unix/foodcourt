@@ -1,0 +1,341 @@
+<?php $title = PROJECT_NAME." | ".Localization::$s_week_sum; include_once('header.inc.html'); ?>
+	<h1><strong><?php echo(Localization::$s_week_sum); ?></strong></h1>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+
+
+<?php if (isset($_GET['user_list'])) {?>
+	<?php if (!empty($weekInfo) && !empty($providerIdList)) {?>
+	
+	<?php if ($_GET['user_list'] != 'from_order') {?>
+		<h2><?php echo(htmlspecialchars($weekInfo['name'])); ?></h2>
+		<hr />
+	<?php }?>
+	
+
+	<?php if ($_GET['user_list'] == 'from_order') {?>
+		<h3>
+			<?php if (!isset($_GET['text_mode'])) {?>
+				<b>
+					<?php echo(Localization::$s_edit_mode); ?>
+				</b>
+				&nbsp;|&nbsp;
+				<a href="<?php echo($scriptName); ?>?<?php if (isset($_GET['next_week'])){?>next_week&<?php }?>order_id=<?php echo($orderId); ?>&text_mode&edit=<?php echo($edit_id); ?>">
+					<?php echo(Localization::$s_text_mode); ?>
+				</a>
+			<?php } else {?>
+				<a href="<?php echo($scriptName); ?>?<?php if (isset($_GET['next_week'])){?>next_week&<?php }?>order_id=<?php echo($orderId); ?>&edit_mode&edit=<?php echo($edit_id); ?>">
+					<?php echo(Localization::$s_edit_mode); ?>
+				</a>
+				&nbsp;|&nbsp;
+				<b>
+					<?php echo(Localization::$s_text_mode); ?>
+				</b>
+			<?php }?>
+		</h3>
+		<?php if(!empty($nextWeekInfo) || !empty($prevWeekInfo)) {?>
+			<?php if(!empty($nextWeekInfo)) {?>
+				<b>
+					<?php echo(Localization::$s_curent); ?>:&nbsp;<?php echo(htmlspecialchars($weekInfo['name'])); ?>
+				</b>
+				&nbsp;|&nbsp;
+				<a href="<?php echo($scriptName); ?>?next_week&order_id=<?php echo($orderId); ?>&<?php if (isset($_GET['text_mode'])){?>text_mode<?php } else {?>edit_mode<?php }?>&edit=<?php echo($edit_id); ?>">
+					<?php echo(Localization::$s_next); ?>:&nbsp;<?php echo(htmlspecialchars($nextWeekInfo['name'])); ?>
+				</a>
+			<?php } else {?>
+				<a href="<?php echo($scriptName); ?>?order_id=<?php echo($orderId); ?>&<?php if (isset($_GET['text_mode'])){?>text_mode<?php } else {?>edit_mode<?php }?>&edit=<?php echo($edit_id); ?>">
+					<?php echo(Localization::$s_curent); ?>:&nbsp;<?php echo(htmlspecialchars($prevWeekInfo['name'])); ?>
+				</a>
+				&nbsp;|&nbsp;
+				<b>
+					<?php echo(Localization::$s_next); ?>:&nbsp;<?php echo(htmlspecialchars($weekInfo['name'])); ?>
+				</b>
+			<?php }?>
+		<?php } else {?>
+			<h2><?php echo(htmlspecialchars($weekInfo['name'])); ?></h2>
+		<?php }?>
+	<?php } else {?>
+		<a href="weeks.php?sum=<?php echo($_GET['sum']); ?>"><?php echo(Localization::$s_sum_by_portion_names); ?></a>&nbsp;|&nbsp;<b><?php echo(Localization::$s_sum_by_user_list); ?></b><br />
+		<?php if (isset($_GET['user_list'])) {?>
+			<hr />
+			<b>
+				<form method="get" action="<?php echo $scriptName?>" name="ordered_for_form">
+					<input type="hidden" name="sum" value="<?php echo $weekInfo['week_id']?>" />
+					<input type="hidden" name="user_list" value="" />
+					
+					<?php echo Localization::$s_all_who_order_for?>
+					<select name="ordered_for" >
+					<option value="all_week" onclick="this.form.submit()" <?php if ($_GET['ordered_for'] == 'all_week') {?>
+						selected="selected" 
+					<?php }?>
+					><?php echo $s_for_all_week?></option>
+					<?php if (!empty($dayLocalizedName)) {?>
+					
+						<?php foreach ($dayLocalizedName AS $dayId => $dayName) {?>
+							<option value="<?php echo $dayId?>" onclick="this.form.submit()"
+								<?php if ($_GET['ordered_for'] == $dayId) {?>
+									selected="selected"
+								<?php }?>
+							><?php echo $dayName?></option>
+						<?php }?>
+						
+					<?php }?>
+					</select>
+				</form>
+			</b>
+		<?php }?>
+	<?php }?>
+		<?php if (!empty($userOrderData)) {?>
+			<?php foreach($userOrderData AS $userOrderDataItem) {?>
+				<hr />
+					<b><?php echo(Localization::$s_login); ?>:&nbsp;<?php echo($userOrderDataItem['login']); ?></b><br />
+					<b><?php echo(Localization::$s_e_mail); ?>:&nbsp;<?php echo($userOrderDataItem['email']); ?></b><br />
+					<h2><b><?php echo(Localization::$s_user_name); ?>:&nbsp;<?php echo($userOrderDataItem['user_name']); ?></b></h2>
+					<?php if ($userOrderDataItem['is_ordered'] == 1) {?>
+					<?php $weekTotalPrice = 0;?>
+						<?php foreach($dayList AS $dayItem) {?>
+						
+							<?php if ((!is_numeric($_GET['ordered_for'])) || ($_GET['ordered_for'] == $dayItem) ) {?>
+								&nbsp;&nbsp;&nbsp;
+								<h3>
+									<?php switch($dayItem) 
+									{
+										case D_MONDAY: 
+											
+											echo Localization::$s_monday;
+											if ($fullWeekInfo[D_MONDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_MONDAY]['day']." ".$fullWeekInfo[D_MONDAY]['monthname']."]";
+											}
+											break;
+										case D_TUESDAY: 
+											echo Localization::$s_tuesday;
+											if ($fullWeekInfo[D_TUESDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_TUESDAY]['day']." ".$fullWeekInfo[D_TUESDAY]['monthname']."]";
+											}
+											break;
+										case D_WEDNESDAY:
+											echo Localization::$s_wednesday;
+											if ($fullWeekInfo[D_WEDNESDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_WEDNESDAY]['day']." ".$fullWeekInfo[D_WEDNESDAY]['monthname']."]";
+											}
+											break;
+										case D_THURSDAY: 
+											echo Localization::$s_thursday;
+											if ($fullWeekInfo[D_THURSDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_THURSDAY]['day']." ".$fullWeekInfo[D_THURSDAY]['monthname']."]";
+											}
+											break;
+										case D_FRIDAY: 
+											echo Localization::$s_friday;
+											if ($fullWeekInfo[D_FRIDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_FRIDAY]['day']." ".$fullWeekInfo[D_FRIDAY]['monthname']."]";
+											}
+											break;
+										case D_SATURDAY: 
+											echo Localization::$s_saturday;
+											if ($fullWeekInfo[D_SATURDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_SATURDAY]['day']." ".$fullWeekInfo[D_SATURDAY]['monthname']."]";
+											}
+											break;
+										case D_SUNDAY: 
+											echo Localization::$s_sunday;
+											if ($fullWeekInfo[D_SUNDAY])
+											{
+												echo "&nbsp;[".$fullWeekInfo[D_SUNDAY]['day']." ".$fullWeekInfo[D_SUNDAY]['monthname']."]";
+											}
+											break;
+									}?>
+								</h3>
+								<?php if (!empty($userOrderDataItem[$dayItem])) {?>
+								<?php $dayTotalPrice = 0;?>
+								<table border="0">
+									
+									<?php for ($portionNumber = 1; $portionNumber <=4; $portionNumber++) {?>
+										<tr>
+											<td valign="top">
+												<b>
+												<?php switch ($portionNumber) {
+													case '1': echo Localization::$s_first;
+														break;
+													case '2': echo Localization::$s_second;
+														break;
+													case '3': echo Localization::$s_third;
+														break;
+													case '4': echo Localization::$s_fours;
+														break;
+												}?>:
+												</b>&nbsp; 
+											</td>
+											<td>
+												<?php if (!empty($userOrderDataItem[$dayItem][$portionNumber])) { ?>
+													<?php foreach ($userOrderDataItem[$dayItem][$portionNumber] AS $itemName) {?>
+														<b><?php echo(Localization::$s_portion_name); ?>&nbsp;:</b><?php echo(htmlspecialchars($itemName['portion_name'])); ?><br />
+														<b><?php echo(Localization::$s_portion_count); ?>&nbsp;:</b><?php echo($itemName['ordered_item_count']); ?><br />
+														<b><?php echo(Localization::$s_provider_name); ?>&nbsp;:</b><?php echo(htmlspecialchars($itemName['provider_name'])); ?><br />
+														<?php if (($_GET['user_list'] == 'from_order') && (SHOW_PRICE_FOR_USER != 1)) {?>
+														<?php } else {?>
+														<b><?php echo(Localization::$s_price_for_all_portions); ?>&nbsp;:</b><?php echo(htmlspecialchars(($itemName['order_price']*$itemName['ordered_item_count']))); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?><br />
+														<?php $dayTotalPrice += ($itemName['order_price']*$itemName['ordered_item_count']);?>
+														<br />
+														<?php }?>
+													<?php } ?>
+												<?php }?>
+											</td>
+										</tr>
+									<?php }?>
+		
+								
+									<?php if (($_GET['user_list'] == 'from_order') && (SHOW_PRICE_FOR_USER != 1)) {?>
+									<?php } else {?>
+										<tr>
+											<td colspan="2" align="left">
+												<?php $weekTotalPrice += $dayTotalPrice;?>
+												<b><?php echo(Localization::$s_day_total_price); ?>:&nbsp;</b><?php echo(htmlspecialchars($dayTotalPrice)); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?>
+											</td>
+										</tr>
+									<?php }?>
+								</table>
+								<?php } else {?>
+									<i><?php echo(Localization::$m_no_user_order_for_a_day); ?></i>
+								<?php }?>
+							<?php }?>
+						<?php }?>
+						
+						<?php if (($_GET['user_list'] == 'from_order') && (SHOW_PRICE_FOR_USER != 1)) {?>
+						<?php } else {?>
+							<br /><br /><b><?php echo(Localization::$s_week_total_price); ?>:&nbsp;</b><?php echo(htmlspecialchars($weekTotalPrice)); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?>
+						<?php }?>
+					<?php } else {?>
+						<i><?php echo(Localization::$m_user_didnt_ordered_for_week); ?></i>
+					<?php }?>
+				<hr />
+				<br /><br />
+			<?php }?>
+		<?php } else {?>
+			<hr />
+			<?php echo Localization::$m_no_user_order_for_a_day;?>
+		<?php }?>
+	<?php } else {?>
+		Some hack? Or some bug...
+	<?php }?>
+<?php } else {?>
+
+	<?php if (!empty($weekInfo) && !empty($providerList) && !empty($orderList)) {?>
+		<h2><?php echo(htmlspecialchars($weekInfo['name'])); ?></h2>
+		<hr />
+		<b><?php echo(Localization::$s_sum_by_portion_names); ?></b>&nbsp;|&nbsp;<a href="weeks.php?sum=<?php echo($_GET['sum']); ?>&user_list"><?php echo(Localization::$s_sum_by_user_list); ?></a><br />
+		<?php foreach ($dayList AS $dayItem) { $daySum = 0; $payedDaySum = 0;?>	
+			<hr />
+				<h2>
+					<?php switch($dayItem) {
+					case D_MONDAY: 
+						
+						echo Localization::$s_monday;
+						if ($fullWeekInfo[D_MONDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_MONDAY]['day']." ".$fullWeekInfo[D_MONDAY]['monthname']."]";
+						}
+						break;
+					case D_TUESDAY: 
+						echo Localization::$s_tuesday;
+						if ($fullWeekInfo[D_TUESDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_TUESDAY]['day']." ".$fullWeekInfo[D_TUESDAY]['monthname']."]";
+						}
+						break;
+					case D_WEDNESDAY:
+						echo Localization::$s_wednesday;
+						if ($fullWeekInfo[D_WEDNESDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_WEDNESDAY]['day']." ".$fullWeekInfo[D_WEDNESDAY]['monthname']."]";
+						}
+						break;
+					case D_THURSDAY: 
+						echo Localization::$s_thursday;
+						if ($fullWeekInfo[D_THURSDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_THURSDAY]['day']." ".$fullWeekInfo[D_THURSDAY]['monthname']."]";
+						}
+						break;
+					case D_FRIDAY: 
+						echo Localization::$s_friday;
+						if ($fullWeekInfo[D_FRIDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_FRIDAY]['day']." ".$fullWeekInfo[D_FRIDAY]['monthname']."]";
+						}
+						break;
+					case D_SATURDAY: 
+						echo Localization::$s_saturday;
+						if ($fullWeekInfo[D_SATURDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_SATURDAY]['day']." ".$fullWeekInfo[D_SATURDAY]['monthname']."]";
+						}
+						break;
+					case D_SUNDAY: 
+						echo Localization::$s_sunday;
+						if ($fullWeekInfo[D_SUNDAY])
+						{
+							echo "&nbsp;[".$fullWeekInfo[D_SUNDAY]['day']." ".$fullWeekInfo[D_SUNDAY]['monthname']."]";
+						}
+						break;
+				}?>
+				</h2>
+				<?php foreach($providerList AS $providerItem) { $providerSum = 0; $payedProviderSum = 0;?>
+					<h3><b><?php echo(htmlspecialchars($providerItem['name'])); ?></b></h3><br />
+					<?php if(!empty($orderIdToDayAndProvider[$dayItem][$providerItem['provider_id']])) {?>
+					
+						<?php foreach($orderIdToDayAndProvider[$dayItem][$providerItem['provider_id']] AS $orderId) {?>
+						
+							<?php echo(htmlspecialchars($orderIdToCount[$orderId]['portion_name'])); ?>&nbsp;=>&nbsp;
+							<?php if ($orderIdToCount[$orderId]['portion_count'] != $orderIdToCount[$orderId]['payed_portion_count']) {?>
+								<font color="yellow"><?php echo($orderIdToCount[$orderId]['portion_count']); ?></font>&nbsp;
+								<font color="yellow">[<?php echo($orderIdToCount[$orderId]['sum_price']); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?>]</font>
+								&nbsp;|&nbsp;
+							<?php }?>
+							<font color="green"><?php echo($orderIdToCount[$orderId]['payed_portion_count']); ?></font>&nbsp;
+							<font color="green">[<?php echo($orderIdToCount[$orderId]['payed_sum_price']); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?>]</font>
+							<?php $daySum += $orderIdToCount[$orderId]['sum_price'];?>
+							<?php $payedDaySum += $orderIdToCount[$orderId]['payed_sum_price']?>
+							<?php $providerSum += $orderIdToCount[$orderId]['sum_price'];?>
+							<?php $payedProviderSum += $orderIdToCount[$orderId]['payed_sum_price']?>
+							<br />
+						<?php }?>
+						
+					<?php }?>
+					<?php echo(Localization::$s_sum_by_provider); ?>:&nbsp;
+					<?php if ($providerSum != $payedProviderSum) {?>
+						<font color="yellow"><?php echo($providerSum); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?></font>
+						&nbsp;|&nbsp;
+					<?php }?>
+					<font color="green"><?php echo($payedProviderSum); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?></font>
+					<br />
+					<br />
+				<?php }?>
+				<?php echo(Localization::$s_sum_total); ?>:&nbsp;
+				<?php if ($daySum != $payedDaySum) {?>
+					<font color="yellow"><?php echo($daySum); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?></font>
+					&nbsp;|&nbsp;
+				<?php }?>
+				<font color="green"><?php echo($payedDaySum); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?></font>
+		<?php }?>
+	<?php } else {?>
+		Some hack? Or some bug...
+	<?php }?>
+
+<?php }?>
+<?php include_once('footer.inc.html'); ?>

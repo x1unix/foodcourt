@@ -1,0 +1,64 @@
+<?php $title = $title = PROJECT_NAME." | "."Sys config | Categories"; include('header.inc.html'); ?>
+
+<h1><strong><?php echo Localization::$s_sys_configuration?></strong></h1>
+
+<h3><b><a href="sys_conf.php?sys_const"><?php echo (Localization::$s_system_constants)?></a>|
+<?php echo Localization::$s_system_categories?>
+</b></h3>
+<br />
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+
+<br />
+	<?php if (!empty($catList)) {?>
+		<table class="data">
+			<tr>
+				<td><?php echo Localization::$s_category?></td>
+				<td><?php echo Localization::$s_actions?></td>
+			</tr>
+			<?php foreach($catList AS $item) {?>
+				<tr>
+					<td>
+					<?php if ($item['localization_var']){
+							$loc_var = $item['localization_var'];
+							if ($$loc_var){
+								echo $$loc_var;
+							}else{
+								echo htmlspecialchars($item['name']);
+							}
+						}else{
+							echo htmlspecialchars($item['name']);
+						}
+					?>
+					</td>
+					<td align="center" width="250">
+						<a href="sys_conf.php?edit_cat=<?php echo $item['id']?>"><img src="img/edit.png" alt="<?php echo Localization::$s_edit?>" border="0"  title="<?php echo Localization::$s_edit?>"/></a>
+						&nbsp;
+						<a href="sys_conf.php?delete_cat=<?php echo $item['id']?>">
+							<img src="img/drop.png" alt="<?php echo Localization::$s_delete?>" border="0"
+								title="<?php echo Localization::$s_delete?>" onclick="return confirm('<?php echo Localization::$m_are_you_sure_to_delete_item?>')"
+							/>
+						</a>
+					</td>
+				</tr>
+	<?php }?>
+<?php } else {?>
+	<tr>
+		<td colspan="2"><?php echo Localization::$e_no_configuration?></td>
+	</tr>
+<?php }?>
+		<br />
+</table>
+<a href="sys_conf.php?add_cat"><img src="img/edit-add.png"
+	 title="<?php echo (Localization::$s_sys_configuration_add)?>" alt="<?php echo Localization::$s_sys_configuration_add?>" border="0" /></a>
+
+<?php include_once ('footer.inc.html'); ?>

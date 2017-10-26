@@ -1,0 +1,86 @@
+<?php $title = PROJECT_NAME." | ".($edit_id ? Localization::$s_edit_profile : Localization::$s_user_add); include_once('header.inc.html'); ?>
+<script language="JavaScript" src="js/radio_handler.js" ></script>
+
+<h1><strong>
+	<?php echo $edit_id ? Localization::$s_edit_profile : Localization::$s_user_add; ?>
+</strong></h1>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo($item); ?></font><br />
+	<?php }?>
+<?php }?>
+
+<form name="register_form" method="post" action="users.php" class="cssform">
+	<p>
+		<label for="login"><?php echo(Localization::$s_login); ?><font color="red">*</font></label>
+		<input type="text" name="login" value="<?php echo(htmlspecialchars($userInfo['login'])); ?>" />
+	</p>
+	<p>
+		<label for="password"><?php echo(Localization::$s_password); ?><font color="red">*</font></label>
+		<input type="password" name="password" value="" />
+	</p>
+	<p>
+		<label for="email"><?php echo(Localization::$s_e_mail); ?></label>
+		<input type="text" name="email" value="<?php echo(htmlspecialchars($userInfo['email'])); ?>" />
+	</p>
+	<p>
+		<label for="user_name"><?php echo(Localization::$s_user_name); ?></label>
+		<input type="text" name="user_name" value="<?php echo(htmlspecialchars($userInfo['user_name'])); ?>" />
+	</p>
+	<p>
+		<label for="status"><?php echo(Localization::$s_status); ?></label>
+		<select name="status">
+			<option value="1"
+			<?php if ($userInfo['status'] == 1) {?>
+			 selected
+			<?php }?>
+			><?php echo(Localization::$m_user); ?></option>
+			<option value="10"
+			<?php if ($userInfo['status'] == 10) {?>
+			 selected
+			<?php }?>
+			><?php echo(Localization::$m_administrator); ?></option>
+		</select><br />
+	</p>
+	<p>
+		<label for="activity"><?php echo(Localization::$s_activity); ?></label>
+		<select name="activity">
+			<option value="1" 
+			<?php if ($userInfo['activity'] != "0") {?>
+				selected
+			<?php }?>
+			><?php echo(Localization::$s_active); ?></option>
+			<option value="0" 
+			<?php if ($userInfo['activity'] == "0") {?>
+				selected 
+			<?php }?>
+			><?php echo(Localization::$s_blocked); ?></option>
+		</select>
+	</p>
+	<p>
+		<label for="cash_total"><?php echo(Localization::$s_cash_total); ?></label>
+		<?php echo($userInfo['cash_total']); ?>&nbsp;<?php echo(PRICE_CURRENCY); ?>
+		<a href="cash.php?user_id=<?php echo($userInfo['user_id']); ?>"><img src="img/edit.png" alt="<?php echo(Localization::$s_edit); ?>" border="0"  title="<?php echo(Localization::$s_edit); ?>"/></a>
+	</p>
+	<p>
+		<input type="submit" name="do_save" value="<?php echo(Localization::$s_save); ?>" />
+		<?php if ($edit_id) {?>
+			<input type="hidden" name="edit_id" value="<?php echo($edit_id); ?>" />
+		<?php }?>
+	</p>
+</form>
+<font color="red">*</font><?php echo(Localization::$m_require_fields); ?>
+<?php if (isset($edit_id)) {?>
+	<?php if (isset($_GET['text_mode'])) {?>
+		<?php include_once("week_sum.html");?>
+	<?php } else {?>
+		<?php include_once("orderlist.html");?>
+	<?php }?>
+<?php }?>
+<?php include_once ('footer.inc.html'); ?>

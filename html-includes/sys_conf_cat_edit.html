@@ -1,0 +1,38 @@
+<?php $title = $title = PROJECT_NAME." | "."Sysconfig | Categories edit"; include('header.inc.html'); ?>
+
+<h1><strong><?php echo Localization::$s_sys_configuration?></strong></h1>
+<h3><b><?php echo Localization::$s_system_categories;?></b></h3>
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo $item?></font><br />
+	<?php }?>
+<?php }?>
+
+<br />
+		<form name="edit_cat_form" action="sys_conf.php" method="post" class="cssform">
+			<p>
+				<label><?php echo Localization::$s_name;?><font color="red">*</font></label>
+				<input type="text" name="name" value="<?php echo htmlspecialchars($catName)?>" />
+			</p>
+			<p>
+				<label><?php echo Localization::$s_localization_variable;?><font color="red">*</font></label>
+				<input type="text" name="localization_var" value="<?php echo htmlspecialchars($catLocalVar)?>" />
+			</p>
+
+			<?php if ($edit_id) {?>
+				<input type="hidden" name="edit_id" value="<?php echo Localization::$edit_id?>" />
+			<?php }?>
+			<p>
+				<input type="submit" name="save_cat" value="<?php echo Localization::$s_save;?>" />
+			</p>
+		</form>
+
+<?php include('footer.inc.html'); ?>
+
+
+

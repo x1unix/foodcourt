@@ -1,0 +1,15 @@
+			<?php if ($isLogged) {?>
+				</div>
+			</div>
+			<?php } else {?>
+			<div id="startcontect">
+				<center>
+					<?php if ($scriptName == 'forgot_password.php') {?>
+						<?php include_once ('forgot_password.html');?>
+					<?php } else {?>
+						<?php include_once ('login.inc.html'); }?>
+					<?php }?>
+				</center>
+			</div>
+	</body>
+</html>

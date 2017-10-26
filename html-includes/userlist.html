@@ -1,0 +1,171 @@
+<?php $title = PROJECT_NAME." | ".Localization::$s_userlist; include_once ('header.inc.html'); ?>
+<h1><strong><?php echo(Localization::$s_userlist); ?></strong></h1>
+
+<?php if (!empty($error)) {?>
+	<?php foreach ($error AS $item){?>
+		<font color="red"><?php echo htmlspecialchars($item); ?></font><br />
+	<?php }?>
+<?php }?>
+<?php if (!empty($message)) {?>
+	<?php foreach ($message AS $item){?>
+		<font color="green"><?php echo(htmlspecialchars($item)); ?></font><br />
+	<?php }?>
+<?php }?>
+
+<hr />
+<form name="display_format" action="<?php echo($scriptName); ?>" method="post">
+	<?php echo(Localization::$s_mark_users_ordered_for); ?>
+	<?php if (!empty($dayLocalizedName)) {?>
+		<select name="ordered_for">
+		
+			<?php foreach ($dayLocalizedName AS $dayId => $dayName) {?>
+				<option value="<?php echo $dayId?>" 
+					<?php if ($markRules['ordered_for'] == $dayId) {?>
+						selected="selected"
+					<?php }?>
+				><?php echo $dayName?></option>
+			<?php }?>
+		
+		</select>
+	<?php }?>
+	<br />
+	<?php echo(Localization::$s_mark_users_payed_for); ?>
+	<?php if (!empty($dayLocalizedName)) {?>
+		<select name="payed_for">
+		
+			<?php foreach ($dayLocalizedName AS $dayId => $dayName) {?>
+				<option value="<?php echo $dayId?>" 
+					<?php if ($markRules['payed_for'] == $dayId) {?>
+						selected="selected"
+					<?php }?>
+				><?php echo $dayName?></option>
+			<?php }?>
+			
+		</select>
+	<?php }?>
+	<br />
+	<input type="submit" name="mark_rules" value="<?php echo(Localization::$s_send); ?>" />
+</form>
+<hr />
+
+	<b><?php echo $dayLocalizedName[$dayInfo['day_id']]?>:</b>&nbsp;
+	<?php if ($dayInfo['blocked'] === "0") {?>
+		<a href="<?php echo $scriptName?>?do_block=<?php echo $weekInfo['week_id']?>_<?php echo $dayInfo['day_id']?>">
+			<?php echo Localization::$s_do_block?>
+		</a>
+	<?php } else { ?>
+		<?php echo Localization::$s_is_blocked?>
+	<?php }?>
+	&nbsp;|&nbsp;
+
+
+	<?php if (!empty($orderedUser)) {?>
+		<a href="<?php echo $scriptName?>?pay_for_all=<?php echo $weekInfo['week_id']?>_<?php echo $dayInfo['day_id']?>">
+			<?php echo Localization::$s_pay?>
+		</a>
+	<?php } else {?>
+		<?php echo Localization::$s_payed?>
+	<?php }?>
+
+<hr />
+<table align="center" border="1" class="data">
+	<tr>
+		<td align="center"><?php echo(Localization::$s_cash); ?></td>
+		<td align="center"><?php echo(Localization::$s_login); ?></td>
+		<td align="center"><?php echo(Localization::$s_user_name); ?></td>
+		<td align="center"><?php echo(Localization::$s_status); ?></td>
+		<td align="center"><?php echo(Localization::$s_activity); ?></td>
+		<td align="center"><?php echo(Localization::$s_actions); ?></td>
+	</tr>
+		<?php if (!empty($userList)) {?>
+			<?php foreach($userList AS $item) {?>
+				<tr>
+					<td align="center">
+						<?php if ($item['cash_total'] > 0) {?>
+							<font color="blue"><?php echo $item['cash_total'];?>&nbsp;<?php echo PRICE_CURRENCY;?></font>
+						<?php } else if ($item['cash_total'] < 0) {?>
+						<font color="red"><?php echo $item['cash_total'];?>&nbsp;<?php echo PRICE_CURRENCY;?></font>
+						<?php } else {?>
+						<?php echo $item['cash_total'];?>&nbsp;<?php echo PRICE_CURRENCY;?>
+						<?php }?>
+					</td>
+					<td align="center">
+						<?php if ($item['activity'] == "0") {?>
+							<i>
+						<?php }?>
+						
+						<a href="users.php?edit=<?php echo($item['user_id']); ?>" 
+							<?php if (!empty($orderedUser[$item['user_id']]) && isset($payedUsersById[$item['user_id']])) {?>
+								style="color:green; font-weight:bold;"
+							<?php } else if (!empty($orderedUser[$item['user_id']])){?>
+								style="color:yellow; font-weight:bold;"
+							<?php } else {?>
+								style="color:black;"
+							<?php }?>
+						><?php echo(htmlspecialchars($item['login'])); ?></a>
+						
+						<?php if ($item['activity'] == "0") {?>
+							</i>
+						<?php }?>
+						
+					</td>
+					<td align="center">
+						<?php if ($item['activity'] == "0") {?>
+							<i>
+						<?php }?>
+						
+						<a href="users.php?edit=<?php echo($item['user_id']); ?>" 
+							<?php if (!empty($orderedUser[$item['user_id']]) && isset($payedUsersById[$item['user_id']])) {?>
+								style="color:green; font-weight:bold;"
+							<?php } else if (!empty($orderedUser[$item['user_id']])){?>
+								style="color:yellow; font-weight:bold;"
+							<?php } else {?>
+								style="color:black;"
+							<?php }?>
+						><?php echo(htmlspecialchars($item['user_name'])); ?></a>
+						
+						<?php if ($item['activity'] == "0") {?>
+							</i>
+						<?php }?>
+					</td>
+					<td align="center">
+						<?php if ($item['activity'] == "0") {?>
+							<i>
+						<?php }?>
+						
+						<?php if ($item['status'] == 1) {?>
+							<?php echo(Localization::$m_user); ?>
+						<?php } else if ($item['status'] == 10) {?>
+							<?php echo(Localization::$m_administrator); ?>
+						<?php } else {?>
+							<?php echo(Localization::$m_unknown_status); ?>
+						<?php }?>
+						
+						<?php if ($item['activity'] == "0") {?>
+							</i>
+						<?php }?>
+					</td>
+					<td align="center">
+						<?php if ($item['activity'] != "0") {?>
+							<img src="img/green_circle.png" height="14" width="14" alt="<?php echo(Localization::$s_active); ?>" title="<?php echo(Localization::$s_active); ?>" border="0" />&nbsp;&nbsp;<a href="users.php?change_activity=0&user_id=<?php echo($item['user_id']); ?>"><img src="img/red_circle_dark.png" height="14" width="14" alt="<?php echo(Localization::$s_do_blocked); ?>" title="<?php echo(Localization::$s_do_blocked); ?>" border="0" /></a>
+							
+						<?php } else {?>
+							<a href="users.php?change_activity=1&user_id=<?php echo($item['user_id']); ?>"><img src="img/green_circle_dark.png" height="14" width="14" alt="<?php echo(Localization::$s_do_active); ?>" title="<?php echo(Localization::$s_do_active); ?>" border="0" /></a>&nbsp;&nbsp;<img src="img/red_circle.png" height="14" width="14" alt="<?php echo(Localization::$s_blocked); ?>" title="<?php echo(Localization::$s_blocked); ?>" border="0" />
+						<?php }?>
+					</td>
+					<td align="center" width="250">
+						<a href="users.php?edit=<?php echo($item['user_id']); ?>"><img src="img/edit.png" alt="<?php echo(Localization::$s_edit); ?>" border="0"  title="<?php echo(Localization::$s_edit); ?>"/></a>
+						&nbsp;
+						<a href="users.php?delete=<?php echo($item['user_id']); ?>"><img src="img/drop.png" alt="<?php echo(Localization::$s_delete); ?>" border="0" title="<?php echo(Localization::$s_delete); ?>" onclick="return confirm('<?php echo Localization::$m_are_you_sure_you_want_to_delete?> <?php echo $item['user_name']?>?')" /></a>
+					</td>
+				</tr>
+			<?php }?>
+		<?php } else {?>
+			<tr>
+				<td colspan="6"><?php echo(Localization::$e_no_users); ?></td>
+			</tr>
+		<?php }?>
+		<br />
+</table>
+<a href="users.php?add"><img src="img/edit-add.png" title="<?php echo(Localization::$s_user_add); ?>" alt="<?php echo(Localization::$s_user_add); ?>" border="0" /></a>
+<?php include_once ('footer.inc.html'); ?> 
