@@ -5,9 +5,9 @@
 
 //Define DB constant's.
 define ("DB_FOR_USE", "mysql");
-define("DB_HOST", "localhost");
-define ("DB_USER", "user");
-define ("DB_PASS", "pass");
+define("DB_HOST", "db");
+define ("DB_USER", "root");
+define ("DB_PASS", "root");
 define ("DB_NAME", "voracity");
 
 // Define DB table constant's.
@@ -35,7 +35,7 @@ define ("D_SUNDAY", 7);
 
 
 $defaultValues["PROJECT_NAME"] = "Voracity";
-$defaultValues["SYSTEM_HTTP_ADDRESS"] = "http://172.22.70.89/voracity/";
+$defaultValues["SYSTEM_HTTP_ADDRESS"] = "http://localhost:8000/voracity/";
 
 // Define cookie's constant's.
 $defaultValues["C_LOGIN"] = "lk_login";						// Login cookie name.

@@ -2,7 +2,7 @@
 	// Developed by kosyak <kosyak_ua@yahoo.com>
 	
 	//// Index page script.
-	
+
 	require_once("init.php");
 	require_once("user.class.php");
 	require_once(LANG.".language.php");

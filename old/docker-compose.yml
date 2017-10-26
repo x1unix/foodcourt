@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+   db:
+     build: ./mysql
+     volumes:
+       - db_data:/var/lib/mysql
+     environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: voracity
+
+   php:
+    build: ./php
+    ports:
+      - '8000:80'
+    restart: always
+    volumes:
+       - ./html:/var/www/html
+    links:
+      - db
+    depends_on:
+      - db
+      
+volumes:
+    db_data:
