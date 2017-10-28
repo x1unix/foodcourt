@@ -3,10 +3,9 @@ package main
 import (
 	"./shared/logger"
 	"./shared/config"
+	"./shared/app"
 	"./route"
-	"net/http"
 	"fmt"
-	"time"
 )
 
 func main() {
@@ -17,16 +16,14 @@ func main() {
 
 	httpPort := config.Get(config.HTTP_PORT, "80")
 	httpHost := config.Get(config.HTTP_HOST, "0.0.0.0")
-	httpAddr := httpHost + ":" + httpPort
 
-	log.Info(fmt.Sprintf("Starting HTTP server at %s", httpAddr))
+	log.Info(fmt.Sprintf("HTTP server started at %s:%s", httpHost, httpPort))
 
-	server := &http.Server{
-		Handler: router,
-		Addr: httpAddr,
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+	appInstance := app.Application {
+		router,
+		nil,
+		log,
 	}
 
-	log.Fatal(server.ListenAndServe())
+	appInstance.Run(httpHost, httpPort)
 }
