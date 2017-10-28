@@ -22,3 +22,7 @@ func Bootstrap() {
 
 	logging.SetBackend(consoleBackend, backendFormatter)
 }
+
+func GetLogger() *logging.Logger {
+	return logging.MustGetLogger("voracity")
+}
