@@ -1,9 +1,10 @@
 package environment
 
 import (
-	"runtime"
+	"path/filepath"
 	"strings"
 	"path"
+	"fmt"
 )
 
 const DIR_PUBLIC = "public"
@@ -12,9 +13,10 @@ const DIR_PUBLIC = "public"
 
 // Get the application root path
 func GetRoot() string {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		panic("No caller information")
+	filename, err  := filepath.Abs(".")
+
+	if (err != nil) {
+		panic(fmt.Sprintf("Failed to get document root path: %s", err.Error()))
 	}
 
 	return path.Dir(filename)
