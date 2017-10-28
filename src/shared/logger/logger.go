@@ -80,5 +80,5 @@ func Bootstrap() *logging.Logger {
 }
 
 func GetLogger() *logging.Logger {
-	return logging.MustGetLogger("voracity")
+	return logging.MustGetLogger(LOG_NAME)
 }
