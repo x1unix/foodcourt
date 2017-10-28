@@ -8,6 +8,8 @@ import (
 
 const DIR_PUBLIC = "public"
 
+
+
 // Get the application root path
 func GetRoot() string {
 	_, filename, _, ok := runtime.Caller(0)
