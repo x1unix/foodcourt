@@ -25,7 +25,7 @@ var fileFormatter = logging.MustStringFormatter(
 // Gets location of logs directory
 func GetLogPath() string {
 	// Get log path from the config
-	logPathOrigin := config.Get("LOG_PATH", ".")
+	logPathOrigin := config.Get(config.LOG_PATH, ".")
 
 	// Get absolute log path
 	logPath, _ := filepath.Abs(logPathOrigin)

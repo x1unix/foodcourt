@@ -15,8 +15,8 @@ func main() {
 	log := logger.Bootstrap()
 	router := route.Bootstrap()
 
-	httpPort := config.Get("HTTP_PORT", "80")
-	httpHost := config.Get("HTTP_HOST", "0.0.0.0")
+	httpPort := config.Get(config.HTTP_PORT, "80")
+	httpHost := config.Get(config.HTTP_HOST, "0.0.0.0")
 	httpAddr := httpHost + ":" + httpPort
 
 	log.Info(fmt.Sprintf("Starting HTTP server at %s", httpAddr))

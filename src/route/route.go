@@ -10,6 +10,7 @@ import (
 func Bootstrap() *mux.Router {
 	r := mux.NewRouter()
 
+	//dirStatic := "./" + environment.DIR_PUBLIC
 	dirStatic := "./" + environment.DIR_PUBLIC
 
 	// GET /
