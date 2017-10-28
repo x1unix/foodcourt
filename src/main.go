@@ -5,29 +5,28 @@ import (
 	"./shared/config"
 	"./route"
 	"net/http"
-	"github.com/op/go-logging"
 	"fmt"
+	"time"
 )
 
 func main() {
-	logger.Bootstrap()
 	config.Bootstrap()
+
+	log := logger.Bootstrap()
 	router := route.Bootstrap()
 
-	log := logging.MustGetLogger("voracity")
-
 	httpPort := config.Get("HTTP_PORT", "80")
+	httpHost := config.Get("HTTP_HOST", "0.0.0.0")
+	httpAddr := httpHost + ":" + httpPort
 
-	log.Info(fmt.Sprintf("Starting HTTP server at port %s", httpPort))
+	log.Info(fmt.Sprintf("Starting HTTP server at %s", httpAddr))
 
-	err := http.ListenAndServe(":" + httpPort, router);
-
-	if err != nil {
-		msg := fmt.Sprintf("Failed to start server: %s", err.Error())
-		log.Error(msg)
-		panic(msg)
+	server := &http.Server{
+		Handler: router,
+		Addr: httpAddr,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
 
-
-
+	log.Fatal(server.ListenAndServe())
 }

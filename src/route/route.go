@@ -9,8 +9,9 @@ import (
 
 func Bootstrap() *mux.Router {
 	r := mux.NewRouter()
-	//
+
 	dirStatic := "./" + environment.DIR_PUBLIC
+
 	// GET /
 	r.HandleFunc("/api/foo", controller.HandleHomeGET).Methods("GET")
 
