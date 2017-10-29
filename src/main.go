@@ -5,7 +5,6 @@ import (
 	"./shared/config"
 	"./shared/app"
 	"./route"
-	"fmt"
 )
 
 func main() {
@@ -17,7 +16,7 @@ func main() {
 	httpPort := config.Get(config.HTTP_PORT, "80")
 	httpHost := config.Get(config.HTTP_HOST, "0.0.0.0")
 
-	log.Info(fmt.Sprintf("HTTP server started at %s:%s", httpHost, httpPort))
+	log.Info("Starting application...")
 
 	appInstance := app.Application {
 		router,
