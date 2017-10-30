@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"../config"
 	"../logger"
+	"github.com/go-sql-driver/mysql"
 )
 
 const SQL_CON_ERR = "Failed to create SQL connection ('%s'): %s"
 const SQL_CON_SUCCESS = "SQL connection created ('%s')"
 
+// Returns SQL connect params
 func getSqlConnectParams() string {
 	host, port, dbase, user, pass :=
 		config.Get(config.DB_HOST, "localhost"),
@@ -18,7 +20,19 @@ func getSqlConnectParams() string {
 		config.Get(config.DB_USER, "foodcourt"),
 		config.Get(config.DB_PASS, "")
 
-	return user + ":" + pass + "@" + host + ":" + port + "/" + dbase
+	// Create DSN builder
+	dsnConfig := &mysql.Config{
+		User: user,
+		Passwd: pass,
+		Net: "tcp",
+		Addr: host + ":" + port,
+		DBName: dbase,
+	}
+
+	// Format DSN to string
+	dsn := dsnConfig.FormatDSN()
+
+	return dsn
 }
 
 // Creates a new SQL connection instance
