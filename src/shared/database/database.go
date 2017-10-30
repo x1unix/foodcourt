@@ -1,11 +1,11 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"../config"
 	"../logger"
 	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 const SQL_CON_ERR = "Failed to create SQL connection ('%s'): %s"
@@ -36,13 +36,13 @@ func getSqlConnectParams() string {
 }
 
 // Creates a new SQL connection instance
-func GetInstance() *sql.DB {
+func GetInstance() *sqlx.DB {
 
 	log := logger.GetLogger()
 
 	sqlDsn := getSqlConnectParams()
 
-	db, err := sql.Open("mysql", sqlDsn)
+	db, err := sqlx.Connect("mysql", sqlDsn)
 
 	// Throw error if occurred
 	if (err != nil) {
@@ -56,10 +56,11 @@ func GetInstance() *sql.DB {
 
 // Test SQL connection
 func TestConnection() (bool, error) {
-	connection := GetInstance()
-	defer connection.Close()
+	sqlDsn := getSqlConnectParams()
 
-	err := connection.Ping()
+	connection, err := sqlx.Connect("mysql", sqlDsn)
+
+	defer connection.Close()
 
 	if err != nil {
 		return false, err

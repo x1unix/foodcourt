@@ -15,9 +15,9 @@ const USERS_VAR_UID = "id"
 // (GET /api/users/{id:[0-9]+})
 func GetUserById(w http.ResponseWriter, r *http.Request) {
 	con := database.GetInstance()
-	userId := rest.Params(r).GetInt(USERS_VAR_UID)
+	userId := rest.Params(r).GetString(USERS_VAR_UID)
 
-	mod := model.User{Connection: con}
+	mod := model.User{DB: con}
 	err, data := mod.FindById(userId);
 
 	if (err != nil) {

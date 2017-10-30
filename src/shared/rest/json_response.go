@@ -57,8 +57,5 @@ func (r *JSONResponse) Write(responseWriter *http.ResponseWriter) *http.Response
 
 	w.Write(data);
 
-	data = nil
-	err = nil
-
 	return &w;
 }

@@ -7,9 +7,13 @@ import (
 	"net/http"
 	"fmt"
 	"../database"
+	"../config"
 )
 
-import _ "github.com/go-sql-driver/mysql"
+import (
+	_ "github.com/go-sql-driver/mysql"
+	"strconv"
+)
 
 type Application struct {
 	Router *mux.Router
@@ -18,7 +22,15 @@ type Application struct {
 
 func (app *Application) Run(httpHost string, httpPost string) {
 	httpAddr := httpHost + ":" + httpPost
-	app.testSQLConnection()
+
+	// Check for DB_TEST_CONNECTION param
+	checkConnection, _ := strconv.ParseBool(config.Get(config.DB_TEST_CONNECTION, "true"))
+
+	if (checkConnection) {
+		// Test db connection if required
+		app.testSQLConnection()
+	}
+
 	app.initializeHTTPServer(httpAddr)
 }
 

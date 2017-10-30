@@ -19,3 +19,5 @@ const DB_USER = "DB_USER"
 
 const DB_PASS = "DB_PASS"
 
+const DB_TEST_CONNECTION = "DB_TEST_CONNECTION"
+

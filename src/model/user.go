@@ -2,12 +2,11 @@ package model
 
 import (
 	"errors"
-	"database/sql"
 )
 
 import (
 	sq "github.com/Masterminds/squirrel"
-	"fmt"
+	"github.com/jmoiron/sqlx"
 )
 
 // Superprevileged user
@@ -23,24 +22,28 @@ const T_USERS = "users";
 
 // Application user (`users`)
 type User struct {
-	ID         int
-	Email      string
-	FirstName  string
-	LastName   string
-	Password   string
-	Level      int8
-	Connection *sql.DB
+	ID        int		`db:"id"`
+	Email     string	`db:"email"`
+	FirstName string	`db:"firstName"`
+	LastName  string	`db:"lastName"`
+	Password  string	`db:"password"`
+	Level     int8		`db:"level"`
+	DB        *sqlx.DB
 }
 
 // Find users by id
-func (u *User) FindById(id int) (error, *User) {
-	data, err := sq.Select("*").From(T_USERS).Where(sq.Eq{"id": id}).RunWith(u.Connection).Query();
+func (u *User) FindById(id string) (error, *User) {
+	q, _, _ := sq.Select("*").From(T_USERS).Where(sq.Eq{"id": id}).ToSql();
 
-	if (err == nil) {
-		fmt.Println(data)
-	}
+	user := User{}
 
-	return err, nil
+	err := u.DB.Get(&user, q, id)
+
+	//q := u.DB.Rebind(q, args)
+	//
+	//err := u.DB.Select(&user, q)
+
+	return err, &user
 }
 
 // Find user
@@ -69,5 +72,5 @@ func (u *User) GetAll() (error, []*User) {
 }
 
 func (u *User) Dispose() {
-	u.Connection.Close();
+	defer u.DB.Close();
 }
