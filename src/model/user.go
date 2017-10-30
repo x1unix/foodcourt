@@ -22,13 +22,13 @@ const T_USERS = "users";
 
 // Application user (`users`)
 type User struct {
-	ID        int		`db:"id"`
-	Email     string	`db:"email"`
-	FirstName string	`db:"firstName"`
-	LastName  string	`db:"lastName"`
-	Password  string	`db:"password"`
-	Level     int8		`db:"level"`
-	DB        *sqlx.DB
+	ID        int		`db:"id" json:"id"`
+	Email     string	`db:"email" json:"email"`
+	FirstName string	`db:"firstName" json:"firstName"`
+	LastName  string	`db:"lastName" json:"lastName"`
+	Password  string	`db:"password" json:"-"`
+	Level     int8		`db:"level" json:"level"`
+	DB        *sqlx.DB 	`json:"-"`
 }
 
 // Find users by id
