@@ -6,6 +6,7 @@ import (
 	"time"
 	"net/http"
 	"fmt"
+	"../database"
 )
 
 import _ "github.com/go-sql-driver/mysql"
@@ -17,6 +18,7 @@ type Application struct {
 
 func (app *Application) Run(httpHost string, httpPost string) {
 	httpAddr := httpHost + ":" + httpPost
+	app.testSQLConnection()
 	app.initializeHTTPServer(httpAddr)
 }
 
@@ -32,4 +34,19 @@ func (app *Application) initializeHTTPServer(httpAddr string) {
 	app.Log.Info(fmt.Sprintf("HTTP server started at %s", httpAddr))
 
 	app.Log.Fatal(server.ListenAndServe())
+}
+
+func (app *Application) testSQLConnection() {
+	app.Log.Info("Testing connection to the MySQL database...")
+
+	result, err := database.TestConnection()
+
+	if (!result) {
+		msg := fmt.Sprintf("Failed to connect to the database: %s. Application will be terminated.", err.Error())
+		app.Log.Error(msg)
+		panic(msg)
+	} else {
+		app.Log.Info("Connection successful, everything is fine.")
+	}
+
 }

@@ -37,8 +37,19 @@ func GetInstance() *sql.DB {
 		panic(errMsg)
 	}
 
-	// Write log message
-	log.Info(fmt.Sprintf(SQL_CON_SUCCESS, sqlDsn))
-
 	return db
+}
+
+// Test SQL connection
+func TestConnection() (bool, error) {
+	connection := GetInstance()
+	defer connection.Close()
+
+	err := connection.Ping()
+
+	if err != nil {
+		return false, err
+	} else {
+		return true, nil
+	}
 }
