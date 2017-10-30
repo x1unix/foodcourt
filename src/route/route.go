@@ -13,8 +13,10 @@ func Bootstrap() *mux.Router {
 	//dirStatic := "./" + environment.DIR_PUBLIC
 	dirStatic := "./" + environment.DIR_PUBLIC
 
-	// GET /
-	r.HandleFunc("/api/foo", controller.HandleHomeGET).Methods("GET")
+	// === USERS ===
+
+	// Get user by id
+	r.HandleFunc("/api/users/{id:[0-9]+}", controller.GetUserById).Methods("GET")
 
 	// Static
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dirStatic))))

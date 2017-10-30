@@ -20,7 +20,6 @@ func main() {
 
 	appInstance := app.Application {
 		router,
-		nil,
 		log,
 	}
 
