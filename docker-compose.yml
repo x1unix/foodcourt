@@ -9,7 +9,7 @@ services:
        - ./mysql:/docker-entrypoint-initdb.d
      environment:
        MYSQL_ROOT_PASSWORD: wh3r315myc00k135
-       MYSQL_DATABASE: voracity
+       MYSQL_DATABASE: foodcourt
 
    web:
     build: ./web

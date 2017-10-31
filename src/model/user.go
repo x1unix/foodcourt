@@ -39,12 +39,16 @@ func (u *User) FindById(id string) (error, *User) {
 
 	err := u.DB.Get(&user, q, id)
 
-	//q := u.DB.Rebind(q, args)
-	//
-	//err := u.DB.Select(&user, q)
-
 	return err, &user
 }
+
+
+// Get all users
+func (u *User) GetAll() (error, []*User) {
+
+	 return errors.New("Not Implemented Yet"), nil
+}
+
 
 // Find user
 func (u *User) Find(query string) (error, []*User) {
@@ -63,11 +67,6 @@ func (u *User) Update() (error, *User) {
 
 // Delete user
 func (u *User) Delete() (error, *User) {
-	return errors.New("Not Implemented Yet"), nil
-}
-
-// Get all users
-func (u *User) GetAll() (error, []*User) {
 	return errors.New("Not Implemented Yet"), nil
 }
 

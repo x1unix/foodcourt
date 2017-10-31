@@ -19,6 +19,7 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	mod := model.User{DB: con}
 	err, data := mod.FindById(userId);
+	mod.Dispose()
 
 	if (err != nil) {
 		logger.GetLogger().Error(err)
@@ -27,5 +28,10 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 		rest.Success(data).Write(&w)
 	}
 
-	mod.Dispose()
+
+}
+
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	// db := database.GetInstance()
+
 }
