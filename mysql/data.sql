@@ -1,78 +1,236 @@
--- phpMyAdmin SQL Dump
--- version 2.11.9.4
--- http://www.phpmyadmin.net
---
--- Хост: localhost
--- Час створення: Бер 09 2009 р., 15:03
--- Версія сервера: 5.0.70
--- Версія PHP: 5.2.8-pl2-gentoo
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 4135
+#
+# http://www.sequelpro.com/
+# http://code.google.com/p/sequel-pro/
+#
+# Host: 127.0.0.1 (MySQL 5.6.38)
+# Database: foodcourt
+# Generation Time: 2017-10-29 16:05:25 +0000
+# ************************************************************
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- БД: `voracity`
---
 
--- --------------------------------------------------------
+# Dump of table dishes
+# ------------------------------------------------------------
 
---
--- Структура таблиці `vi_sys_categories`
---
+DROP TABLE IF EXISTS `dishes`;
 
-CREATE DATABASE IF NOT EXISTS `voracity`;
+CREATE TABLE `dishes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `label` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` int(1) NOT NULL,
+  `photo_url` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `dish_id_UNIQUE` (`id`),
+  UNIQUE KEY `label_UNIQUE` (`label`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-use `voracity`;
+LOCK TABLES `dishes` WRITE;
+/*!40000 ALTER TABLE `dishes` DISABLE KEYS */;
 
-CREATE TABLE IF NOT EXISTS `vi_sys_categories` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
-  `localization_var` varchar(128) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  AUTO_INCREMENT=5;
+INSERT INTO `dishes` (`id`, `label`, `description`, `type`, `photo_url`)
+VALUES
+	(1,'Vomit cake','just a cake, bro',0,NULL);
 
---
--- Дамп даних таблиці `vi_sys_categories`
---
+/*!40000 ALTER TABLE `dishes` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `vi_sys_categories` (`id`, `name`, `localization_var`) VALUES
-(1, 'ldap_configuration', 's_ldap_configuration'),
-(4, 'db_configuration', 's_db_configuration'),
-(3, 'total_system_configuration', 's_total_system_configuration');
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `dishes_autoremove_menu_item` AFTER DELETE ON `dishes` FOR EACH ROW BEGIN
+ DELETE FROM menu WHERE menu.dish_id = OLD.id;
+END */;;
+DELIMITER ;
+/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
 
--- --------------------------------------------------------
 
---
--- Структура таблиці `vi_sys_config`
---
+# Dump of table menu
+# ------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `vi_sys_config` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
-  `value` text,
-  `comment` text,
-  `localization_var` varchar(128) default NULL,
-  `cat_selected` int(11) NOT NULL default '0',
-  `active` int(11) NOT NULL default '1',
-  `type` varchar(10) NOT NULL default 'text',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  AUTO_INCREMENT=11;
+DROP TABLE IF EXISTS `menu`;
 
---
--- Дамп даних таблиці `vi_sys_config`
---
+CREATE TABLE `menu` (
+  `row_id` int(11) NOT NULL AUTO_INCREMENT,
+  `dish_id` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  PRIMARY KEY (`row_id`),
+  UNIQUE KEY `entry_id_UNIQUE` (`row_id`),
+  KEY `dish_id` (`dish_id`),
+  CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `vi_sys_config` (`id`, `name`, `value`, `comment`, `localization_var`, `cat_selected`, `active`, `type`) VALUES
-(1, 'LDAP_USE', 'true', '1 - use ldap server\r\n0 - don''t use ldap server', 's_use_ldap_server', 1, 1023, 'bool'),
-(2, 'LDAP_SERVER', 'deka', 'Ldap server address for use.', 's_ldap_server_address', 1, 1023, 'text'),
-(3, 'LDAP_PORT', '389', 'The ldap server port for connect to.', 's_ldap_server_port', 1, 1023, 'int'),
-(4, 'LDAP_DN', 'OU=People,DC=lv,DC=lohika,DC=com', 'The base DN for the directory.', 's_ldap_base_dn', 1, 1023, 'text'),
-(5, 'PROJECT_NAME', 'Voracity', 'The project name.', 's_project_name', 3, 1023, 'text'),
-(6, 'SYSTEM_HTTP_ADDRESS', 'http://localhost/voracity/', 'The system http address.', 's_system_http_address', 3, 1023, 'text'),
-(7, 'ITEM_PER_PAGE', '15', 'The count of items to display per 1 page.', 's_item_per_page_count', 3, 1023, 'int'),
-(8, 'DB_FOR_USE', 'mysql', 'DB for use.', 's_db_for_use', 4, 1023, 'text'),
-(9, 'DB_NAME', 'voracity', 'DB name', 's_db_name', 4, 1023, 'text'),
-(10, 'CORP_EMAIL', 'lv.lohika.com', 'Corporative e-mail address.', 's_corp_email', 3, 1023, 'text');
+LOCK TABLES `menu` WRITE;
+/*!40000 ALTER TABLE `menu` DISABLE KEYS */;
+
+INSERT INTO `menu` (`row_id`, `dish_id`, `date`)
+VALUES
+	(1,1,1509238390);
+
+/*!40000 ALTER TABLE `menu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `menu_remove_order_on_delete` AFTER DELETE ON `menu` FOR EACH ROW BEGIN
+ DELETE FROM orders WHERE orders.item_id = OLD.row_id;
+END */;;
+DELIMITER ;
+/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
+
+
+# Dump of table orders
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `orders`;
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`order_id`),
+  UNIQUE KEY `order_id_UNIQUE` (`order_id`),
+  KEY `order_user_iid` (`user_id`),
+  KEY `order_item_id` (`item_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `menu` (`row_id`),
+  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+
+INSERT INTO `orders` (`order_id`, `item_id`, `user_id`)
+VALUES
+	(2,1,1);
+
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `update_stats_on_order_insert` AFTER INSERT ON `orders` FOR EACH ROW BEGIN
+ # Get current dish Id
+ SET @sel_dish_id = (SELECT `dish_id` from `menu` WHERE `row_id` = NEW.item_id);
+
+ # Check if stat entry already exists
+ SET @stat_has_item = (SELECT COUNT(*) FROM `stats` WHERE `stats`.`dish_id` = @sel_dish_id AND `stats`.`user_id` = NEW.user_id);
+ 
+ IF @stat_has_item = 0 THEN
+  # Get prev hit count
+  SET @stat_count = (SELECT `hit_count` FROM `stats` WHERE `stats`.`dish_id` = @sel_dish_id AND `stats`.`user_id` = NEW.user_id);
+
+  # Update hits count
+  UPDATE `stats` SET `hit_count` = @stat_count+1;
+ ELSE
+  # Just insert data
+  INSERT INTO `stats` (`dish_id`, `user_id`, `hit_count`) values (@sel_dish_id, NEW.user_id, 1);
+ END IF;
+
+END */;;
+DELIMITER ;
+/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
+
+
+# Dump of table ratings
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `ratings`;
+
+CREATE TABLE `ratings` (
+  `row_id` int(11) NOT NULL AUTO_INCREMENT,
+  `dish_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`row_id`),
+  UNIQUE KEY `row_id_UNIQUE` (`row_id`),
+  KEY `user_id` (`user_id`),
+  KEY `rate` (`rate`),
+  KEY `dish_id` (`dish_id`),
+  CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+# Dump of table stats
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stats`;
+
+CREATE TABLE `stats` (
+  `stat_id` int(33) NOT NULL AUTO_INCREMENT,
+  `dish_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `hit_count` int(11) DEFAULT '0',
+  PRIMARY KEY (`stat_id`),
+  UNIQUE KEY `stat_id_UNIQUE` (`stat_id`),
+  UNIQUE KEY `dish_id_UNIQUE` (`dish_id`),
+  UNIQUE KEY `user_id_UNIQUE` (`user_id`),
+  KEY `dish_id` (`dish_id`),
+  KEY `hit_count` (`hit_count`),
+  CONSTRAINT `stats_ibfk_1` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`),
+  CONSTRAINT `stats_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+# Dump of table users
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `firstName` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `lastName` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `password` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `level` int(1) NOT NULL DEFAULT '2',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  KEY `email` (`email`),
+  KEY `id` (`id`),
+  KEY `password` (`password`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+
+INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `password`, `level`)
+VALUES
+	(1,'admin@llnw.net','Lorem','Ipsum','21232f297a57a5a743894a0e4a801fc3',0);
+
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `users_crypt_pass` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
+ SET NEW.password = md5(NEW.password);
+END */;;
+/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `users_on_update_crypt_pass` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
+    SET NEW.password = md5(NEW.password);
+  END */;;
+DELIMITER ;
+/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
