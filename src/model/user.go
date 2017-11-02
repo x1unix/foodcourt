@@ -20,13 +20,19 @@ const LEVEL_USER = 2;
 
 const T_USERS = "users";
 
+// User id column key
+const UserId = "id";
+
+// User
+const UserEmail = "email";
+
 // Application user (`users`)
 type User struct {
 	ID        int      `db:"id" json:"id"`
 	Email     string   `db:"email" json:"email" validate:"required,email"`
 	FirstName string   `db:"firstName" json:"firstName" validate:"required"`
 	LastName  string   `db:"lastName" json:"lastName" validate:"required"`
-	Password  string   `db:"password" json:"password" validate:"required"`
+	Password  string   `db:"password" json:"password,omitempty" validate:"required"`
 	Level     int8     `db:"level" json:"level"`
 	DB        *sqlx.DB `json:"-"`
 }
@@ -56,9 +62,20 @@ func (u *User) Find(query string) (error, []*User) {
 	return errors.New("Not Implemented Yet"), nil
 }
 
+// check if user exists
+func (u *User) Exists() (error, bool) {
+	q, _, _ := sq.Select("COUNT(*)").From(T_USERS).Where(sq.Eq{"email": u.Email}).ToSql()
+
+	count := 0
+	err := u.DB.Get(&count, q, u.Email)
+	ifExists := count > 0
+
+	return err, ifExists
+}
+
 // Create user
-func (u *User) Create() (error, *User) {
-	return errors.New("Not Implemented Yet"), nil
+func (u *User) Create() (error) {
+	return errors.New("Not Implemented Yet")
 }
 
 // Update user
