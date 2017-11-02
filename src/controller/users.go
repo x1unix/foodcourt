@@ -75,7 +75,36 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Write response
-	rest.Echo("Success").Write(&w)
+	// Assign new DB connection instance to the model
+	user.DB = database.GetInstance()
 
+	// Check if user exists
+	err, exists := user.Exists()
+
+
+	if (err != nil) {
+		// If query error occurred - close DB and return error
+		defer user.DB.Close()
+		rest.Error(err).Write(&w)
+		return;
+	}
+
+	if (exists) {
+		// If user already exists - return error
+		defer user.DB.Close()
+		rest.ErrorFromString("User already exists", http.StatusConflict).Write(&w)
+		return;
+	}
+
+
+	// Create new user
+	error := user.Create()
+
+	user.Dispose()
+
+	if (error != nil) {
+		rest.Error(error).Write(&w)
+	} else {
+		rest.Echo("Success").Write(&w)
+	}
 }
