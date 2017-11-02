@@ -26,7 +26,7 @@ type User struct {
 	Email     string   `db:"email" json:"email" validate:"required,email"`
 	FirstName string   `db:"firstName" json:"firstName" validate:"required"`
 	LastName  string   `db:"lastName" json:"lastName" validate:"required"`
-	Password  string   `db:"password" json:"-" validate:"required"`
+	Password  string   `db:"password" json:"password" validate:"required"`
 	Level     int8     `db:"level" json:"level"`
 	DB        *sqlx.DB `json:"-"`
 }

@@ -65,10 +65,10 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var validate *validator.Validate
+	validate := validator.New()
 
 	// Validate
-	validErrors := validate.Struct(user)
+	validErrors := validate.Struct(&user)
 
 	if (validErrors != nil) {
 		rest.HttpError(validErrors, http.StatusBadRequest).Write(&w)
