@@ -32,6 +32,17 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	// db := database.GetInstance()
+	db := database.GetInstance()
+
+	err, data := model.Users(db).GetAll()
+
+	db.Close()
+
+	if (err != nil) {
+		logger.GetLogger().Error(err)
+		rest.Error(err).Write(&w)
+	} else {
+		rest.Success(data).Write(&w)
+	}
 
 }

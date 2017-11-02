@@ -22,19 +22,18 @@ const T_USERS = "users";
 
 // Application user (`users`)
 type User struct {
-	ID        int		`db:"id" json:"id"`
-	Email     string	`db:"email" json:"email"`
-	FirstName string	`db:"firstName" json:"firstName"`
-	LastName  string	`db:"lastName" json:"lastName"`
-	Password  string	`db:"password" json:"-"`
-	Level     int8		`db:"level" json:"level"`
-	DB        *sqlx.DB 	`json:"-"`
+	ID        int      `db:"id" json:"id"`
+	Email     string   `db:"email" json:"email"`
+	FirstName string   `db:"firstName" json:"firstName"`
+	LastName  string   `db:"lastName" json:"lastName"`
+	Password  string   `db:"password" json:"-"`
+	Level     int8     `db:"level" json:"level"`
+	DB        *sqlx.DB `json:"-"`
 }
 
 // Find users by id
 func (u *User) FindById(id string) (error, *User) {
-	q, _, _ := sq.Select("*").From(T_USERS).Where(sq.Eq{"id": id}).ToSql();
-
+	q, _, _ := sq.Select("*").From(T_USERS).Where(sq.Eq{"id": id}).ToSql()
 	user := User{}
 
 	err := u.DB.Get(&user, q, id)
@@ -42,13 +41,15 @@ func (u *User) FindById(id string) (error, *User) {
 	return err, &user
 }
 
-
 // Get all users
-func (u *User) GetAll() (error, []*User) {
+func (u *User) GetAll() (error, *[]User) {
+	q, _, _ := sq.Select("*").From(T_USERS).ToSql()
 
-	 return errors.New("Not Implemented Yet"), nil
+	users := []User{}
+	err := u.DB.Select(&users, q)
+
+	return err, &users
 }
-
 
 // Find user
 func (u *User) Find(query string) (error, []*User) {
@@ -72,4 +73,9 @@ func (u *User) Delete() (error, *User) {
 
 func (u *User) Dispose() {
 	defer u.DB.Close();
+}
+
+func Users(con *sqlx.DB) *User {
+	u := User{DB: con}
+	return &u
 }

@@ -18,6 +18,9 @@ func Bootstrap() *mux.Router {
 	// Get user by id
 	r.HandleFunc("/api/users/{id:[0-9]+}", controller.GetUserById).Methods("GET")
 
+	// Get all users
+	r.HandleFunc("/api/users/", controller.GetUsers).Methods("GET")
+
 	// Static
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dirStatic))))
 
