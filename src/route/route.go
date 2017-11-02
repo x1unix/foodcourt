@@ -21,6 +21,9 @@ func Bootstrap() *mux.Router {
 	// Get all users
 	r.HandleFunc("/api/users/", controller.GetUsers).Methods("GET")
 
+	// Add new user
+	r.HandleFunc("/api/users/", controller.AddUser).Methods("POST")
+
 	// Static
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dirStatic))))
 

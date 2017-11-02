@@ -38,3 +38,7 @@ func ErrorFromString(errorMessage string, code int) *JSONResponse {
 func Error(err error) *JSONResponse {
 	return ErrorFromString(err.Error(), 500)
 }
+
+func HttpError(err error, code int) *JSONResponse {
+	return ErrorFromString(err.Error(), code)
+}

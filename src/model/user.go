@@ -23,10 +23,10 @@ const T_USERS = "users";
 // Application user (`users`)
 type User struct {
 	ID        int      `db:"id" json:"id"`
-	Email     string   `db:"email" json:"email"`
-	FirstName string   `db:"firstName" json:"firstName"`
-	LastName  string   `db:"lastName" json:"lastName"`
-	Password  string   `db:"password" json:"-"`
+	Email     string   `db:"email" json:"email" validate:"required,email"`
+	FirstName string   `db:"firstName" json:"firstName" validate:"required"`
+	LastName  string   `db:"lastName" json:"lastName" validate:"required"`
+	Password  string   `db:"password" json:"-" validate:"required"`
 	Level     int8     `db:"level" json:"level"`
 	DB        *sqlx.DB `json:"-"`
 }
