@@ -62,6 +62,17 @@ func (u *User) Find(query string) (error, []*User) {
 	return errors.New("Not Implemented Yet"), nil
 }
 
+// Check if user id exists
+func (u *User) IdExists() (error, bool) {
+	q, _, _ := sq.Select("COUNT(*)").From(T_USERS).Where(sq.Eq{"id": u.ID}).ToSql()
+
+	count := 0
+	err := u.DB.Get(&count, q, u.ID)
+	ifExists := count > 0
+
+	return err, ifExists
+}
+
 // check if user exists
 func (u *User) Exists() (error, bool) {
 	q, _, _ := sq.Select("COUNT(*)").From(T_USERS).Where(sq.Eq{"email": u.Email}).ToSql()
@@ -91,8 +102,14 @@ func (u *User) Update() (error, *User) {
 }
 
 // Delete user
-func (u *User) Delete() (error, *User) {
-	return errors.New("Not Implemented Yet"), nil
+func (u *User) Delete() error {
+	q, _, _ := sq.Delete(T_USERS).
+		Where(sq.Eq{"id": u.ID}).
+		ToSql()
+
+	_, err := u.DB.Exec(q, u.ID)
+
+	return err
 }
 
 func (u *User) Dispose() {

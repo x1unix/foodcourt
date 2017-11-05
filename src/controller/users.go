@@ -49,6 +49,43 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Delete a user
+// (DELETE /api/users/{id:[0-9]+})
+func DropUser(w http.ResponseWriter, r *http.Request) {
+	db := database.GetInstance()
+	userId := rest.Params(r).GetInt(USERS_VAR_UID)
+
+	mod := model.User{DB: db, ID: userId}
+
+	err, ifExists := mod.IdExists()
+
+	// Check if error occurred on user id check
+	if (err != nil) {
+		mod.Dispose()
+		logger.GetLogger().Error(err)
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	// Return 404 if user isn't exists
+	if !ifExists {
+		mod.Dispose()
+		rest.HttpErrorFromString("User doesn't exists", 404).Write(&w)
+		return
+	}
+
+	delErr := mod.Delete()
+
+	if (delErr != nil) {
+		mod.Dispose()
+		rest.Error(delErr).Write(&w)
+		return
+	}
+
+	mod.Dispose()
+	rest.Echo("Success")
+}
+
 // Add new user
 // (POST /api/users/)
 func AddUser(w http.ResponseWriter, r *http.Request) {

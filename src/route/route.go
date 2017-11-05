@@ -24,6 +24,9 @@ func Bootstrap() *mux.Router {
 	// Add new user
 	r.HandleFunc("/api/users/", controller.AddUser).Methods("POST")
 
+	// Delete a user
+	r.HandleFunc("/api/users/{id:[0-9]+}", controller.DropUser).Methods("DELETE")
+
 	// Static
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dirStatic))))
 

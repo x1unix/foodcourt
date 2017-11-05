@@ -40,5 +40,9 @@ func Error(err error) *JSONResponse {
 }
 
 func HttpError(err error, code int) *JSONResponse {
-	return ErrorFromString(err.Error(), code)
+	return HttpErrorFromString(err.Error(), code)
+}
+
+func HttpErrorFromString(err string, code int) *JSONResponse {
+	return ErrorFromString(err, code)
 }
