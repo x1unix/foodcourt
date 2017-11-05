@@ -98,12 +98,12 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 
 	// Create new user
-	error := user.Create()
+	err = user.Create()
 
 	user.Dispose()
 
-	if (error != nil) {
-		rest.Error(error).Write(&w)
+	if (err != nil) {
+		rest.Error(err).Write(&w)
 	} else {
 		rest.Echo("Success").Write(&w)
 	}

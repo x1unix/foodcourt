@@ -74,8 +74,15 @@ func (u *User) Exists() (error, bool) {
 }
 
 // Create user
-func (u *User) Create() (error) {
-	return errors.New("Not Implemented Yet")
+func (u *User) Create() error {
+	q, _, _ := sq.Insert(T_USERS).
+	Columns("Email", "FirstName", "LastName", "Password", "Level").
+	Values(u.Email, u.FirstName, u.LastName, u.Password, u.Level).
+	ToSql()
+
+	_, err := u.DB.Exec(q, u.Email, u.FirstName, u.LastName, u.Password, u.Level)
+
+	return err
 }
 
 // Update user
