@@ -10,9 +10,6 @@ import (
 	"../database"
 	"../config"
 	"../vault"
-)
-
-import (
 	_ "github.com/go-sql-driver/mysql"
 	"strconv"
 )
@@ -22,6 +19,7 @@ type Application struct {
 	Log *logging.Logger
 }
 
+// Run app
 func (app *Application) Run(httpHost string, httpPost string) {
 	httpAddr := httpHost + ":" + httpPost
 
@@ -53,6 +51,7 @@ func (app *Application) initializeHTTPServer(httpAddr string) {
 	app.Log.Fatal(server.ListenAndServe())
 }
 
+// Bootstrap sessions vault
 func (app *Application) initializeSessions() {
 	sessionsPath := config.Get(config.TMP_PATH, "/tmp")
 
@@ -79,6 +78,7 @@ func (app *Application) initializeSessions() {
 	vault.Bootstrap(sessionsPath, sessKey)
 }
 
+// Check connection to the main MySQL database
 func (app *Application) testSQLConnection() {
 	app.Log.Info("Testing connection to the MySQL database...")
 
