@@ -97,8 +97,24 @@ func (u *User) Create() error {
 }
 
 // Update user
-func (u *User) Update() (error, *User) {
-	return errors.New("Not Implemented Yet"), nil
+func (u *User) Update() error {
+	builder := sq.Update(T_USERS).Where(sq.Eq{"id": u.ID})
+
+	if (u.FirstName != "") {
+		builder = builder.Set("firstName", u.FirstName)
+	}
+
+	if (u.LastName != "") {
+		builder = builder.Set("firstName", u.LastName)
+	}
+
+	if (u.Password != "") {
+		builder = builder.Set("firstName", u.Password)
+	}
+
+	_, err := builder.RunWith(u.DB.DB).Query()
+
+	return err
 }
 
 // Delete user

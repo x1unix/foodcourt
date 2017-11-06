@@ -49,6 +49,55 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Update user information
+// (PUT /api/users/{id:[0-9]+})
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	db := database.GetInstance()
+	userId := rest.Params(r).GetInt(USERS_VAR_UID)
+
+	mod := model.User{DB: db, ID: userId}
+
+	err, ifExists := mod.IdExists()
+
+	// Check if error occurred on user id check
+	if (err != nil) {
+		mod.Dispose()
+		logger.GetLogger().Error(err)
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	// Return 404 if user isn't exists
+	if !ifExists {
+		mod.Dispose()
+		rest.HttpErrorFromString("User doesn't exists", 404).Write(&w)
+		return
+	}
+
+	// Extract request data
+	decoder := json.NewDecoder(r.Body)
+	decodeErr := decoder.Decode(&mod)
+	defer r.Body.Close()
+
+	if (err != nil) {
+		rest.HttpError(decodeErr, http.StatusBadRequest).Write(&w)
+		return
+	}
+
+	// Modify data in DB
+	createErr := mod.Update()
+
+	// Write error if occurred
+	if (createErr != nil) {
+		logger.GetLogger().Error(err)
+		rest.Error(createErr).Write(&w)
+		return
+	}
+
+	// Write success message if everything is OK
+	rest.Echo("Success").Write(&w)
+}
+
 // Delete a user
 // (DELETE /api/users/{id:[0-9]+})
 func DropUser(w http.ResponseWriter, r *http.Request) {
