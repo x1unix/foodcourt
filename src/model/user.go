@@ -100,6 +100,7 @@ func (u *User) Create() error {
 func (u *User) Update() error {
 	builder := sq.Update(T_USERS).Where(sq.Eq{"id": u.ID})
 
+	// TODO: add method to autofill UPDATE query with non-empty fields
 	if (u.FirstName != "") {
 		builder = builder.Set("firstName", u.FirstName)
 	}
