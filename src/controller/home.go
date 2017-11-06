@@ -22,3 +22,7 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 
 	rest.Echo(token).Write(&w)
 }
+
+func TestToken(w http.ResponseWriter, r *http.Request) {
+
+}

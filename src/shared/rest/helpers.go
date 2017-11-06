@@ -2,6 +2,8 @@ package rest
 
 import "net/http"
 
+type RequestHandler func(w http.ResponseWriter, r *http.Request)
+
 // Create a new success rest
 func Success(data interface{}) *JSONResponse {
 	return &JSONResponse{

@@ -4,3 +4,4 @@ github.com/lib/pq
 github.com/jmoiron/sqlx
 gopkg.in/go-playground/validator.v9
 github.com/gorilla/sessions
+github.com/gorilla/context

@@ -2,23 +2,57 @@ package auth
 
 import (
 	"net/http"
-	"github.com/gorilla/mux"
-	"fmt"
+	"../rest"
+	"../vault"
+	"github.com/gorilla/context"
 )
 
-// List of ignored routes by auth middleware
-var ProtectedRoutes = []string{
-	"/api/token",
+const TokenQueryParam = "token"
+const ContextSessionKey = "session"
+const errAccessDenied = "Access Denied"
+
+// Middleware guard that required api token to be passed
+func RequireToken(handler rest.RequestHandler) rest.RequestHandler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := r.URL.Query().Get(TokenQueryParam)
+
+		if len(token) == 0 {
+			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			return
+		}
+
+		context.Set(r, TokenQueryParam, token)
+		handler(w, r)
+	}
 }
 
-func AuthMiddleware(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		mr := mux.CurrentRoute(r)
-		if (mr != nil) {
-			fmt.Println(mr.GetPathTemplate())
+func RequireAuth(handler rest.RequestHandler) rest.RequestHandler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := r.URL.Query().Get(TokenQueryParam)
+
+		if len(token) == 0 {
+			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			return
 		}
-		h.ServeHTTP(w, r)
-	})
+
+		session, valid := vault.IsSessionValid(r, token)
+		if !valid {
+			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			return
+		}
+
+		sessionData, err := vault.BuildSessionData(session)
+
+		if err != nil {
+			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			return
+		}
+
+		context.Set(r, ContextSessionKey, sessionData)
+		context.Set(r, TokenQueryParam, token)
+
+		handler(w, r)
+	}
 }
 
 

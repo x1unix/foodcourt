@@ -3,6 +3,7 @@ package route
 import (
 	"github.com/gorilla/mux"
 	"../controller"
+	"../shared/auth"
 	"../shared/environment"
 	"net/http"
 )
@@ -14,7 +15,13 @@ func Bootstrap() *mux.Router {
 
 
 	// == AUTH ==
+
+	// Get Token
 	r.HandleFunc("/api/token", controller.GetToken).Methods("GET")
+
+	// Login
+	r.HandleFunc("/api/login", auth.RequireToken(controller.Login)).Methods("POST")
+
 
 	// === USERS ===
 

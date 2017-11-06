@@ -7,6 +7,8 @@ import (
 import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"crypto/md5"
+	"encoding/hex"
 )
 
 // Superprevileged user
@@ -125,6 +127,44 @@ func (u *User) Delete() error {
 		ToSql()
 
 	_, err := u.DB.Exec(q, u.ID)
+
+	return err
+}
+
+func (u *User) GetHashedPassword() string {
+	hasher := md5.New()
+	hasher.Write([]byte(u.Password))
+	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+// Validate user credentials
+func (u *User) MatchCredentials() (error, bool) {
+	passwd := u.GetHashedPassword()
+	q, _, _ := sq.Select("COUNT(*)").
+		From(T_USERS).
+		Where(sq.Eq{"email": u.Email, "password": passwd}).
+		ToSql()
+
+	var count int
+	err := u.DB.Get(&count, q, u.Email, passwd)
+	ifExists := count > 0
+
+	return err, ifExists
+}
+
+// Get ID of current user by defined email
+func (u *User) GetId() error {
+	q, _, _ := sq.Select("id").
+		From(T_USERS).
+		Where(sq.Eq{"email": u.Email}).
+		ToSql()
+
+	var uid int
+	err := u.DB.Get(&uid, q, u.Email)
+
+	if (err == nil) {
+		u.ID = uid
+	}
 
 	return err
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 	"net/http"
 	"fmt"
-	"golang.org/x/sys/unix"
+	//"golang.org/x/sys/unix"
 	"../database"
 	"../config"
 	"../vault"
@@ -56,7 +56,7 @@ func (app *Application) initializeSessions() {
 	sessionsPath := config.Get(config.TMP_PATH, "/tmp")
 
 	// Check if sessions dir exists and is writable
-	if unix.Access(sessionsPath, unix.W_OK) != nil {
+	/*if unix.Access(sessionsPath, unix.W_OK) != nil {
 		msg := fmt.Sprintf(
 			"Failed to initialize sessions storage, directory doesn't exists or not writable: %s",
 			sessionsPath,
@@ -64,7 +64,7 @@ func (app *Application) initializeSessions() {
 
 		app.Log.Error(msg)
 		panic(msg)
-	}
+	}*/
 
 	// Get session encrypt key
 	sessKey := config.Get(config.APP_KEY, "")
