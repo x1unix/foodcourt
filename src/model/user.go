@@ -105,11 +105,11 @@ func (u *User) Update() error {
 	}
 
 	if (u.LastName != "") {
-		builder = builder.Set("firstName", u.LastName)
+		builder = builder.Set("lastName", u.LastName)
 	}
 
 	if (u.Password != "") {
-		builder = builder.Set("firstName", u.Password)
+		builder = builder.Set("password", u.Password)
 	}
 
 	_, err := builder.RunWith(u.DB.DB).Query()
