@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `foodcourt` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `foodcourt`;
 -- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: foodcourt
@@ -235,35 +233,6 @@ LOCK TABLES `stats` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tokens`
---
-
-DROP TABLE IF EXISTS `tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tokens` (
-  `token_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `client_ip` int(10) unsigned NOT NULL,
-  `ttl` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`token_id`),
-  UNIQUE KEY `token_id_UNIQUE` (`token_id`),
-  KEY `user_id` (`user_id`),
-  KEY `ttl` (`ttl`),
-  CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tokens`
---
-
-LOCK TABLES `tokens` WRITE;
-/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `users`
 --
 
@@ -347,4 +316,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-07  1:51:33
+-- Dump completed on 2017-11-07 20:58:36
