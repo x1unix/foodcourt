@@ -47,6 +47,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// If everything is ok - get user by id
 	idErr := user.GetId()
+	token := rest.GetToken(r)
 
 	if (idErr != nil) {
 		logger.GetLogger().Error(idErr)
@@ -56,7 +57,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create session
-	sessionData, sessErr := vault.NewSessionTicket(r, &w, user.ID)
+	sessionData, sessErr := vault.NewSession(token, user.ID)
 
 	if (sessErr != nil) {
 		logger.GetLogger().Error(sessErr)
@@ -68,4 +69,29 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// return session data on success
 	rest.Success(sessionData).Write(&w)
 	user.Dispose()
+}
+
+// Get session details
+// (GET - /api/session)
+func GetSessionInfo(w http.ResponseWriter, r *http.Request) {
+	token := rest.GetToken(r)
+
+	sess, err := vault.GetSession(token)
+
+	if err != nil {
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Success(sess).Write(&w)
+}
+
+// User logout
+// (POST - /api/logout)
+func Logout(w http.ResponseWriter, r *http.Request) {
+	token := rest.GetToken(r)
+
+	vault.RevealToken(token)
+
+	rest.Echo("Success").Write(&w)
 }

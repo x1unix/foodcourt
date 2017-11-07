@@ -9,7 +9,8 @@ import (
 	//"golang.org/x/sys/unix"
 	"../database"
 	"../config"
-	"../vault"
+	// "../vault"
+	"../cache"
 	_ "github.com/go-sql-driver/mysql"
 	"strconv"
 )
@@ -32,6 +33,7 @@ func (app *Application) Run(httpHost string, httpPost string) {
 	if (checkConnection) {
 		// Test db connection if required
 		app.testSQLConnection()
+		app.initializeCache()
 	}
 
 	app.initializeHTTPServer(httpAddr)
@@ -51,9 +53,22 @@ func (app *Application) initializeHTTPServer(httpAddr string) {
 	app.Log.Fatal(server.ListenAndServe())
 }
 
+func (app *Application) initializeCache() {
+	cache.Bootstrap()
+
+	app.Log.Info("Checking connection to the Redis cache...")
+	err := cache.TestConnection()
+
+	if (err != nil) {
+		msg := fmt.Sprintf("Failed to connect to the Redis: %s. Application will be terminated.", err.Error())
+		app.Log.Error(msg)
+		panic(msg)
+	}
+}
+
 // Bootstrap sessions vault
 func (app *Application) initializeSessions() {
-	sessionsPath := config.Get(config.TMP_PATH, "/tmp")
+	//sessionsPath := config.Get(config.TMP_PATH, "/tmp")
 
 	// Check if sessions dir exists and is writable
 	/*if unix.Access(sessionsPath, unix.W_OK) != nil {
@@ -67,20 +82,16 @@ func (app *Application) initializeSessions() {
 	}*/
 
 	// Get session encrypt key
-	sessKey := config.Get(config.APP_KEY, "")
 
 	// Check if key is empty
-	if (len(sessKey) == 0) {
-		panic("Application key is empty. Please define application key at 'APP_KEY' parameter in .env file")
-	}
 
 	// Bootstrap sessions vault
-	vault.Bootstrap(sessionsPath, sessKey)
+	//vault.Bootstrap(sessionsPath, sessKey)
 }
 
 // Check connection to the main MySQL database
 func (app *Application) testSQLConnection() {
-	app.Log.Info("Testing connection to the MySQL database...")
+	app.Log.Info("Checking connection to the MySQL database...")
 
 	result, err := database.TestConnection()
 
@@ -88,8 +99,6 @@ func (app *Application) testSQLConnection() {
 		msg := fmt.Sprintf("Failed to connect to the database: %s. Application will be terminated.", err.Error())
 		app.Log.Error(msg)
 		panic(msg)
-	} else {
-		app.Log.Info("Connection successful, everything is fine.")
 	}
 
 }

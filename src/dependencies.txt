@@ -3,5 +3,6 @@ github.com/gorilla/mux
 github.com/lib/pq
 github.com/jmoiron/sqlx
 gopkg.in/go-playground/validator.v9
-github.com/gorilla/sessions
+github.com/go-redis/redis
 github.com/gorilla/context
+github.com/vmihailenco/msgpack
