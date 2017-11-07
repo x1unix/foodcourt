@@ -16,11 +16,8 @@ func Bootstrap() *mux.Router {
 
 	// == AUTH ==
 
-	// Get Token
-	r.HandleFunc("/api/token", controller.GetToken).Methods("GET")
-
 	// Login
-	r.HandleFunc("/api/login", auth.RequireToken(controller.Login)).Methods("POST")
+	r.HandleFunc("/api/login", controller.Login).Methods("POST")
 
 	// Logout
 	r.HandleFunc("/api/logout", auth.RequireAuth(controller.Logout)).Methods("POST")

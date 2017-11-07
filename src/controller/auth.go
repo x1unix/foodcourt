@@ -47,7 +47,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// If everything is ok - get user by id
 	idErr := user.GetId()
-	token := rest.GetToken(r)
+
+	// Generate a token
+	token, err := vault.NewToken()
+
+	if (err != nil) {
+		rest.Error(err).Write(&w)
+		return
+	}
 
 	if (idErr != nil) {
 		logger.GetLogger().Error(idErr)
