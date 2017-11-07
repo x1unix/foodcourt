@@ -32,19 +32,19 @@ func Bootstrap() *mux.Router {
 	// === USERS ===
 
 	// Get user by id
-	r.HandleFunc("/api/users/{id:[0-9]+}", controller.GetUserById).Methods("GET")
+	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAuth(controller.GetUserById)).Methods("GET")
 
 	// Get all users
-	r.HandleFunc("/api/users/", controller.GetUsers).Methods("GET")
+	r.HandleFunc("/api/users", auth.RequireAdmin(controller.GetUsers)).Methods("GET")
 
 	// Add new user
-	r.HandleFunc("/api/users/", controller.AddUser).Methods("POST")
+	r.HandleFunc("/api/users", auth.RequireAdmin(controller.AddUser)).Methods("POST")
 
 	// Delete a user
-	r.HandleFunc("/api/users/{id:[0-9]+}", controller.DropUser).Methods("DELETE")
+	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAdmin(controller.DropUser)).Methods("DELETE")
 
 	// Update a user
-	r.HandleFunc("/api/users/{id:[0-9]+}", controller.UpdateUser).Methods("PUT")
+	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAuth(controller.UpdateUser)).Methods("PUT")
 
 	// Static
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dirStatic))))

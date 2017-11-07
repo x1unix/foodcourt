@@ -35,7 +35,7 @@ type User struct {
 	FirstName string   `db:"firstName" json:"firstName" validate:"required"`
 	LastName  string   `db:"lastName" json:"lastName" validate:"required"`
 	Password  string   `db:"password" json:"password,omitempty" validate:"required"`
-	Level     int8     `db:"level" json:"level"`
+	Level     int     `db:"level" json:"level"`
 	DB        *sqlx.DB `json:"-"`
 }
 
@@ -60,7 +60,7 @@ func (u *User) GetAll() (error, *[]User) {
 }
 
 // Find user
-func (u *User) Find(query string) (error, []*User) {
+func (u *User) Find() (error, []*User) {
 	return errors.New("Not Implemented Yet"), nil
 }
 
