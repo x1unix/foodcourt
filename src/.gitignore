@@ -1,3 +1,7 @@
 .idea
 .idea/*.*
 .DS_Store
+public
+public/*.*
+public/**/*
+ui/node_modules
