@@ -1,17 +1,22 @@
 version: '2'
 
 services:
-   db:
-     build: ./mysql
-     ports:
-       - '3366:3306'
-     volumes:
-       - ./mysql:/docker-entrypoint-initdb.d
-     environment:
-       MYSQL_ROOT_PASSWORD: wh3r315myc00k135
-       MYSQL_DATABASE: foodcourt
+  db:
+    build: ./mysql
+    ports:
+      - '3366:3306'
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: wh3r315myc00k135
+      MYSQL_DATABASE: foodcourt
 
-   web:
+  cache:
+    image: redis
+    ports:
+      - '6379:6379'
+
+  web:
     build: ./web
     ports:
       - '8000:80'
@@ -20,8 +25,10 @@ services:
        - ./src:/var/www/voracity
     links:
       - db
+      - redis
     depends_on:
       - db
+
       
 volumes:
     db:
