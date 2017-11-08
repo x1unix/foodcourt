@@ -94,7 +94,7 @@ export class LocalStorageService {
         break;
     }
 
-    this.store.setItem(pref, data);
+    this.store.setItem(pref, serialized);
   }
 
   /**
