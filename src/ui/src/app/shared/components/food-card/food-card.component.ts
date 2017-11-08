@@ -22,7 +22,7 @@ export class FoodCardComponent implements OnInit {
    * Can element be selected
    * @type {boolean}
    */
-  @Input() selectable = true;
+  @Input() selectable = false;
 
   /**
    * Is element selected
