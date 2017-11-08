@@ -11,7 +11,9 @@ import { RouterModule } from '@angular/router';
 import {
   LocalStorageService,
   LoggerService,
-  SessionsService
+  SessionsService,
+  AuthService,
+  WebHelperService
 } from './services';
 
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -40,6 +42,8 @@ import { LoggedInGuard } from './guards/logged-in.guard';
     LoggerService,
     SessionsService,
     LoggedInGuard,
+    AuthService,
+    WebHelperService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

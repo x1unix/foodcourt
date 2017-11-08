@@ -40,7 +40,7 @@ export class TokenInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
 
           // Emit event if session is expired
-          if ((err.status === 403) || (err.status === 401)) {
+          if ((err.status === 403) || (err.status === 401) && !WHITELIST.includes(request.url)) {
             this.auth.purgeSession(true);
           }
 
