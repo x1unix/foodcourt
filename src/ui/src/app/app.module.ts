@@ -6,22 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { ClarityModule } from 'clarity-angular';
 import { ToastyModule } from 'ng2-toasty';
 
+import { SharedModule } from './shared/shared.module';
 import { AppComponent } from './app.component';
-
-// Services
-import {
-  LocalStorageService,
-  LoggerService,
-  AuthService
-} from './shared/services';
-
-import { TokenInterceptor } from './shared/interceptors/token.interceptor';
-import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AuthComponent
+    AppComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -31,14 +21,7 @@ import { AuthComponent } from './auth/auth.component';
     FormsModule
   ],
   providers: [
-    LocalStorageService,
-    LoggerService,
-    AuthService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    }
+    SharedModule
   ],
   bootstrap: [AppComponent]
 })
