@@ -5,16 +5,29 @@
     <div class="row">
 
       <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-        <app-food-card [selectable]="false" [rateable]="true" [rating]="2.5"></app-food-card>
+        <app-food-card
+          [rating]="2.5"
+          label="Бульйон з індика"
+          category="soup"
+          badgeColor="purple"
+        ></app-food-card>
       </div>
 
       <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-        <app-food-card [disabled]="true" [rating]="3.5"></app-food-card>
+        <app-food-card
+          [rating]="3.5"
+          label="Гречка+Биточок під грибним соусом"
+          imageUrl="/assets/sushi.jpg"
+          category="main course"
+          badgeColor="blue"
+        ></app-food-card>
       </div>
 
-
       <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-        <app-food-card></app-food-card>
+        <app-food-card
+          label="Салат з квашеної капусти"
+          category="salad"
+        ></app-food-card>
       </div>
 
 
