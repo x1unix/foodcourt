@@ -152,7 +152,7 @@ export class LoggerService {
    * @memberof LoggerService
    */
   private printMessage(level: number, tag: string, message: string, content: any[]) {
-    let args = [this.format(level, tag, message), ...content];
+    const args = [this.format(level, tag, message), ...content];
 
     switch (level) {
       case LogLevel.ERROR:
