@@ -1,10 +1,6 @@
 package model
 
 import (
-	"errors"
-)
-
-import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	"crypto/md5"
@@ -30,12 +26,12 @@ const UserEmail = "email";
 
 // Application user (`users`)
 type User struct {
-	ID        int      `db:"id" json:"id"`
-	Email     string   `db:"email" json:"email" validate:"required,email"`
-	FirstName string   `db:"firstName" json:"firstName" validate:"required"`
-	LastName  string   `db:"lastName" json:"lastName" validate:"required"`
-	Password  string   `db:"password" json:"password,omitempty" validate:"required"`
-	Level     int     `db:"level" json:"level"`
+	ID        int      `db:"id" json:"id" msgpack:"id"`
+	Email     string   `db:"email" json:"email" msgpack:"email" validate:"required,email"`
+	FirstName string   `db:"firstName" json:"firstName" msgpack:"firstName" validate:"required"`
+	LastName  string   `db:"lastName" json:"lastName" msgpack:"lastName" validate:"required"`
+	Password  string   `db:"password" json:"password,omitempty" msgpack:"-" validate:"required"`
+	Level     int     `db:"level" json:"level" msgpack:""`
 	DB        *sqlx.DB `json:"-"`
 }
 
@@ -60,8 +56,22 @@ func (u *User) GetAll() (error, *[]User) {
 }
 
 // Find user
-func (u *User) Find() (error, []*User) {
-	return errors.New("Not Implemented Yet"), nil
+func (u *User) Find(query sq.Eq) (error, *User) {
+	q, args, _ := sq.Select("*").From(T_USERS).Where(query).ToSql()
+	user := &User{}
+
+	err := u.DB.Get(user, q, args...)
+
+	return err, user
+}
+
+func (u *User) FindAll(query sq.Eq) (error, *[]User) {
+	q, args, _ := sq.Select("*").From(T_USERS).Where(query).ToSql()
+	users := &[]User{}
+
+	err := u.DB.Get(users, q, args...)
+
+	return err, users
 }
 
 // Check if user id exists
@@ -131,25 +141,17 @@ func (u *User) Delete() error {
 	return err
 }
 
-func (u *User) GetHashedPassword() string {
+func (u *User) HashPassword(pass string) string {
 	hasher := md5.New()
-	hasher.Write([]byte(u.Password))
+	hasher.Write([]byte(pass))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
 // Validate user credentials
-func (u *User) MatchCredentials() (error, bool) {
-	passwd := u.GetHashedPassword()
-	q, _, _ := sq.Select("COUNT(*)").
-		From(T_USERS).
-		Where(sq.Eq{"email": u.Email, "password": passwd}).
-		ToSql()
+func (u *User) MatchCredentials(pass string) bool {
+	passwd := u.HashPassword(pass)
 
-	var count int
-	err := u.DB.Get(&count, q, u.Email, passwd)
-	ifExists := count > 0
-
-	return err, ifExists
+	return passwd == u.Password
 }
 
 // Get ID of current user by defined email
