@@ -22,6 +22,7 @@ export class SessionsService {
 
 
   sessionExpired = new Subject();
+  logout = new Subject();
 
   /**
    * API auth token
@@ -166,6 +167,14 @@ export class SessionsService {
       this.log.warn(TAG, 'Session expired');
       this.sessionExpired.next();
     }
+  }
+
+  /**
+   * remove session after logout
+   */
+  sessionLogout() {
+    this.purgeSession(false);
+    this.logout.next();
   }
 
 }

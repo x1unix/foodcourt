@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ClarityModule } from 'clarity-angular';
 
 import { ContainerComponent } from './container.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   imports: [
@@ -11,6 +12,6 @@ import { ContainerComponent } from './container.component';
     RouterModule,
     ClarityModule
   ],
-  declarations: [ContainerComponent]
+  declarations: [ContainerComponent, HeaderComponent]
 })
 export class ContainerModule { }
