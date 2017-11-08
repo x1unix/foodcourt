@@ -1,4 +1,4 @@
-<div class="card food-card clickable" [ngClass]="{'food-card--selected': selected}">
+<div class="card food-card" [ngClass]="{'food-card--selected': selected, 'clickable': !disabled}">
   <div class="food-card__frame">
     <img src="/assets/sushi.jpg" class="card-media-image food-card__image">
   </div>
@@ -19,17 +19,23 @@
         <span class="badge badge-success">Garnish</span>
       </div>
       <div class="rating text-right col-xs-8">
-        <app-rating [value]="4.5"></app-rating>
+        <app-rating [value]="4.5" [readonly]="disabled"></app-rating>
       </div>
     </div>
   </div>
-  <div class="card-footer text-center" [ngClass]="{'food-card__footer--active': selected}">
-    <button *ngIf="!selected" class="btn btn-sm btn-link btn-block food-card__check" (click)="toggleSelected()">
+  <div *ngIf="selectable" class="card-footer text-center" [ngClass]="{'food-card__footer--active': selected}">
+    <button
+      *ngIf="!selected"
+      class="btn btn-sm btn-link btn-block food-card__check"
+      [disabled]="disabled"
+      (click)="toggleSelected()"
+    >
       Select
     </button>
     <button
       *ngIf="selected"
       class="btn btn-sm btn-primary btn-block food-card__uncheck"
+      [disabled]="disabled"
       (click)="toggleSelected()"
     >
       Selected

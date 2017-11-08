@@ -28,6 +28,12 @@ export class FoodCardComponent implements OnInit {
    */
   @Input() rateable = true;
 
+  /**
+   * Is element disabled
+   * @type {boolean}
+   */
+  @Input() disabled = false;
+
   constructor() { }
 
   ngOnInit() {

@@ -3,7 +3,7 @@
   *ngFor="let star of starsIndex"
   [attr.shape]="star.shape"
   class="rating__star"
-  [ngClass]="{'is-solid': star.match, 'rating__star--half': star.shape == 'half-star'}"
-  (click)="setRating(star.rate)"
+  [ngClass]="{'is-solid': star.match, 'rating__star--half': star.shape == 'half-star', 'rating_star--selectable': !readonly}"
+  (click)="(!readonly) &&setRating(star.rate)"
 >
 </clr-icon>
