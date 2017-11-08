@@ -11,7 +11,7 @@ interface Star {
 /**
  * Stars rating component
  *
- * @example <app-rating [value]="5" [readonly]="false" (change)="onRatingChange($value)"></app-rating>
+ * @example <app-rating [rating]="5" [readonly]="false" (change)="onRatingChange($value)"></app-rating>
  */
 @Component({
   selector: 'app-rating',
@@ -20,22 +20,28 @@ interface Star {
 })
 export class RatingComponent implements OnInit {
 
-  private rating = 0;
+  /**
+   * Initial rating
+   * @type {number}
+   */
+  @Input() rating = 0;
+
+  private currentValue = 0;
 
   /**
-   * Rating value
+   * Selected rating value
    * @returns {number}
    */
   get value() {
-    return this.rating;
+    return this.currentValue;
   }
 
   /**
-   * Rating value
+   * Selected rating value
    * @param {number} newVal
    */
-  @Input() set value(newVal: number) {
-    this.rating = newVal;
+  set value(newVal: number) {
+    this.currentValue = newVal;
     this.recalcStarsIndex();
   }
 
@@ -61,16 +67,25 @@ export class RatingComponent implements OnInit {
    * Formatted rating
    * @type {string}
    */
-  prettyRating = '0.0';
+  prettyRating = '';
 
   starsIndex: Star[] = [];
 
   constructor() { }
 
   ngOnInit() {
-    if (this.rating > this.max) {
-      this.rating = this.max;
+    let rate = this.rating;
+
+    if (rate > this.max) {
+      rate = this.max;
     }
+
+    this.preciseRating(rate);
+    this.value = rate;
+  }
+
+  private preciseRating(rate: number) {
+    this.prettyRating = (rate > 0) ? String(parseFloat('' + rate).toPrecision(2)) : 'N/A';
   }
 
   /**
@@ -78,24 +93,26 @@ export class RatingComponent implements OnInit {
    */
   private recalcStarsIndex() {
     const newStars = [];
-    const rating = String(parseFloat('' + this.rating).toPrecision(2));
 
     for (let c = 1; c <= this.max; c++) {
       newStars.push({
         rate: c,
         shape: this.getButtonShape(c),
-        match: this.rating >= c
+        match: this.value >= c
       });
     }
 
-    this.prettyRating = rating;
+    if (this.rating === 0) {
+      this.preciseRating(this.currentValue);
+    }
+
     this.starsIndex = newStars;
   }
 
   getButtonShape(btnRating: number): string {
     const prefRate = btnRating - 1;
 
-    return (this.rating > prefRate) && (this.rating < btnRating) ? 'half-star' : 'star';
+    return (this.value > prefRate) && (this.value < btnRating) ? 'half-star' : 'star';
   }
 
   /**

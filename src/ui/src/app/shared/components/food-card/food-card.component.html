@@ -1,25 +1,24 @@
 <div class="card food-card" [ngClass]="{'food-card--selected': selected, 'clickable': !disabled}">
   <div class="food-card__frame">
-    <img src="/assets/sushi.jpg" class="card-media-image food-card__image">
+    <img [src]="imageUrl" class="card-media-image food-card__image" [alt]="label" />
   </div>
   <div class="card-block">
     <div class="card-text">
       <h4 class="food-card__title">
-        Гречка+Биточок під грибним соусом
+        {{label}}
       </h4>
       <p class="food-card__text">
-        No description
+        {{description}}
       </p>
-
     </div>
   </div>
   <div class="card-block">
     <div class="row">
       <div class="food-card__category col-xs-4">
-        <span class="badge badge-success">Garnish</span>
+        <span class="badge badge-{{badgeColor}}">{{category}}</span>
       </div>
       <div class="rating text-right col-xs-8">
-        <app-rating [value]="4.5" [readonly]="disabled"></app-rating>
+        <app-rating [rating]="rating" [readonly]="disabled || !rateable" (change)="ratingChange.emit($event)"></app-rating>
       </div>
     </div>
   </div>

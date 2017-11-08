@@ -4,6 +4,6 @@
   [attr.shape]="star.shape"
   class="rating__star"
   [ngClass]="{'is-solid': star.match, 'rating__star--half': star.shape == 'half-star', 'rating_star--selectable': !readonly}"
-  (click)="(!readonly) &&setRating(star.rate)"
+  (click)="setRating(star.rate)"
 >
 </clr-icon>
