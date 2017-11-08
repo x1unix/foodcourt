@@ -7,7 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
-import { AuthService, LoggerService, URL_LOGIN } from '../services';
+import { SessionsService, LoggerService, URL_LOGIN } from '../services';
 
 const WHITELIST = [
   URL_LOGIN
@@ -18,7 +18,7 @@ const WHITELIST = [
  */
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private auth: AuthService, private log: LoggerService) {}
+  constructor(private auth: SessionsService, private log: LoggerService) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     // Check if necessary to add token

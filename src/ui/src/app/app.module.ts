@@ -1,12 +1,16 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ClarityModule } from 'clarity-angular';
+import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
 import { SharedModule } from './shared/shared.module';
+import { ContainerModule } from './container/container.module';
+import { AuthModule } from './auth/auth.module';
+import { AppRoutingModule } from './app.routing';
+
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -17,12 +21,15 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     HttpClientModule,
     BrowserModule,
-    ClarityModule,
-    FormsModule
+    RouterModule,
+    FormsModule,
+    ToastyModule,
+    AuthModule,
+    ContainerModule,
+    SharedModule,
+    AppRoutingModule
   ],
-  providers: [
-    SharedModule
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,14 +6,16 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ClarityModule } from 'clarity-angular';
 import { ToastyModule } from 'ng2-toasty';
+import { RouterModule } from '@angular/router';
 
 import {
   LocalStorageService,
   LoggerService,
-  AuthService
+  SessionsService
 } from './services';
 
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { LoggedInGuard } from './guards/logged-in.guard';
 
 /**
  * Module provides access to common app parts and services
@@ -23,18 +25,21 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
  */
 @NgModule({
   imports: [
+    ToastyModule,
     CommonModule,
     BrowserAnimationsModule,
     HttpClientModule,
     BrowserModule,
     ClarityModule,
+    RouterModule,
     FormsModule
   ],
   declarations: [],
   providers: [
     LocalStorageService,
     LoggerService,
-    AuthService,
+    SessionsService,
+    LoggedInGuard,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
