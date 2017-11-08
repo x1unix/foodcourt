@@ -1,6 +1,15 @@
-<div class="card food-card" [ngClass]="{'food-card--selected': selected, 'clickable': !disabled}">
+<div
+  class="card food-card"
+  [ngClass]="{'food-card--selected': selected, 'clickable': !disabled, 'food-card--editable': editable}"
+>
   <div class="food-card__frame">
     <img [src]="imageUrl" class="card-media-image food-card__image" [alt]="label" />
+    <div class="food-card__overlay" *ngIf="editable">
+      <button class="btn btn-inverse" (click)="edit.emit()">
+        <clr-icon shape="cog"></clr-icon>
+        Edit
+      </button>
+    </div>
   </div>
   <div class="card-block">
     <div class="card-text">

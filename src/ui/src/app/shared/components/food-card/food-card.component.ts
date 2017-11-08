@@ -42,6 +42,12 @@ export class FoodCardComponent implements OnInit {
    */
   @Input() disabled = false;
 
+  /**
+   * Show edit button
+   * @type {boolean}
+   */
+  @Input() editable = false;
+
 
   // State props
 
@@ -94,6 +100,12 @@ export class FoodCardComponent implements OnInit {
    * @type {EventEmitter<boolean>}
    */
   @Output() checkChange = new EventEmitter<boolean>();
+
+  /**
+   * Edit button press event
+   * @type {EventEmitter<any>}
+   */
+  @Output() edit = new EventEmitter();
 
 
   constructor() { }

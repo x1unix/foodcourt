@@ -8,6 +8,15 @@ $color-active: #0094d2;
   overflow: hidden;
 }
 
+.food-card--editable:hover {
+  .food-card__image {
+    filter: blur(5px);
+  }
+  .food-card__overlay {
+    visibility: visible;
+  }
+}
+
 .food-card--selected {
   box-shadow: 0 0.125rem 0 0 $color-active;
   border: 1px solid $color-active;
@@ -28,6 +37,25 @@ $color-active: #0094d2;
   padding: .5rem .75rem;
   height: auto;
   border-radius: 0;
+}
+
+.food-card__frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.food-card__overlay {
+  visibility: hidden;
+  position: absolute;
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  align-items: center;
+  justify-content: center;
 }
 
 .food-card__image {
