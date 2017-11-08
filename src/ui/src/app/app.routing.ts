@@ -3,12 +3,22 @@ import { RouterModule, Routes } from '@angular/router';
 import {ContainerComponent} from './container/container.component';
 import {LoggedInGuard} from './shared/guards/logged-in.guard';
 import {AuthComponent} from './auth/auth.component';
+import {DashboardComponent} from './container/dashboard/dashboard.component';
 
 const APP_ROUTES: Routes = [
   {
     path: '',
     component: ContainerComponent,
-    canActivate: [LoggedInGuard]
+    canActivate: [LoggedInGuard],
+    children: [
+      {
+        path: '',
+        component: DashboardComponent,
+        data: {
+          title: 'Dashboard'
+        }
+      }
+    ]
   },
   {
     path: 'auth',

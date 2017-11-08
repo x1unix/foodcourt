@@ -1,6 +1,6 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,8 @@ import {
 
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { LoggedInGuard } from './guards/logged-in.guard';
+import { FoodCardComponent } from './components/food-card/food-card.component';
+import { RatingComponent } from './components/rating/rating.component';
 
 /**
  * Module provides access to common app parts and services
@@ -36,7 +38,7 @@ import { LoggedInGuard } from './guards/logged-in.guard';
     RouterModule,
     FormsModule
   ],
-  declarations: [],
+  declarations: [FoodCardComponent, RatingComponent],
   providers: [
     LocalStorageService,
     LoggerService,
@@ -50,7 +52,11 @@ import { LoggedInGuard } from './guards/logged-in.guard';
       multi: true
     }
   ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
   exports: [
+    FoodCardComponent
     // ...FORM_DIRECTIVES,
     // ...COMPONENTS,
     // ...DIRECTIVES,

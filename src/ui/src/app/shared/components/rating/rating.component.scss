@@ -1,0 +1,15 @@
+:host {
+  display: inline-block;
+}
+
+.rating {
+
+}
+
+.rating__star {
+  color: orange;
+}
+
+.rating__star--half {
+  transform: rotateY(180deg);
+}

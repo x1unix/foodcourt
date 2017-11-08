@@ -1,1 +1,6 @@
-<app-header [user]="currentUser" (logout)="onLogoutClick()"></app-header>
+<clr-main-container class="main-container">
+  <app-header [user]="currentUser" (logout)="onLogoutClick()"></app-header>
+
+    <router-outlet></router-outlet>
+
+</clr-main-container>
