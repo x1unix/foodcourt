@@ -1,5 +1,12 @@
 :host {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.rating__count {
+  margin-left: auto;
+  margin-right: 5px;
 }
 
 .rating {
@@ -8,6 +15,7 @@
 
 .rating__star {
   color: orange;
+  cursor: pointer;
 }
 
 .rating__star--half {

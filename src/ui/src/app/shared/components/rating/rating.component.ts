@@ -16,8 +16,7 @@ interface Star {
 @Component({
   selector: 'app-rating',
   templateUrl: './rating.component.html',
-  styleUrls: ['./rating.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./rating.component.scss']
 })
 export class RatingComponent implements OnInit {
 

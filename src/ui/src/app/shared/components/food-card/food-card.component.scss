@@ -1,3 +1,5 @@
+$color-active: #0094d2;
+
 :host {
   display: block;
 }
@@ -6,8 +8,26 @@
   overflow: hidden;
 }
 
-.food-card__frame {
+.food-card--selected {
+  box-shadow: 0 0.125rem 0 0 $color-active;
+  border: 1px solid $color-active;
+}
 
+.food-card__footer--active {
+  padding: 0;
+  overflow: hidden;
+}
+
+.btn.food-card__check {
+  &:focus, &:active {
+    outline: 0;
+  }
+}
+
+.btn.food-card__uncheck {
+  padding: .5rem .75rem;
+  height: auto;
+  border-radius: 0;
 }
 
 .food-card__image {
