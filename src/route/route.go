@@ -5,13 +5,14 @@ import (
 	"../controller"
 	"../shared/auth"
 	"../shared/environment"
+	"../shared/rest"
 	"net/http"
 )
 
 func Bootstrap() *mux.Router {
 	r := mux.NewRouter()
 
-	dirStatic := "./" + environment.DIR_PUBLIC
+	dirStatic := environment.DIR_PUBLIC
 
 
 	// == AUTH ==
@@ -43,9 +44,25 @@ func Bootstrap() *mux.Router {
 	// Update a user
 	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAuth(controller.UpdateUser)).Methods("PUT")
 
-	// Static
-	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dirStatic))))
 
+
+	// === ETC ===
+
+	// Serve static files
+	r.PathPrefix("/").Handler(SpaFileServer(http.Dir(dirStatic), HandleNotFound))
 
 	return r
+}
+
+func HandleNotFound(w http.ResponseWriter, r *http.Request) {
+	apiToken := rest.GetToken(r)
+
+	if (len(apiToken) > 0) {
+		// If token is defined - sent API error
+		rest.HttpErrorFromString("Not Found", http.StatusNotFound).Write(&w)
+	} else {
+		// Otherwise - redirect to SPA
+		indexFile := "./" + environment.DIR_PUBLIC + "/index.html"
+		http.ServeFile(w, r, indexFile)
+	}
 }
