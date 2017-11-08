@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import {LocalStorageService} from './local-storage.service';
 import {IAuthSession} from '../interfaces/auth-session';
 import {LoggerService} from './logger.service';
+import {IUser} from '../interfaces/user';
 
 const TAG = 'SessionsService';
 export const KEY_SESSION = 'session';
@@ -17,6 +18,7 @@ export class SessionsService {
   private _token: string = null;
   private _authorized = false;
   private _userId: number = null;
+  private _user: IUser = null;
 
 
   sessionExpired = new Subject();
@@ -35,6 +37,14 @@ export class SessionsService {
    */
   get userId() {
     return this._userId;
+  }
+
+  /**
+   * Current logged in user
+   * @returns {IUser}
+   */
+  get currentUser() {
+    return this._user;
   }
 
   /**
@@ -130,6 +140,7 @@ export class SessionsService {
     this._ttl = newSession.ttl;
     this._token = newSession.token;
     this._authorized = newSession.authorized;
+    this._user = newSession.user;
 
     // Save session
     this.storage.setItem(KEY_SESSION, newSession);
@@ -145,6 +156,7 @@ export class SessionsService {
     this._userId = null;
     this._token = null;
     this._authorized = false;
+    this._user = null;
 
     // Remove cached session
     this.storage.removeItem(KEY_SESSION);

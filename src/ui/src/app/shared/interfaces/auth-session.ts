@@ -1,3 +1,5 @@
+import {IUser} from './user';
+
 /**
  * User auth session
  */
@@ -21,4 +23,9 @@ export interface IAuthSession {
    * Current user ID
    */
   userId: number;
+
+  /**
+   * Current user data
+   */
+  user: IUser;
 }
