@@ -9,8 +9,16 @@
     <a href="javascript://" class="nav-link nav-text">Interactive Analytics</a>
   </div>
   <div class="header-actions">
-    <a href="javascript://" class="nav-link nav-icon">
-      <!--<clr-icon shape="cog"></clr-icon>-->
-    </a>
+    <clr-dropdown>
+      <button class="nav-icon" clrDropdownTrigger>
+        <clr-icon shape="user"></clr-icon>
+        <clr-icon shape="caret down"></clr-icon>
+      </button>
+      <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+        <a href="..." clrDropdownItem>About</a>
+        <a href="..." clrDropdownItem>Preferences</a>
+        <a href="..." clrDropdownItem>Log out</a>
+      </clr-dropdown-menu>
+    </clr-dropdown>
   </div>
 </header>
