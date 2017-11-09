@@ -36,6 +36,20 @@ func ErrorFromString(errorMessage string, code int) *JSONResponse {
 	}
 }
 
+func NotFound(w *http.ResponseWriter) {
+	ErrorFromString("Not Found", 404).Write(w)
+}
+
+func BadRequest(w *http.ResponseWriter, err string) {
+
+	if len(err) == 0 {
+		err = "Bad Request"
+	}
+
+	ErrorFromString(err, 404).Write(w)
+}
+
+
 // Create a new error rest from app error
 func Error(err error) *JSONResponse {
 	return ErrorFromString(err.Error(), 500)

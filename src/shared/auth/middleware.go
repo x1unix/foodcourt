@@ -20,7 +20,7 @@ func RequireToken(handler rest.RequestHandler) rest.RequestHandler {
 		token := rest.GetToken(r)
 
 		if len(token) == 0 {
-			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			rest.HttpErrorFromString(errAccessDenied, http.StatusUnauthorized).Write(&w)
 			return
 		}
 
@@ -35,7 +35,7 @@ func RequireAuth(handler rest.RequestHandler) rest.RequestHandler {
 		token := rest.GetToken(r)
 
 		if len(token) == 0 {
-			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			rest.HttpErrorFromString(errAccessDenied, http.StatusUnauthorized).Write(&w)
 			return
 		}
 
@@ -49,7 +49,7 @@ func RequireAuth(handler rest.RequestHandler) rest.RequestHandler {
 		}
 
 		if !exists {
-			rest.HttpErrorFromString(errAccessDenied, http.StatusForbidden).Write(&w)
+			rest.HttpErrorFromString(errAccessDenied, http.StatusUnauthorized).Write(&w)
 			return
 		}
 

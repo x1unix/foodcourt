@@ -14,12 +14,12 @@ const LOG_NAME = "voracity"
 
 // Console output formatter
 var consoleFormatter = logging.MustStringFormatter(
-	`%{color}%{time:15:04:05.000} %{module}:%{shortfunc}/%{level:.4s}: %{color:reset} %{message}`,
+	`%{color}%{time:15:04:05.000} %{module}:%{shortfunc}/%{level:.6s}: %{color:reset} %{message}`,
 )
 
 // File output
 var fileFormatter = logging.MustStringFormatter(
-	`%{time:15:04:05.000} %{module}:%{shortfunc}/%{level:.4s}: %{message}`,
+	`%{time:15:04:05.000} %{module}:%{shortfunc}/%{level:.6s}: %{message}`,
 )
 
 // Gets location of logs directory

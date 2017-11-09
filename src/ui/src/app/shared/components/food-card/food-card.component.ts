@@ -48,6 +48,12 @@ export class FoodCardComponent implements OnInit {
    */
   @Input() editable = false;
 
+  /**
+   * Item editor URL
+   * @type {any}
+   */
+  @Input() editorUrl = '#';
+
 
   // State props
 

@@ -12,10 +12,12 @@ import { AuthModule } from './auth/auth.module';
 import { AppRoutingModule } from './app.routing';
 
 import { AppComponent } from './app.component';
+import { ManagementDashboardComponent } from './management-dashboard/management-dashboard.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ManagementDashboardComponent
   ],
   imports: [
     BrowserAnimationsModule,

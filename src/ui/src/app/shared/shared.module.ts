@@ -20,7 +20,6 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { LoggedInGuard } from './guards/logged-in.guard';
 import { FoodCardComponent } from './components/food-card/food-card.component';
 import { RatingComponent } from './components/rating/rating.component';
-
 /**
  * Module provides access to common app parts and services
  *

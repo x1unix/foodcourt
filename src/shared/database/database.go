@@ -9,7 +9,6 @@ import (
 )
 
 const SQL_CON_ERR = "Failed to create SQL connection ('%s'): %s"
-const SQL_CON_SUCCESS = "SQL connection created ('%s')"
 
 // Returns SQL connect params
 func getSqlConnectParams() string {
@@ -45,7 +44,7 @@ func GetInstance() *sqlx.DB {
 	db, err := sqlx.Connect("mysql", sqlDsn)
 
 	// Throw error if occurred
-	if (err != nil) {
+	if err != nil {
 		errMsg := fmt.Sprintf(SQL_CON_ERR, sqlDsn, err.Error())
 		log.Error(errMsg)
 		panic(errMsg)

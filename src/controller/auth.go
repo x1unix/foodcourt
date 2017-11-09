@@ -20,31 +20,44 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	decodeErr := decoder.Decode(&form)
 	defer r.Body.Close()
 
-	if (decodeErr != nil) {
+	if decodeErr != nil {
 		rest.HttpError(decodeErr, http.StatusBadRequest).Write(&w)
 		return
 	}
 
 	// Create DB connection instance
 	db := database.GetInstance()
+
+	// Close db at the end
+	defer db.Close()
+
 	users := model.Users(db)
 
+	// Search query
+	query := sq.Eq{"email": form.Email, "password": users.HashPassword(form.Password)}
+
 	// Try to find user with specified credentials
-	matchErr, user := users.Find(sq.Eq{"email": form.Email, "password": users.HashPassword(form.Password)})
+	searchErr, ifExists := users.Exists(query);
 
-	// Close db
-	users.Dispose()
-
-	// Check query error
-	if (matchErr != nil) {
-		logger.GetLogger().Error(matchErr)
-		rest.HttpError(matchErr, http.StatusInternalServerError).Write(&w)
+	// Search error
+	if searchErr != nil {
+		logger.GetLogger().Error(searchErr)
+		rest.HttpError(searchErr, http.StatusInternalServerError).Write(&w)
 		return
 	}
 
 	// return 401 authorized in case of bad credentials
-	if user == nil {
+	if !ifExists {
 		rest.HttpErrorFromString("Wrong email or password", http.StatusUnauthorized).Write(&w)
+		return
+	}
+
+	matchErr, cuser := users.Find(query);
+
+	// Check query error
+	if matchErr != nil {
+		logger.GetLogger().Error(matchErr)
+		rest.HttpError(matchErr, http.StatusInternalServerError).Write(&w)
 		return
 	}
 
@@ -57,12 +70,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create session
-	sessionData, sessErr := vault.NewSession(token, user)
+	sessionData, sessErr := vault.NewSession(token, cuser)
 
-	if (sessErr != nil) {
+	if sessErr != nil {
 		logger.GetLogger().Error(sessErr)
 		rest.Error(sessErr).Write(&w)
-		user.Dispose()
 		return
 	}
 

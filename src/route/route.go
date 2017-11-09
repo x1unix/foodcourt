@@ -44,6 +44,17 @@ func Bootstrap() *mux.Router {
 	// Update a user
 	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAuth(controller.UpdateUser)).Methods("PUT")
 
+	// == Dishes ==
+
+	// Get all dishes
+	r.HandleFunc("/api/dishes", auth.RequireAuth(controller.GetDishes)).Methods("GET")
+
+	// Get by id
+	r.HandleFunc("/api/dishes/{id:[0-9]+}", auth.RequireAuth(controller.GetDishById)).Methods("GET")
+
+	// Add new dish
+	r.HandleFunc("/api/dishes", auth.RequireAdmin(controller.AddDish)).Methods("POST")
+
 
 
 	// === ETC ===

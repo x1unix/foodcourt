@@ -55,6 +55,15 @@ func (u *User) GetAll() (error, *[]User) {
 	return err, &users
 }
 
+func (u *User) Exists(query sq.Eq) (error, bool) {
+	q, args, _ := sq.Select("COUNT(*)").From(T_USERS).Where(query).ToSql()
+	var count int
+
+	err := u.DB.Get(&count, q, args...)
+
+	return err, count > 0
+}
+
 // Find user
 func (u *User) Find(query sq.Eq) (error, *User) {
 	q, args, _ := sq.Select("*").From(T_USERS).Where(query).ToSql()
@@ -76,34 +85,22 @@ func (u *User) FindAll(query sq.Eq) (error, *[]User) {
 
 // Check if user id exists
 func (u *User) IdExists() (error, bool) {
-	q, _, _ := sq.Select("COUNT(*)").From(T_USERS).Where(sq.Eq{"id": u.ID}).ToSql()
-
-	count := 0
-	err := u.DB.Get(&count, q, u.ID)
-	ifExists := count > 0
-
-	return err, ifExists
+	return u.Exists(sq.Eq{"id": u.ID})
 }
 
 // check if user exists
-func (u *User) Exists() (error, bool) {
-	q, _, _ := sq.Select("COUNT(*)").From(T_USERS).Where(sq.Eq{"email": u.Email}).ToSql()
-
-	count := 0
-	err := u.DB.Get(&count, q, u.Email)
-	ifExists := count > 0
-
-	return err, ifExists
+func (u *User) MailExists() (error, bool) {
+	return u.Exists(sq.Eq{"email": u.Email})
 }
 
 // Create user
 func (u *User) Create() error {
-	q, _, _ := sq.Insert(T_USERS).
+	q, args, _ := sq.Insert(T_USERS).
 	Columns("Email", "FirstName", "LastName", "Password", "Level").
 	Values(u.Email, u.FirstName, u.LastName, u.Password, u.Level).
 	ToSql()
 
-	_, err := u.DB.Exec(q, u.Email, u.FirstName, u.LastName, u.Password, u.Level)
+	_, err := u.DB.Exec(q, args...)
 
 	return err
 }

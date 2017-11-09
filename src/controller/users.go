@@ -10,13 +10,17 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-const USERS_VAR_UID = "id"
+
+// Why not VAR_ID? It's official GO code convention
+// and I don't like it too...
+const VarID = "id"
+
 
 // Get user by id
 // (GET /api/users/{id:[0-9]+})
 func GetUserById(w http.ResponseWriter, r *http.Request) {
 	con := database.GetInstance()
-	userId := rest.Params(r).GetString(USERS_VAR_UID)
+	userId := rest.Params(r).GetString(VarID)
 
 	mod := model.User{DB: con}
 	err, data := mod.FindById(userId);
@@ -53,7 +57,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 // (PUT /api/users/{id:[0-9]+})
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	db := database.GetInstance()
-	userId := rest.Params(r).GetInt(USERS_VAR_UID)
+	userId := rest.Params(r).GetInt(VarID)
 
 	mod := model.User{DB: db, ID: userId}
 
@@ -102,7 +106,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 // (DELETE /api/users/{id:[0-9]+})
 func DropUser(w http.ResponseWriter, r *http.Request) {
 	db := database.GetInstance()
-	userId := rest.Params(r).GetInt(USERS_VAR_UID)
+	userId := rest.Params(r).GetInt(VarID)
 
 	mod := model.User{DB: db, ID: userId}
 
@@ -146,7 +150,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&user)
 	defer r.Body.Close()
 
-	if (err != nil) {
+	if err != nil {
 		rest.HttpError(err, http.StatusBadRequest).Write(&w)
 		return
 	}
@@ -165,7 +169,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	user.DB = database.GetInstance()
 
 	// Check if user exists
-	err, exists := user.Exists()
+	err, exists := user.MailExists()
 
 
 	if (err != nil) {
