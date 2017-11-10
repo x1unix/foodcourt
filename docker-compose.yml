@@ -16,18 +16,18 @@ services:
     ports:
       - '6379:6379'
 
-  web:
-    build: ./web
-    ports:
-      - '8000:80'
-    restart: always
-    volumes:
-       - ./src:/var/www/voracity
-    links:
-      - db
-      - cache
-    depends_on:
-      - db
+  # web:
+  #   build: ./web
+  #   ports:
+  #     - '8000:80'
+  #   restart: always
+  #   volumes:
+  #      - ./src:/var/www/voracity
+  #   links:
+  #     - db
+  #     - cache
+  #   depends_on:
+  #     - db
 
       
 volumes:
