@@ -9,8 +9,8 @@ import (
 )
 
 // Log file name
-const LOG_FILE_NAME = "voracity.log"
-const LOG_NAME = "voracity"
+const LOG_FILE_NAME = "fc.log"
+const LOG_NAME = "fc"
 
 // Console output formatter
 var consoleFormatter = logging.MustStringFormatter(
