@@ -8,7 +8,7 @@ import (
 const Table = "dishes"
 const Id = "id"
 
-var Columns = []string{"label", "description", "type", "photo_url", "has_garnish"}
+var Columns = []string{"label", "description", "type", "photo_url"}
 
 func Select(cols string, destination interface{}, where sq.Eq, db *sqlx.DB) error {
 	query, args, _ := sq.Select(cols).From(Table).Where(where).ToSql()
@@ -19,7 +19,7 @@ func Select(cols string, destination interface{}, where sq.Eq, db *sqlx.DB) erro
 // Get all items
 func All(dest *[]Dish, db *sqlx.DB) error {
 	query, _, _ := sq.Select("*").From(Table).ToSql()
-	return db.Get(dest, query)
+	return db.Select(dest, query)
 }
 
 // Find dish by id
@@ -41,7 +41,7 @@ func Exists(id string, db *sqlx.DB) (error, bool) {
 func Add(dish *Dish, db *sqlx.DB) error {
 	_, err := sq.Insert(Table).
 		Columns(Columns...).
-		Values(dish.Label, dish.Description, dish.Type, dish.PhotoUrl, dish.HasGarnish).
+		Values(dish.Label, dish.Description, dish.Type, dish.PhotoUrl).
 		RunWith(db.DB).
 		Query()
 
