@@ -46,14 +46,6 @@ VALUES
 /*!40000 ALTER TABLE `dishes` ENABLE KEYS */;
 UNLOCK TABLES;
 
-DELIMITER ;;
-/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `dishes_autoremove_menu_item` AFTER DELETE ON `dishes` FOR EACH ROW BEGIN
- DELETE FROM menu WHERE menu.dish_id = OLD.id;
-END */;;
-DELIMITER ;
-/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
-
 
 # Dump of table menu
 # ------------------------------------------------------------
@@ -68,6 +60,7 @@ CREATE TABLE `menu` (
   UNIQUE KEY `entry_id_UNIQUE` (`row_id`),
   KEY `dish_id` (`dish_id`),
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`)
+  ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 LOCK TABLES `menu` WRITE;
@@ -79,14 +72,6 @@ VALUES
 
 /*!40000 ALTER TABLE `menu` ENABLE KEYS */;
 UNLOCK TABLES;
-
-DELIMITER ;;
-/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `menu_remove_order_on_delete` AFTER DELETE ON `menu` FOR EACH ROW BEGIN
- DELETE FROM orders WHERE orders.item_id = OLD.row_id;
-END */;;
-DELIMITER ;
-/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
 
 
 # Dump of table orders
@@ -102,8 +87,8 @@ CREATE TABLE `orders` (
   UNIQUE KEY `order_id_UNIQUE` (`order_id`),
   KEY `order_user_iid` (`user_id`),
   KEY `order_item_id` (`item_id`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `menu` (`row_id`),
-  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `menu` (`row_id`) ON DELETE CASCADE,
+  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 LOCK TABLES `orders` WRITE;
@@ -132,8 +117,8 @@ CREATE TABLE `ratings` (
   KEY `user_id` (`user_id`),
   KEY `rate` (`rate`),
   KEY `dish_id` (`dish_id`),
-  CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`)
+  CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`dish_id`) REFERENCES `dishes` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -163,22 +148,10 @@ LOCK TABLES `users` WRITE;
 
 INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `password`, `level`)
 VALUES
-	(1,'admin@llnw.com','Lorem','Ipsum','7cbb3252ba6b7e9c422fac5334d22054',0);
+	(1,'admin@llnw.com','Lorem','Ipsum','c0c5fb6d96fd410e5519292081751ba5706b86d55d9a0d362b5b330e90a58c71',0);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-
-DELIMITER ;;
-/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `users_crypt_pass` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
- SET NEW.password = md5(NEW.password);
-END */;;
-/*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`root`@`%` */ /*!50003 TRIGGER `users_on_update_crypt_pass` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
-    SET NEW.password = md5(NEW.password);
-  END */;;
-DELIMITER ;
-/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
 
 
 
