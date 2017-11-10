@@ -1,0 +1,7 @@
+"Field","Type","Null","Key","Default","Extra"
+"id","int(11)","NO","PRI",NULL,"auto_increment"
+"label","varchar(64)","NO","UNI",NULL,""
+"description","varchar(64)","YES","",NULL,""
+"type","int(1)","NO","",NULL,""
+"photo_url","varchar(128)","YES","",NULL,""
+"has_garnish","tinyint(1)","NO","",1,""
