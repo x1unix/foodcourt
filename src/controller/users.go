@@ -5,7 +5,7 @@ import (
 	"../shared/rest"
 	"../shared/database"
 	"../shared/logger"
-	"../model"
+	"../shared/auth"
 	"encoding/json"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -20,13 +20,12 @@ const VarID = "id"
 // (GET /api/users/{id:[0-9]+})
 func GetUserById(w http.ResponseWriter, r *http.Request) {
 	con := database.GetInstance()
+	defer con.Close()
 	userId := rest.Params(r).GetString(VarID)
 
-	mod := model.User{DB: con}
-	err, data := mod.FindById(userId);
-	mod.Dispose()
+	err, data := auth.FindById(con, userId);
 
-	if (err != nil) {
+	if err != nil {
 		logger.GetLogger().Error(err)
 		rest.Error(err).Write(&w)
 	} else {
@@ -41,11 +40,11 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	db := database.GetInstance()
 
-	err, data := model.Users(db).GetAll()
+	err, data := auth.GetAll(db)
 
 	db.Close()
 
-	if (err != nil) {
+	if err != nil {
 		logger.GetLogger().Error(err)
 		rest.Error(err).Write(&w)
 	} else {
@@ -57,15 +56,13 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 // (PUT /api/users/{id:[0-9]+})
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	db := database.GetInstance()
+	defer db.Close()
 	userId := rest.Params(r).GetInt(VarID)
 
-	mod := model.User{DB: db, ID: userId}
-
-	err, ifExists := mod.IdExists()
+	err, ifExists := auth.IdExists(db, userId)
 
 	// Check if error occurred on user id check
-	if (err != nil) {
-		mod.Dispose()
+	if err != nil {
 		logger.GetLogger().Error(err)
 		rest.Error(err).Write(&w)
 		return
@@ -73,26 +70,26 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	// Return 404 if user isn't exists
 	if !ifExists {
-		mod.Dispose()
 		rest.HttpErrorFromString("User doesn't exists", 404).Write(&w)
 		return
 	}
 
 	// Extract request data
+	user := auth.User{}
 	decoder := json.NewDecoder(r.Body)
-	decodeErr := decoder.Decode(&mod)
+	decodeErr := decoder.Decode(&user)
 	defer r.Body.Close()
 
-	if (err != nil) {
+	if err != nil {
 		rest.HttpError(decodeErr, http.StatusBadRequest).Write(&w)
 		return
 	}
 
 	// Modify data in DB
-	createErr := mod.Update()
+	createErr := auth.UpdateUser(db, &user)
 
 	// Write error if occurred
-	if (createErr != nil) {
+	if createErr != nil {
 		logger.GetLogger().Error(err)
 		rest.Error(createErr).Write(&w)
 		return
@@ -106,15 +103,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 // (DELETE /api/users/{id:[0-9]+})
 func DropUser(w http.ResponseWriter, r *http.Request) {
 	db := database.GetInstance()
+	defer db.Close()
 	userId := rest.Params(r).GetInt(VarID)
 
-	mod := model.User{DB: db, ID: userId}
-
-	err, ifExists := mod.IdExists()
+	err, ifExists := auth.IdExists(db, userId)
 
 	// Check if error occurred on user id check
-	if (err != nil) {
-		mod.Dispose()
+	if err != nil {
 		logger.GetLogger().Error(err)
 		rest.Error(err).Write(&w)
 		return
@@ -122,20 +117,17 @@ func DropUser(w http.ResponseWriter, r *http.Request) {
 
 	// Return 404 if user isn't exists
 	if !ifExists {
-		mod.Dispose()
 		rest.HttpErrorFromString("User doesn't exists", 404).Write(&w)
 		return
 	}
 
-	delErr := mod.Delete()
+	delErr := auth.Delete(db, userId)
 
 	if (delErr != nil) {
-		mod.Dispose()
 		rest.Error(delErr).Write(&w)
 		return
 	}
 
-	mod.Dispose()
 	rest.Echo("Success")
 }
 
@@ -143,7 +135,7 @@ func DropUser(w http.ResponseWriter, r *http.Request) {
 // (POST /api/users/)
 func AddUser(w http.ResponseWriter, r *http.Request) {
 	// Source model
-	var user model.User
+	var user auth.User
 
 	// Extract request data
 	decoder := json.NewDecoder(r.Body)
@@ -160,39 +152,36 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	// Validate
 	validErrors := validate.Struct(&user)
 
-	if (validErrors != nil) {
+	if validErrors != nil {
 		rest.HttpError(validErrors, http.StatusBadRequest).Write(&w)
 		return
 	}
 
-	// Assign new DB connection instance to the model
-	user.DB = database.GetInstance()
+	// New sql connection
+	db := database.GetInstance()
+	defer db.Close()
 
 	// Check if user exists
-	err, exists := user.MailExists()
+	err, exists := auth.MailExists(db, user.Email)
 
 
-	if (err != nil) {
-		// If query error occurred - close DB and return error
-		defer user.DB.Close()
+	if err != nil {
+		// If query error occurred - return error
 		rest.Error(err).Write(&w)
 		return;
 	}
 
-	if (exists) {
+	if exists {
 		// If user already exists - return error
-		defer user.DB.Close()
 		rest.ErrorFromString("User already exists", http.StatusConflict).Write(&w)
 		return;
 	}
 
 
 	// Create new user
-	err = user.Create()
+	err = auth.AddUser(db, &user)
 
-	user.Dispose()
-
-	if (err != nil) {
+	if err != nil {
 		rest.Error(err).Write(&w)
 	} else {
 		rest.Echo("Success").Write(&w)

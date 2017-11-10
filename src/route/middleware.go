@@ -1,12 +1,12 @@
-package auth
+package route
 
 import (
 	"net/http"
-	"../rest"
-	 "../vault"
-	 "../database"
-	 "../../model"
+	"../shared/rest"
+	 "../shared/vault"
+	 "../shared/database"
 	"github.com/gorilla/context"
+	"../shared/auth"
 	"strconv"
 	"time"
 )
@@ -78,7 +78,7 @@ func RequireLevel(userLevel int, strict bool, handler rest.RequestHandler) rest.
 		strUserId := strconv.Itoa(session.UserId)
 
 		db := database.GetInstance()
-		err, u := model.Users(db).FindById(strUserId)
+		err, u := auth.FindById(db, strUserId)
 		defer db.Close()
 
 		if err != nil {

@@ -5,7 +5,7 @@ import (
 	"../cache"
 	"github.com/vmihailenco/msgpack"
 	"github.com/go-redis/redis"
-	"../../model"
+	"../auth"
 )
 
 // Token length
@@ -24,7 +24,7 @@ func ssid(token string) string {
 }
 
 // Register new session and get session data
-func NewSession(token string, user *model.User) (*Session, error) {
+func NewSession(token string, user *auth.User) (*Session, error) {
 	ttlDr := time.Duration(14 * (time.Hour * 24))
 	ttl := time.Now().AddDate(0, 0, DefaultTTL).Unix()
 

@@ -24,6 +24,9 @@ type Application struct {
 func (app *Application) Run(httpHost string, httpPost string) {
 	httpAddr := httpHost + ":" + httpPost
 
+	// Check app key
+	app.checkAppKey()
+
 	// Initialize sessions
 	app.initializeSessions()
 
@@ -51,6 +54,16 @@ func (app *Application) initializeHTTPServer(httpAddr string) {
 	app.Log.Info(fmt.Sprintf("HTTP server started at %s", httpAddr))
 
 	app.Log.Fatal(server.ListenAndServe())
+}
+
+func (app *Application) checkAppKey() {
+	key := config.Get(config.APP_KEY, ".-.-.-.-.-.-.")
+
+	if len(key) == 0 {
+		msg := "Application key is not defined. Please define it at APP_KEY in .env file"
+		app.Log.Error(msg)
+		panic(msg)
+	}
 }
 
 func (app *Application) initializeCache() {

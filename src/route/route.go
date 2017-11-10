@@ -3,7 +3,6 @@ package route
 import (
 	"github.com/gorilla/mux"
 	"../controller"
-	"../shared/auth"
 	"../shared/environment"
 	"../shared/rest"
 	"net/http"
@@ -21,42 +20,42 @@ func Bootstrap() *mux.Router {
 	r.HandleFunc("/api/login", controller.Login).Methods("POST")
 
 	// Logout
-	r.HandleFunc("/api/logout", auth.RequireAuth(controller.Logout)).Methods("POST")
+	r.HandleFunc("/api/logout", RequireAuth(controller.Logout)).Methods("POST")
 
 	// Session info
-	r.HandleFunc("/api/session", auth.RequireAuth(controller.GetSessionInfo)).Methods("GET")
+	r.HandleFunc("/api/session", RequireAuth(controller.GetSessionInfo)).Methods("GET")
 
 
 	// === USERS ===
 
 	// Get user by id
-	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAuth(controller.GetUserById)).Methods("GET")
+	r.HandleFunc("/api/users/{id:[0-9]+}", RequireAuth(controller.GetUserById)).Methods("GET")
 
 	// Get all users
-	r.HandleFunc("/api/users", auth.RequireAdmin(controller.GetUsers)).Methods("GET")
+	r.HandleFunc("/api/users", RequireAdmin(controller.GetUsers)).Methods("GET")
 
 	// Add new user
-	r.HandleFunc("/api/users", auth.RequireAdmin(controller.AddUser)).Methods("POST")
+	r.HandleFunc("/api/users", RequireAdmin(controller.AddUser)).Methods("POST")
 
 	// Delete a user
-	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAdmin(controller.DropUser)).Methods("DELETE")
+	r.HandleFunc("/api/users/{id:[0-9]+}", RequireAdmin(controller.DropUser)).Methods("DELETE")
 
 	// Update a user
-	r.HandleFunc("/api/users/{id:[0-9]+}", auth.RequireAuth(controller.UpdateUser)).Methods("PUT")
+	r.HandleFunc("/api/users/{id:[0-9]+}", RequireAuth(controller.UpdateUser)).Methods("PUT")
 
 	// == Dishes ==
 
 	// Get all dishes
-	r.HandleFunc("/api/dishes", auth.RequireAuth(controller.GetDishes)).Methods("GET")
+	r.HandleFunc("/api/dishes", RequireAuth(controller.GetDishes)).Methods("GET")
 
 	// Get by id
-	r.HandleFunc("/api/dishes/{id:[0-9]+}", auth.RequireAuth(controller.GetDishById)).Methods("GET")
+	r.HandleFunc("/api/dishes/{id:[0-9]+}", RequireAuth(controller.GetDishById)).Methods("GET")
 
 	// Add new dish
-	r.HandleFunc("/api/dishes", auth.RequireAdmin(controller.AddDish)).Methods("POST")
+	r.HandleFunc("/api/dishes", RequireAdmin(controller.AddDish)).Methods("POST")
 
 	// Delete by id
-	r.HandleFunc("/api/dishes/{id:[0-9]+}", auth.RequireAuth(controller.DeleteDishById)).Methods("DELETE")
+	r.HandleFunc("/api/dishes/{id:[0-9]+}", RequireAuth(controller.DeleteDishById)).Methods("DELETE")
 
 
 

@@ -6,14 +6,14 @@ import (
 	"../shared/rest"
 	"../shared/vault"
 	"../shared/logger"
-	"../model"
+	"../shared/auth"
 	"encoding/json"
 	sq "github.com/Masterminds/squirrel"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	// Form request body
-	form := model.Credentials{}
+	form := auth.Credentials{}
 
 	// Extract request data
 	decoder := json.NewDecoder(r.Body)
@@ -31,13 +31,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// Close db at the end
 	defer db.Close()
 
-	users := model.Users(db)
-
 	// Search query
-	query := sq.Eq{"email": form.Email, "password": users.HashPassword(form.Password)}
+	query := sq.Eq{"email": form.Email, "password": auth.Password(form.Password)}
 
 	// Try to find user with specified credentials
-	searchErr, ifExists := users.Exists(query);
+	searchErr, ifExists := auth.UserExists(db, query);
 
 	// Search error
 	if searchErr != nil {
@@ -52,7 +50,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	matchErr, cuser := users.Find(query);
+	matchErr, cuser := auth.Find(db, query);
 
 	// Check query error
 	if matchErr != nil {

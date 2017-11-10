@@ -6,3 +6,4 @@ gopkg.in/go-playground/validator.v9
 github.com/go-redis/redis
 github.com/gorilla/context
 github.com/vmihailenco/msgpack
+golang.org/x/crypto/scrypt
