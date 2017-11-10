@@ -63,6 +63,23 @@ func GetDishById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Delete dish by id
+// (DELETE /api/dishes/{id:[0-9]+})
+func DeleteDishById(w http.ResponseWriter, r *http.Request) {
+	db := database.GetInstance()
+	defer db.Close()
+
+	id := rest.Params(r).GetString(VarID)
+	err := dishes.Delete(id, db)
+
+	if err != nil {
+		logger.GetLogger().Error(err)
+		rest.Error(err).Write(&w)
+	} else {
+		rest.Echo("OK").Write(&w)
+	}
+}
+
 
 // Add new dish
 // (POST /api/users/)

@@ -27,6 +27,12 @@ func FindById(id string, dest *Dish, db *sqlx.DB) error {
 	return Select("*", dest, sq.Eq{Id: id}, db)
 }
 
+// Delete an item
+func Delete(id string, db *sqlx.DB) error {
+	_, err := sq.Delete(Table).Where(sq.Eq{Id: id}).RunWith(db.DB).Exec()
+	return err
+}
+
 // Check if dish exists
 func Exists(id string, db *sqlx.DB) (error, bool) {
 	q, args, _ := sq.Select("COUNT(*)").From(Table).Where(sq.Eq{Id: id}).ToSql()
