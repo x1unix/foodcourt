@@ -14,5 +14,4 @@ type Dish struct {
 	Description string `db:"description" json:"description,omitempty"`
 	Type int `db:"type" json:"type"`
 	PhotoUrl string `db:"photo_url" json:"photoUrl"`
-	HasGarnish bool `db:"has_garnish" json:"hasGarnish"`
 }
