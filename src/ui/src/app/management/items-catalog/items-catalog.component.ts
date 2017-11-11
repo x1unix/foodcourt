@@ -33,6 +33,7 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
   }
 
   fetchData() {
+    this.isLoading = true;
     this.dishes.getAll().subscribe(
       (data) => {
         this.items = data;

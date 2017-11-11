@@ -23,6 +23,7 @@ import { FoodCardComponent } from './components/food-card/food-card.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { RetryAlertComponent } from './components/retry-alert/retry-alert.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { HeaderToolbarComponent } from './components/header-toolbar/header-toolbar.component';
 /**
  * Module provides access to common app parts and services
  *
@@ -40,7 +41,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     RouterModule,
     FormsModule
   ],
-  declarations: [FoodCardComponent, RatingComponent, RetryAlertComponent, SpinnerComponent],
+  declarations: [FoodCardComponent, RatingComponent, RetryAlertComponent, SpinnerComponent, HeaderToolbarComponent],
   providers: [
     LocalStorageService,
     LoggerService,
