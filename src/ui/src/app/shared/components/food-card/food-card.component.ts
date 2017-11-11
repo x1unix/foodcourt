@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation, Input, EventEmitter, Output} from '@angular/core';
-import { isNil } from 'lodash';
+import { isNil, isString } from 'lodash';
 
 export const NO_PHOTO_URL = '/assets/dish_no_image.jpg';
 
@@ -52,7 +52,7 @@ export class FoodCardComponent implements OnInit {
    * Item editor URL
    * @type {any}
    */
-  @Input() editorUrl = '#';
+  @Input() editorUrl = '';
 
 
   // State props
@@ -116,10 +116,14 @@ export class FoodCardComponent implements OnInit {
 
   constructor() { }
 
+  isUrlEditor = false;
+
   ngOnInit() {
     if (isNil(this.imageUrl)) {
       this.imageUrl = NO_PHOTO_URL;
     }
+
+    this.isUrlEditor = isString(this.editorUrl) && (this.editorUrl.length > 0);
   }
 
   toggleSelected() {

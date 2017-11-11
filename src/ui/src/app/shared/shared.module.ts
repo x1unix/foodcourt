@@ -21,6 +21,8 @@ import { LoggedInGuard } from './guards/logged-in.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { FoodCardComponent } from './components/food-card/food-card.component';
 import { RatingComponent } from './components/rating/rating.component';
+import { RetryAlertComponent } from './components/retry-alert/retry-alert.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 /**
  * Module provides access to common app parts and services
  *
@@ -38,7 +40,7 @@ import { RatingComponent } from './components/rating/rating.component';
     RouterModule,
     FormsModule
   ],
-  declarations: [FoodCardComponent, RatingComponent],
+  declarations: [FoodCardComponent, RatingComponent, RetryAlertComponent, SpinnerComponent],
   providers: [
     LocalStorageService,
     LoggerService,
@@ -57,7 +59,10 @@ import { RatingComponent } from './components/rating/rating.component';
     CUSTOM_ELEMENTS_SCHEMA
   ],
   exports: [
-    FoodCardComponent
+    FoodCardComponent,
+    RetryAlertComponent,
+    RatingComponent,
+    SpinnerComponent
     // ...FORM_DIRECTIVES,
     // ...COMPONENTS,
     // ...DIRECTIVES,

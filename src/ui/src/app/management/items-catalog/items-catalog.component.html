@@ -1,49 +1,26 @@
 <h1>Dishes</h1>
-<div class="row">
+<app-retry-alert
+  *ngIf="isFailed"
+  text="Failed to get list of dishes"
+  [errorMessage]="error"
+  (retry)="fetchData()"
+></app-retry-alert>
+<app-spinner *ngIf="isLoading"></app-spinner>
+<div class="row" *ngIf="isLoaded">
 
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+  <div
+    *ngFor="let item of items"
+    class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+  >
     <app-food-card
-      [rating]="2.5"
-      label="Бульйон з індика"
-      category="soup"
-      [rateable]="true"
+      [rating]="5"
+      [label]="item.label"
+      [category]="getDishCategory(item.type)"
+      [rateable]="false"
       [editable]="true"
       [selectable]="true"
-      badgeColor="purple"
+      [badgeColor]="getDishCategoryColor(item.type)"
     ></app-food-card>
   </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-    <app-food-card
-      [rating]="3.5"
-      label="Гречка"
-      imageUrl="/assets/sushi.jpg"
-      category="main course"
-      badgeColor="blue"
-      [editable]="true"
-      [selectable]="true"
-    ></app-food-card>
-  </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-    <app-food-card
-      [rating]="3.5"
-      label="Биточок під грибним соусом"
-      imageUrl="/assets/sushi.jpg"
-      category="main course"
-      badgeColor="blue"
-      [editable]="true"
-      [selectable]="true"
-    ></app-food-card>
-  </div>
-
-
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-    <app-food-card
-      label="Салат з квашеної капусти"
-      category="salad"
-    ></app-food-card>
-  </div>
-
 
 </div>

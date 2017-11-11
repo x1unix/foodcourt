@@ -1,0 +1,20 @@
+<div class="alert alert-danger">
+  <div class="alert-items">
+    <div class="alert-item static">
+      <div class="alert-icon-wrapper">
+        <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+      </div>
+      <span class="alert-text">{{text}}: {{errorMessage}}</span>
+      <div class="alert-actions">
+        <div class="alert-action dropdown bottom-right">
+          <button class="dropdown-toggle" (click)="retry.emit()">
+            Retry
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="close" aria-label="Close">
+    <clr-icon aria-hidden="true" shape="close"></clr-icon>
+  </button>
+</div>

@@ -5,10 +5,15 @@
   <div class="food-card__frame">
     <img [src]="imageUrl" class="card-media-image food-card__image" [alt]="label" />
     <div class="food-card__overlay" *ngIf="editable">
-      <a [href]="editorUrl" target="_blank" class="btn btn-inverse" (click)="edit.emit()">
+      <a *ngIf="isUrlEditor" [href]="editorUrl" target="_blank" class="btn btn-inverse" (click)="edit.emit()">
         <clr-icon shape="cog"></clr-icon>
         Edit
       </a>
+
+      <button *ngIf="!isUrlEditor" type="button" class="btn btn-inverse" (click)="edit.emit()">
+        <clr-icon shape="cog"></clr-icon>
+        Edit
+      </button>
     </div>
   </div>
   <div class="card-block">

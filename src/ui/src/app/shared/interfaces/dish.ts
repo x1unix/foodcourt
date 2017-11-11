@@ -6,6 +6,22 @@ export enum DishType {
   special
 }
 
+export const DISH_TYPES = [
+  'Soup',
+  'Garnish',
+  'Main',
+  'Salad',
+  'Special'
+];
+
+export const DISH_TYPE_COLORS = [
+  'purple',
+  'orange',
+  'info',
+  'success',
+  'danger'
+];
+
 export interface IDish {
   id: number;
   label: string;
