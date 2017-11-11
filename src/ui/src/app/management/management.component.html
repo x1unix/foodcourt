@@ -1,16 +1,16 @@
 <div class="content-container">
   <div class="content-area">
-    <ng-content></ng-content>
+    <router-outlet></router-outlet>
   </div>
   <nav class="sidenav">
     <section class="sidenav-content">
-      <a href="#" class="nav-link active">
+      <a routerLink="/management" routerLinkActive="active" class="nav-link">
         Items
       </a>
-      <a href="#" class="nav-link">
+      <a routerLink="/management/schedule" routerLinkActive="active" class="nav-link">
         Schedule
       </a>
-      <a href="#" class="nav-link">
+      <a routerLink="/management/users" routerLinkActive="active" class="nav-link">
         Users
       </a>
     </section>

@@ -4,6 +4,9 @@ import {ContainerComponent} from './container/container.component';
 import {LoggedInGuard} from './shared/guards/logged-in.guard';
 import {AuthComponent} from './auth/auth.component';
 import {DashboardComponent} from './container/dashboard/dashboard.component';
+import {ManagementComponent} from './management/management.component';
+import {AdminGuard} from './shared/guards/admin.guard';
+import {ItemsCatalogComponent} from './management/items-catalog/items-catalog.component';
 
 const APP_ROUTES: Routes = [
   {
@@ -12,11 +15,37 @@ const APP_ROUTES: Routes = [
     canActivate: [LoggedInGuard],
     children: [
       {
-        path: '',
+        path: 'dashboard',
         component: DashboardComponent,
         data: {
           title: 'Dashboard'
         }
+      },
+      {
+        path: 'management',
+        component: ManagementComponent,
+        canActivate: [AdminGuard],
+        children: [
+          // TODO: replace with schedule
+          {
+            path: '',
+            component: ItemsCatalogComponent,
+            data: {
+              title: 'Manage menu'
+            }
+          },
+          {
+            path: 'catalog',
+            component: ItemsCatalogComponent,
+            data: {
+              title: 'Manage dishes'
+            }
+          }
+        ]
+      },
+      {
+        path: '**',
+        redirectTo: '/dashboard'
       }
     ]
   },

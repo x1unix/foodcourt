@@ -6,18 +6,17 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
+import { ManagementModule} from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { ContainerModule } from './container/container.module';
 import { AuthModule } from './auth/auth.module';
 import { AppRoutingModule } from './app.routing';
 
 import { AppComponent } from './app.component';
-import { ManagementDashboardComponent } from './management-dashboard/management-dashboard.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ManagementDashboardComponent
+    AppComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -29,7 +28,8 @@ import { ManagementDashboardComponent } from './management-dashboard/management-
     AuthModule,
     ContainerModule,
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ManagementModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -18,6 +18,7 @@ import {
 
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { LoggedInGuard } from './guards/logged-in.guard';
+import { AdminGuard } from './guards/admin.guard';
 import { FoodCardComponent } from './components/food-card/food-card.component';
 import { RatingComponent } from './components/rating/rating.component';
 /**
@@ -43,6 +44,7 @@ import { RatingComponent } from './components/rating/rating.component';
     LoggerService,
     SessionsService,
     LoggedInGuard,
+    AdminGuard,
     AuthService,
     WebHelperService,
     {

@@ -1,3 +1,49 @@
-<p>
-  items-catalog works!
-</p>
+<h1>Dishes</h1>
+<div class="row">
+
+  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+    <app-food-card
+      [rating]="2.5"
+      label="Бульйон з індика"
+      category="soup"
+      [rateable]="true"
+      [editable]="true"
+      [selectable]="true"
+      badgeColor="purple"
+    ></app-food-card>
+  </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+    <app-food-card
+      [rating]="3.5"
+      label="Гречка"
+      imageUrl="/assets/sushi.jpg"
+      category="main course"
+      badgeColor="blue"
+      [editable]="true"
+      [selectable]="true"
+    ></app-food-card>
+  </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+    <app-food-card
+      [rating]="3.5"
+      label="Биточок під грибним соусом"
+      imageUrl="/assets/sushi.jpg"
+      category="main course"
+      badgeColor="blue"
+      [editable]="true"
+      [selectable]="true"
+    ></app-food-card>
+  </div>
+
+
+  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+    <app-food-card
+      label="Салат з квашеної капусти"
+      category="salad"
+    ></app-food-card>
+  </div>
+
+
+</div>

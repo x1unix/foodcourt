@@ -23,6 +23,10 @@ export class HeaderComponent implements OnInit {
 
   title = 'Limelight FoodCourt';
 
+  get isAdmin() {
+    return this.user.level === 0;
+  }
+
   constructor() { }
 
   ngOnInit() {
