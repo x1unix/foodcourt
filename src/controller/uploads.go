@@ -11,19 +11,20 @@ import (
 	"../shared/rest"
 	"../shared/logger"
 	"mime/multipart"
-	"gopkg.in/h2non/filetype.v1"
+	"strconv"
 	"fmt"
+	"strings"
+	"time"
+	"math/rand"
 )
 
 const UploadDir = "photos"
 const ParamName = "image"
 
 
-// Upload a new image
-// (POST - /api/media)
 func UploadFile(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(32 << 20)
-	file, _, err := r.FormFile(ParamName)
+	file, handler, err := r.FormFile(ParamName)
 
 	// try to read input file
 	if err != nil {
@@ -31,132 +32,78 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Close the file at the end
 	defer file.Close()
 
-	// try to check MIME
-	isImage, ext := isImage(&file)
+	// Check image MIME type
+	isImage, ext := isImageType(handler)
 
 	if !isImage {
 		rest.ErrorFromString("Provided file is not an image", 400).Write(&w)
 		return
 	}
 
-	// Get file local location and URL
-	local, url, ferr := getFileLocation(&file, ext)
+	// Generate random file name
+	fileName := generateFileName(handler.Filename) + ext
 
-	if ferr != nil {
-		logger.GetLogger().Error(fmt.Sprintf("Failed to determine uploaded file destination: %s", local, ferr.Error()))
-		rest.Error(ferr).Write(&w)
-		return
-	}
 
-	// Check if image exists
-	imageExists := imageExists(local)
-
-	if imageExists {
-		// If image exists - just return current location
-		rest.Echo(url).Write(&w)
-		return
-	}
+	// Define file URL and path
+	furl := "/photos/" + fileName
+	flocal := "./public" + furl
 
 	// Ensure that upload dir exists
 	checkUploadEnv()
 
-	// Open output stream for the image
-	f, openErr := os.OpenFile(local, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile(flocal, os.O_WRONLY|os.O_CREATE, 0666)
 
-	// Report error if failed to create a file
-	if openErr != nil {
-		logger.GetLogger().Error(fmt.Sprintf("Failed to prepare file to save '%s': %s", local, openErr.Error()))
-		rest.Error(openErr).Write(&w)
+	if err != nil {
+		rest.Error(err).Write(&w)
 		return
 	}
 
 	defer f.Close()
 
-	// Try to save the file
 	_, copyErr := io.Copy(f, file)
 
 	if copyErr != nil {
-		logger.GetLogger().Error(fmt.Sprintf("Failed to save uploaded file '%s': %s", local, copyErr.Error()))
-		rest.Error(openErr).Write(&w)
+		logger.GetLogger().Error(fmt.Sprintf("Failed to save uploaded file '%s': %s", flocal, copyErr.Error()))
+		rest.Error(copyErr).Write(&w)
 		return
 	}
 
 	// Send new file URL if it's uploaded
-	rest.Echo(url).Write(&w)
+	rest.Echo(furl).Write(&w)
+
+	return
 }
 
-// Get file location
-func getFileLocation(file *multipart.File, ext string) (string, string, error) {
-	hash, err := md5FromFile(file)
-	var local string
-	var url string
+// Generate hashed file name
+func generateFileName(originalFileName string) string {
+	// Current date
+	now := strconv.FormatInt(time.Now().Unix(), 10)
 
-	if err == nil {
-		fname := fmt.Sprintf("%s.%s", hash, ext)
-		url = "/" + UploadDir + "/" + fname
-		local = filepath.ToSlash("./" + environment.DIR_PUBLIC + url)
-	}
+	// Random number based on file name
+	rndNum := strconv.Itoa(rand.Intn(len(originalFileName)))
 
-	return local, url, err
+	// file hash salt
+	salt := []byte(originalFileName + ":" + now + ":" + rndNum)
+
+
+	hasher := md5.New()
+
+	// hash darling, hash
+	hasher.Write(salt)
+	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-// Check if provided file is image
-func isImage(file *multipart.File) (bool, string) {
-	buff := make([]byte, 512)
-	f := *file
-	_, err := f.Read(buff)
-
-	if err != nil {
-		logger.GetLogger().Error(fmt.Sprintf("Failed to check file MIME: %s", err.Error()))
-		return false, "";
-	}
-
-	isImage := filetype.IsImage(buff)
-	var ext string
-
-	if isImage {
-		kind, _ := filetype.Match(buff)
-
-		ext = kind.Extension
-	}
-
-	return isImage, ext
+// Assert image type
+func isImageType(handler *multipart.FileHeader) (bool, string) {
+	mime := handler.Header.Get("Content-Type")
+	isImageMime := strings.Contains(mime, "image/")
+	return isImageMime, filepath.Ext(handler.Filename)
 }
 
 
-// Generate MD5 from file
-func md5FromFile(file *multipart.File) (string, error) {
-	var returnMD5String string
-
-	hash := md5.New()
-
-	//Copy the file in the hash interface and check for any error
-	if _, err := io.Copy(hash, *file); err != nil {
-		return returnMD5String, err
-	}
-
-	//Get the 16 bytes hash
-	hashInBytes := hash.Sum(nil)[:16]
-
-	//Convert the bytes to a string
-	returnMD5String = hex.EncodeToString(hashInBytes)
-
-	return returnMD5String, nil
-}
-
-func imageExists(fileName string) bool {
-	if _, err := os.Stat(fileName); err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-
-	return true
-}
-
+// Check if upload directory exists
 func checkUploadEnv() {
 	dirUploads := filepath.ToSlash("./" + environment.DIR_PUBLIC + "/" + UploadDir)
 
