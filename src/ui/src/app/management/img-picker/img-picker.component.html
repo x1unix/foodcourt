@@ -16,6 +16,7 @@
         #fileInput
         [disabled]="isLoading"
         style="display: none"
+        (change)="onFilePick()"
         accept="image/x-png,image/gif,image/jpeg"
       />
     </label>

@@ -35,7 +35,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	// try to check MIME
-	isImage, ext := isImage(file)
+	isImage, ext := isImage(&file)
 
 	if !isImage {
 		rest.ErrorFromString("Provided file is not an image", 400).Write(&w)
@@ -104,9 +104,10 @@ func getFileLocation(file *multipart.File, ext string) (string, string, error) {
 }
 
 // Check if provided file is image
-func isImage(file multipart.File) (bool, string) {
+func isImage(file *multipart.File) (bool, string) {
 	buff := make([]byte, 512)
-	_, err := file.Read(buff)
+	f := *file
+	_, err := f.Read(buff)
 
 	if err != nil {
 		logger.GetLogger().Error(fmt.Sprintf("Failed to check file MIME: %s", err.Error()))
@@ -133,7 +134,7 @@ func md5FromFile(file *multipart.File) (string, error) {
 	hash := md5.New()
 
 	//Copy the file in the hash interface and check for any error
-	if _, err := io.Copy(hash, file); err != nil {
+	if _, err := io.Copy(hash, *file); err != nil {
 		return returnMD5String, err
 	}
 
@@ -161,6 +162,7 @@ func checkUploadEnv() {
 
 	if _, err := os.Stat(dirUploads); err != nil {
 		if os.IsNotExist(err) {
+			logger.GetLogger().Info("Images upload directory doesn't exists. A new one will be created.")
 			os.MkdirAll(dirUploads, 655)
 		}
 	}
