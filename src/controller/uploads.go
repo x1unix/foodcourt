@@ -21,7 +21,8 @@ import (
 const UploadDir = "photos"
 const ParamName = "image"
 
-
+// Upload a new photo
+// (POST - /api/media)
 func UploadFile(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile(ParamName)
