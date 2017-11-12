@@ -22,8 +22,10 @@ export const DISH_TYPE_COLORS = [
   'danger'
 ];
 
+export const DISH_IMG_DEFAULT = '/assets/dish_no_image.jpg';
+
 export interface IDish {
-  id: number;
+  id?: number;
   label: string;
   description: string;
   type: number;

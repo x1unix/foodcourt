@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-4 col-xs-12 dish-editor__picker">
+    <app-img-picker [src]="safePhotoUrl"></app-img-picker>
+  </div>
+  <div class="col-md-8 col-xs-12">
+    <form
+      class="form"
+      [formGroup]="dishForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <section class="form-block">
+        <label>Basic Information</label>
+        <div class="form-group">
+          <label for="dishName">Name</label>
+          <label
+            for="dishName"
+            aria-haspopup="true"
+            role="tooltip"
+            class="tooltip tooltip-validation tooltip-sm"
+            [class.invalid]="isInvalid('label')"
+          >
+            <input
+              id="dishName"
+              type="text"
+              maxlength="64"
+              formControlName="label"
+            >
+            <span class="tooltip-content">
+          Label is required.
+        </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="dishDescription">Description</label>
+          <label
+            for="dishDescription"
+            aria-haspopup="true"
+            role="tooltip"
+            class="tooltip tooltip-validation tooltip-sm"
+            [class.invalid]="isInvalid('description')"
+          >
+            <input
+              id="dishDescription"
+              type="text"
+              maxlength="128"
+              formControlName="description"
+            >
+            <span class="tooltip-content">
+          Value is required.
+        </span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="empType">Dish Type</label>
+          <div class="select">
+            <select
+              id="empType"
+              name="employeeType"
+              formControlName="type"
+            >
+              <option
+                *ngFor="let type of dishTypes; let i = index"
+                [value]="i"
+              >
+                {{type}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </section>
+    </form>
+  </div>
+</div>

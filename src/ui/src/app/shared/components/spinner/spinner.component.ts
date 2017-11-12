@@ -9,6 +9,8 @@ export class SpinnerComponent implements OnInit {
 
   @Input() inline = false;
 
+  @Input() text = 'Loading...';
+
   constructor() { }
 
   ngOnInit() {

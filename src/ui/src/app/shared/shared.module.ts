@@ -63,7 +63,8 @@ import { HeaderToolbarComponent } from './components/header-toolbar/header-toolb
     FoodCardComponent,
     RetryAlertComponent,
     RatingComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    HeaderToolbarComponent
     // ...FORM_DIRECTIVES,
     // ...COMPONENTS,
     // ...DIRECTIVES,

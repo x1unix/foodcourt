@@ -1,0 +1,26 @@
+<div
+  class="img-picker__trap"
+  [ngClass]="{'img-picker__trap--editable': !isLoading, 'img-picker__trap--uploading': isLoading}"
+>
+  <img
+    [src]="src"
+    class="img-picker__image"
+    alt="Uploaded image"
+  />
+  <div class="img-picker__overlay" *ngIf="!isLoading">
+    <label type="button" class="btn btn-inverse">
+      <clr-icon shape="folder-open"></clr-icon>
+      Choose a file
+      <input
+        type="file"
+        #fileInput
+        [disabled]="isLoading"
+        style="display: none"
+        accept="image/x-png,image/gif,image/jpeg"
+      />
+    </label>
+  </div>
+  <div class="img-picker__preloader" *ngIf="isLoading">
+    <app-spinner [inline]="true" text="Uploading..."></app-spinner>
+  </div>
+</div>

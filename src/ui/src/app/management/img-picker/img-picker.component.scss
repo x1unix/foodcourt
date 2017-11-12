@@ -1,0 +1,51 @@
+:host {
+  display: block;
+}
+
+.img-picker__trap--editable:hover {
+  .img-picker__image {
+    filter: blur(5px);
+  }
+  .img-picker__overlay {
+    visibility: visible;
+  }
+}
+
+.img-picker__trap--uploading {
+  .img-picker__image {
+    filter: blur(5px);
+  }
+}
+
+.img-picker__overlay,
+.img-picker__preloader {
+  position: absolute;
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-picker__overlay {
+  visibility: hidden;
+}
+
+.img-picker__preloader {
+  cursor: progress;
+}
+
+.img-picker__image {
+  max-width: 100%;
+}
+
+.img-picker__trap {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  overflow: hidden;
+}

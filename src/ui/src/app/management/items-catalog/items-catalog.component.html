@@ -1,4 +1,15 @@
-<h1>Dishes</h1>
+<app-header-toolbar title="Dishes">
+  <button *ngIf="selectedIds.length > 0" type="button" class="btn btn-danger">
+    <clr-icon shape="trash"></clr-icon>
+    <span>Delete selected</span>
+  </button>
+
+
+  <button type="button" class="btn btn-success" (click)="openDishCreator()">
+    <clr-icon shape="plus"></clr-icon>
+    <span>Add new</span>
+  </button>
+</app-header-toolbar>
 <app-retry-alert
   *ngIf="isFailed"
   text="Failed to get list of dishes"
@@ -21,7 +32,19 @@
       [editable]="true"
       [selectable]="true"
       [badgeColor]="getDishCategoryColor(item.type)"
+      (checkChange)="onItemSelect(item.id, $event)"
     ></app-food-card>
   </div>
 
 </div>
+
+<clr-modal clrModalSize="lg" [(clrModalOpen)]="showEditor">
+  <h3 class="modal-title">New dish</h3>
+  <div class="modal-body">
+    <app-dish-editor *ngIf="showEditor" [enabled]="showEditor" [dish]="editableDish"></app-dish-editor>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline">Cancel</button>
+    <button type="button" class="btn btn-primary">Ok</button>
+  </div>
+</clr-modal>
