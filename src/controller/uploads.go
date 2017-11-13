@@ -57,6 +57,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	f, err := os.OpenFile(flocal, os.O_WRONLY|os.O_CREATE, 0666)
 
 	if err != nil {
+		logger.GetLogger().Error(fmt.Sprintf("Failed to create upload file '%s': %s", flocal, err.Error()))
 		rest.Error(err).Write(&w)
 		return
 	}
@@ -111,7 +112,8 @@ func checkUploadEnv() {
 	if _, err := os.Stat(dirUploads); err != nil {
 		if os.IsNotExist(err) {
 			logger.GetLogger().Info("Images upload directory doesn't exists. A new one will be created.")
-			os.MkdirAll(dirUploads, 655)
+			logger.GetLogger().Debug(fmt.Sprintf("Images directory: %s", dirUploads))
+			os.MkdirAll(dirUploads, 0700)
 		}
 	}
 }
