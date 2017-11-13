@@ -17,6 +17,8 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 Mb
 export class ImgPickerComponent extends LoadStatusComponent implements OnInit {
   @Input() src: string = null;
 
+  @Input() disabled = false;
+
   @Output() uploadSuccess = new EventEmitter<string>();
 
   @Output() uploadFailed = new EventEmitter<string>();
@@ -60,7 +62,6 @@ export class ImgPickerComponent extends LoadStatusComponent implements OnInit {
       (err) => {
         this.isFailed = true;
         const msg = this.web.extractResponseError(err);
-        alert(`Failed to upload an image: ${msg}`);
         this.uploadFailed.emit(msg);
       }
     );

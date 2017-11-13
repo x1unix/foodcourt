@@ -2,7 +2,7 @@
   display: block;
 }
 
-.img-picker__trap--editable:hover {
+.img-picker__trap--enabled.img-picker__trap--editable:hover {
   .img-picker__image {
     filter: blur(5px);
   }
@@ -44,8 +44,11 @@
 }
 
 .img-picker__trap {
-  cursor: pointer;
   position: relative;
   display: block;
   overflow: hidden;
+}
+
+.img-picker__trap.img-picker__trap--enabled {
+  cursor: pointer;
 }

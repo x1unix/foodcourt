@@ -1,0 +1,22 @@
+<div class="alert alert-{{type}}">
+  <div class="alert-items">
+    <div class="alert-item static">
+      <div class="alert-icon-wrapper">
+        <clr-icon class="alert-icon" [attr.shape]="icon"></clr-icon>
+      </div>
+      <span class="alert-text">
+        <ng-content></ng-content>
+      </span>
+      <div class="alert-actions" *ngIf="hasAction">
+        <div class="alert-action dropdown bottom-right">
+          <button class="dropdown-toggle" (click)="actionClick.emit()">
+            {{actionText}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button *ngIf="dismissable" type="button" class="close" aria-label="Close" (click)="close.emit()">
+    <clr-icon aria-hidden="true" shape="close"></clr-icon>
+  </button>
+</div>

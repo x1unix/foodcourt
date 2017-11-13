@@ -1,15 +1,29 @@
+<app-alert
+  *ngIf="isFailed"
+  type="danger"
+  icon="exclamation-circle"
+  [dismissable]="false"
+>
+  {{error}}
+</app-alert>
+
 <div class="row">
-  <div class="col-md-4 col-xs-12 dish-editor__picker">
-    <app-img-picker [src]="safePhotoUrl"></app-img-picker>
+  <div class="col-xs-12 dish-editor__picker" [ngClass]="{'col-md-4': !compactMode}">
+    <app-img-picker
+      [src]="safePhotoUrl"
+      (uploadFailed)="onImageUploadFail($event)"
+      (uploadStart)="onImgUploadStart()"
+      (uploadSuccess)="onImageUploaded($event)"
+    ></app-img-picker>
   </div>
-  <div class="col-md-8 col-xs-12">
+  <div class="col-xs-12" [ngClass]="{'col-md-8': !compactMode}">
     <form
       class="form"
       [formGroup]="dishForm"
       (ngSubmit)="onSubmit()"
     >
-      <section class="form-block">
-        <label>Basic Information</label>
+      <section class="form-block" style="margin-bottom: 0">
+        <label>Item Information</label>
         <div class="form-group">
           <label for="dishName">Name</label>
           <label
@@ -67,6 +81,16 @@
               </option>
             </select>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [clrLoading]="isLoading"
+            [disabled]="dishForm.invalid || isLoading || imageLoading"
+          >
+            Submit
+          </button>
         </div>
       </section>
     </form>

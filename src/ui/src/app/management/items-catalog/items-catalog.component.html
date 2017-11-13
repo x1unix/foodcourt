@@ -1,3 +1,4 @@
+<!-- Page header -->
 <app-header-toolbar title="Dishes">
   <button *ngIf="selectedIds.length > 0" type="button" class="btn btn-danger">
     <clr-icon shape="trash"></clr-icon>
@@ -10,15 +11,30 @@
     <span>Add new</span>
   </button>
 </app-header-toolbar>
+
+<!-- Items load fail message -->
 <app-retry-alert
   *ngIf="isFailed"
   text="Failed to get list of dishes"
   [errorMessage]="error"
   (retry)="fetchData()"
 ></app-retry-alert>
-<app-spinner *ngIf="isLoading"></app-spinner>
-<div class="row" *ngIf="isLoaded">
 
+<!-- Operation success message -->
+<app-alert
+  *ngIf="showSuccessMessage"
+  type="success"
+  icon="check-circle"
+  [dismissable]="false"
+>
+  Item <span *ngIf="operation == 0">added</span><span *ngIf="operation == 1">changed</span> successfully
+</app-alert>
+
+<!-- Items preloader -->
+<app-spinner *ngIf="isLoading"></app-spinner>
+
+<!-- Items list -->
+<div class="row" *ngIf="isLoaded">
   <div
     *ngFor="let item of items"
     class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
@@ -33,18 +49,31 @@
       [selectable]="true"
       [badgeColor]="getDishCategoryColor(item.type)"
       (checkChange)="onItemSelect(item.id, $event)"
+      (edit)="editItem(item)"
     ></app-food-card>
   </div>
-
 </div>
 
-<clr-modal clrModalSize="lg" [(clrModalOpen)]="showEditor">
-  <h3 class="modal-title">New dish</h3>
+<!-- Editor modal -->
+<clr-modal
+  clrModalSize="md"
+  [(clrModalOpen)]="showEditor"
+  [clrModalClosable]="!blockModal"
+  [clrModalStaticBackdrop]="!blockModal"
+>
+  <h3 class="modal-title">
+    <span *ngIf="operation == 0">Create a new</span><span *ngIf="operation == 1">Edit the</span> dish
+  </h3>
   <div class="modal-body">
-    <app-dish-editor *ngIf="showEditor" [enabled]="showEditor" [dish]="editableDish"></app-dish-editor>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline">Cancel</button>
-    <button type="button" class="btn btn-primary">Ok</button>
+    <app-dish-editor
+      *ngIf="showEditor"
+      [enabled]="showEditor"
+      [dish]="editableDish"
+      [compactMode]="true"
+      (success)="onEditFinish(true)"
+      (error)="onEditFinish(false)"
+      (loading)="onEditLoading()"
+      (dismiss)="onEditDismiss()"
+    ></app-dish-editor>
   </div>
 </clr-modal>

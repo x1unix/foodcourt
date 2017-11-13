@@ -1,13 +1,17 @@
 <div
   class="img-picker__trap"
-  [ngClass]="{'img-picker__trap--editable': !isLoading, 'img-picker__trap--uploading': isLoading}"
+  [ngClass]="{
+    'img-picker__trap--editable': !isLoading,
+    'img-picker__trap--uploading': isLoading,
+    'img-picker__trap--enabled': !disabled
+  }"
 >
   <img
     [src]="src"
     class="img-picker__image"
     alt="Uploaded image"
   />
-  <div class="img-picker__overlay" *ngIf="!isLoading">
+  <div class="img-picker__overlay" *ngIf="!isLoading && !disabled">
     <label type="button" class="btn btn-inverse">
       <clr-icon shape="folder-open"></clr-icon>
       Choose a file
