@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "ng build --watch",
+    "start": "ng build --watch --delete-output-path=false",
     "serve": "ng serve",
     "build": "ng build",
     "test": "ng test",

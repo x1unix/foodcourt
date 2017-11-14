@@ -12,6 +12,32 @@
   </button>
 </app-header-toolbar>
 
+<!-- Search bar -->
+<form class="row" style="width: 100%" [formGroup]="searchBar">
+  <section class="form-block col-sm-3">
+    <div class="select">
+      <select formControlName="order">
+        <option
+          *ngFor="let orderType of orderList; let i = index"
+          [value]="i"
+        >
+          Order by {{orderType.label}}
+        </option>
+      </select>
+    </div>
+  </section>
+  <div class="col-sm-5"></div>
+  <section class="form-block col-sm-4">
+    <input
+      type="text"
+      formControlName="query"
+      placeholder="Search by name ..."
+      style="width: 100%"
+      maxlength="64"
+    />
+  </section>
+</form>
+
 <!-- Items load fail message -->
 <app-retry-alert
   *ngIf="isFailed"
@@ -52,11 +78,8 @@
   Item <span *ngIf="operation == 0">added</span><span *ngIf="operation == 1">changed</span> successfully
 </app-alert>
 
-<!-- Items preloader -->
-<app-spinner *ngIf="isLoading"></app-spinner>
-
 <!-- Items list -->
-<div class="row" *ngIf="isLoaded">
+<div class="row" *ngIf="!resetDone || isLoaded" style="flex: 1">
   <div
     *ngFor="let item of items"
     class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
@@ -75,7 +98,22 @@
       (edit)="editItem(item)"
     ></app-food-card>
   </div>
+  <div class="col-xs-12 text-center block-spaced" *ngIf="lastChunkSize >= itemsPerPage">
+    <button
+      [clrLoading]="isLoading"
+      class="btn btn-outline"
+      (click)="getNextChunk()"
+      [disabled]="isLoading"
+    >
+      <span *ngIf="!isLoading">More items</span>
+      <span *ngIf="isLoading">Loading</span>
+    </button>
+  </div>
 </div>
+
+
+<!-- Items preloader -->
+<app-spinner *ngIf="isLoading && resetDone"></app-spinner>
 
 <!-- Editor modal -->
 <clr-modal

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import { isObject } from 'lodash';
 import {IDish, DISH_TYPES, DISH_TYPE_COLORS} from '../../shared/interfaces/dish';
 import {Observable} from 'rxjs/Observable';
 import {IMessage} from '../../shared/interfaces/message';
-import {RequestOptions} from '@angular/http';
+import {SearchQuery, queryFillParams} from '../helpers/search-query';
 
 @Injectable()
 export class DishesService {
@@ -12,10 +13,13 @@ export class DishesService {
 
   /**
    * Get list of all dishes
+   * @param {SearchQuery} query Additional query params (limit, offset, filter, etc)
    * @returns {Observable<IDish[]>}
    */
-  getAll(): Observable<IDish[]> {
-    return <Observable<IDish[]>> this.http.get('/api/dishes');
+  getAll(query: SearchQuery = null): Observable<IDish[]> {
+    return <Observable<IDish[]>> this.http.get('/api/dishes', {
+      params: isObject(query) ? queryFillParams(query) : null
+    });
   }
 
   /**

@@ -11,8 +11,7 @@ export const NO_PHOTO_URL = '/assets/dish_no_image.jpg';
 @Component({
   selector: 'app-food-card',
   templateUrl: './food-card.component.html',
-  styleUrls: ['./food-card.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./food-card.component.scss']
 })
 export class FoodCardComponent implements OnInit {
 
