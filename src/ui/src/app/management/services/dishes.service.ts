@@ -41,6 +41,7 @@ export class DishesService {
    * @returns {Observable<IMessage>}
    */
   addDish(dish: IDish): Observable<IMessage> {
+    dish.type = Number(dish.type);
     return <Observable<IMessage>> this.http.post('/api/dishes', dish);
   }
 
@@ -50,6 +51,7 @@ export class DishesService {
    * @returns {Observable<IMessage>}
    */
   updateDish(dish: IDish): Observable<IMessage> {
+    dish.type = Number(dish.type);
     return <Observable<IMessage>> this.http.put(`/api/dishes/${dish.id}`, dish);
   }
 
