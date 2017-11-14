@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation, Input, EventEmitter, Output} from '@angular/core';
-import { isNil, isString } from 'lodash';
+import { isNil, isString, isEmpty } from 'lodash';
 
 export const NO_PHOTO_URL = '/assets/dish_no_image.jpg';
 
@@ -118,8 +118,13 @@ export class FoodCardComponent implements OnInit {
 
   isUrlEditor = false;
 
+  hasDescription = false;
+
   ngOnInit() {
-    if (isNil(this.imageUrl)) {
+
+    this.hasDescription = !isEmpty(this.description);
+
+    if (isEmpty(this.imageUrl)) {
       this.imageUrl = NO_PHOTO_URL;
     }
 
