@@ -18,9 +18,13 @@ func GetDishes(w http.ResponseWriter, r *http.Request) {
 	db := database.GetInstance()
 	defer db.Close()
 
+	querySelector := database.QuerySelector{SearchKey: "label"}
 	items := []dishes.Dish{}
 
-	err := dishes.All(&items, db)
+	// Read search query params
+	parseQuerySelector(&querySelector, r)
+
+	err := dishes.All(&items, &querySelector, db)
 
 	if err != nil {
 		rest.Error(err).Write(&w)

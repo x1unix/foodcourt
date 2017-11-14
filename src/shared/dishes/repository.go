@@ -3,6 +3,7 @@ package dishes
 import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"../database"
 )
 
 const Table = "dishes"
@@ -17,9 +18,14 @@ func Select(cols string, destination interface{}, where sq.Eq, db *sqlx.DB) erro
 }
 
 // Get all items
-func All(dest *[]Dish, db *sqlx.DB) error {
-	query, _, _ := sq.Select("*").From(Table).ToSql()
-	return db.Select(dest, query)
+func All(dest *[]Dish, querySelector *database.QuerySelector, db *sqlx.DB) error {
+	query, args, _ := querySelector.ApplyOnSelect(sq.Select("*").From(Table)).ToSql()
+
+	if len(args) > 0 {
+		return db.Select(dest, query, args)
+	} else {
+		return db.Select(dest, query)
+	}
 }
 
 // Find dish by id
