@@ -58,7 +58,7 @@ func Bootstrap() *mux.Router {
 	r.HandleFunc("/api/dishes/{id:[0-9]+}", RequireAuth(controller.DeleteDishById)).Methods("DELETE")
 
 	// Delete multiple dishes
-	r.HandleFunc("/api/dishes", RequireAuth(controller.DeleteMultipleDishes)).Methods("DELETE")
+	r.HandleFunc("/api/dishes/purge", RequireAuth(controller.DeleteMultipleDishes)).Methods("POST")
 
 	// == Files ==
 
