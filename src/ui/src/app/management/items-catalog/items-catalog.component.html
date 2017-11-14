@@ -1,6 +1,6 @@
 <!-- Page header -->
 <app-header-toolbar label="Dishes">
-  <button *ngIf="selectedIds.length > 0" type="button" class="btn btn-danger">
+  <button *ngIf="selectedIds.length > 0" type="button" class="btn btn-danger" (click)="doDeleteMultiple()">
     <clr-icon shape="trash"></clr-icon>
     <span>Delete selected</span>
   </button>
@@ -19,6 +19,28 @@
   [errorMessage]="error"
   (retry)="fetchData()"
 ></app-retry-alert>
+
+
+<!-- Delete success message -->
+<app-alert
+  *ngIf="showSuccessDeleteMsg"
+  type="success"
+  icon="check-circle"
+  [dismissable]="false"
+>
+  Item(s) deleted successfully
+</app-alert>
+
+<!-- Delete success message -->
+<app-alert
+  *ngIf="deleteStatus.isFailed"
+  type="danger"
+  icon="exclamation-circle"
+  [dismissable]="true"
+  (dismiss)="deleteStatus.isIdle = true"
+>
+  Failed to delete items: {{deleteStatus.error}}
+</app-alert>
 
 <!-- Operation success message -->
 <app-alert

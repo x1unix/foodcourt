@@ -3,6 +3,7 @@ import {DishesService} from '../services/dishes.service';
 import {LoadStatusComponent} from '../../shared/helpers/load-status-component';
 import {IDish} from '../../shared/interfaces/dish';
 import {WebHelperService} from '../../shared/services/web-helper.service';
+import {ResourceStatus} from '../../shared/helpers/resource-status';
 
 const SUCCESS_ALERT_TIMEOUT = 5 * 1000; // 5 sec
 
@@ -50,10 +51,18 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
   showSuccessMessage = false;
 
   /**
+   * Show success delete message
+   * @type {boolean}
+   */
+  showSuccessDeleteMsg = false;
+
+  /**
    * Current editor operation
    * @type {number}
    */
   operation = 0; // 0 - Create, 1 - Update
+
+  deleteStatus = new ResourceStatus();
 
   constructor(private dishes: DishesService, private web: WebHelperService) {
     super();
@@ -61,6 +70,7 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
 
   ngOnInit() {
     this.fetchData();
+    this.deleteStatus.isIdle = true;
   }
 
   /**
@@ -171,6 +181,27 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
     this.editableDish = null;
     this.blockModal = false;
     this.showEditor = false;
+  }
+
+  doDeleteMultiple() {
+    this.showSuccessDeleteMsg = false;
+    this.deleteStatus.isLoading = true;
+    this.dishes.deleteMultiple(this.selectedIds).subscribe(
+      () => {
+        this.showSuccessDeleteMsg = true;
+        this.deleteStatus.isLoaded = true;
+        this.selectedIds.length = 0;
+
+        // Hide success message after timeout finish
+        setTimeout(() => this.showSuccessDeleteMsg = false, SUCCESS_ALERT_TIMEOUT);
+
+        this.fetchData();
+      }, (err) => {
+        this.showSuccessDeleteMsg = false;
+        this.deleteStatus.isFailed = true;
+        this.deleteStatus.error = err;
+      }
+    );
   }
 
 }
