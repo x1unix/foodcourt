@@ -80,6 +80,37 @@ func DeleteDishById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Delete multiple dishes by id
+// (DELETE /api/dishes)
+func DeleteMultipleDishes(w http.ResponseWriter, r *http.Request) {
+	// ID's
+	var ids []int
+
+	// Extract request JSON data
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&ids)
+	defer r.Body.Close()
+
+	if err != nil {
+		rest.BadRequest(&w, err.Error())
+		return
+	}
+
+	// Create DB connection
+	db := database.GetInstance()
+	defer db.Close()
+
+	// Try to delete items
+	delErr := dishes.DeleteIds(ids, db)
+
+	// Handle errors
+	if delErr != nil {
+		rest.Error(delErr).Write(&w)
+	} else {
+		rest.Echo("OK").Write(&w)
+	}
+}
+
 
 // Add new dish
 // (POST /api/users/)

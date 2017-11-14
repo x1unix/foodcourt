@@ -33,6 +33,12 @@ func Delete(id string, db *sqlx.DB) error {
 	return err
 }
 
+// Delete multiple items by id
+func DeleteIds(ids []int, db *sqlx.DB) error {
+	_, err := sq.Delete(Table).Where(sq.Eq{Id: ids}).RunWith(db.DB).Exec()
+	return err
+}
+
 // Check if dish exists
 func Exists(id string, db *sqlx.DB) (error, bool) {
 	q, args, _ := sq.Select("COUNT(*)").From(Table).Where(sq.Eq{Id: id}).ToSql()
