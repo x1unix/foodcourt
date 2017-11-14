@@ -21,9 +21,20 @@ type QuerySelector struct {
 func (qs *QuerySelector) ApplyOnSelect(query squirrel.SelectBuilder) squirrel.SelectBuilder {
 	// Apply search query
 	if h.NotEmpty(qs.SearchKey) && h.NotEmpty(qs.SearchQuery) {
-		key := fmt.Sprintf("%s like ", qs.SearchKey)
-		value := "%" + qs.SearchQuery + "%"
-		query = query.Where(key, value)
+		// Doesn't work - sql: converting Exec argument $1 type: unsupported type []interface {}, a slice of interface
+		//
+		// key := fmt.Sprintf("%s LIKE ?", qs.SearchKey)
+		// val := fmt.Sprint("%", qs.SearchQuery, "%")
+
+		// query = query.Where(key, val)
+
+		// So I've used a workaround:
+		key := fmt.Sprintf("%s LIKE ", qs.SearchKey)
+		val := fmt.Sprint("%", qs.SearchQuery, "%")
+		val = h.EscapeString(val)
+
+
+		query = query.Where(key + val)
 	}
 
 	// Apply order
