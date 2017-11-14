@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./header-toolbar.component.scss']
 })
 export class HeaderToolbarComponent implements OnInit {
-  @Input() title: string = null;
+  @Input() label: string = null;
 
   constructor() { }
 
