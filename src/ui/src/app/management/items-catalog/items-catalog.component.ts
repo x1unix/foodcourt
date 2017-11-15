@@ -298,7 +298,7 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
       setTimeout(() => this.showSuccessMessage = false, SUCCESS_ALERT_TIMEOUT);
 
       // Refresh data
-      this.fetchData();
+      this.onFilterUpdate();
     }
   }
 
@@ -344,7 +344,7 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
         // Hide success message after timeout finish
         setTimeout(() => this.showSuccessDeleteMsg = false, SUCCESS_ALERT_TIMEOUT);
 
-        this.fetchData();
+        this.onFilterUpdate();
       }, (err) => {
         this.showSuccessDeleteMsg = false;
         this.deleteStatus.isFailed = true;
