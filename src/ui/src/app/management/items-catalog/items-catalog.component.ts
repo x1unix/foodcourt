@@ -251,7 +251,7 @@ export class ItemsCatalogComponent extends LoadStatusComponent implements OnInit
     this.resetDone = true;
     this.offset = 0; // Clear offset position
     this.lastChunkSize = 0; // Clear last chunk size
-    this.items.length = 0; // The same as "this.items = [];"
+    this.items = [];
     this.updateSearchParams(); // update search params
     this.fetchData(); // Fetch data from the API
   }
