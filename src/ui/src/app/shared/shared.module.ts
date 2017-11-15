@@ -25,6 +25,7 @@ import { RetryAlertComponent } from './components/retry-alert/retry-alert.compon
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { HeaderToolbarComponent } from './components/header-toolbar/header-toolbar.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { PosterComponent } from './components/poster/poster.component';
 /**
  * Module provides access to common app parts and services
  *
@@ -42,7 +43,7 @@ import { AlertComponent } from './components/alert/alert.component';
     RouterModule,
     FormsModule
   ],
-  declarations: [FoodCardComponent, RatingComponent, RetryAlertComponent, SpinnerComponent, HeaderToolbarComponent, AlertComponent],
+  declarations: [FoodCardComponent, RatingComponent, RetryAlertComponent, SpinnerComponent, HeaderToolbarComponent, AlertComponent, PosterComponent],
   providers: [
     LocalStorageService,
     LoggerService,

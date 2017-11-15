@@ -188,6 +188,10 @@
   dependencies:
     "@types/jasmine" "*"
 
+"@types/lunr@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@types/lunr/-/lunr-2.1.3.tgz#efa1eb1d2bfa7b86c41bde119774be6ae4016666"
+
 "@types/node@^6.0.46", "@types/node@~6.0.60":
   version "6.0.90"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.90.tgz#0ed74833fa1b73dcdb9409dcb1c97ec0a8b13b02"
@@ -3360,6 +3364,10 @@ lru-cache@^4.0.1, lru-cache@^4.1.1:
   dependencies:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
+
+lunr@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/lunr/-/lunr-2.1.4.tgz#52be0a9d068321909a7fb46575620e24417d5591"
 
 macaddress@^0.2.8:
   version "0.2.8"

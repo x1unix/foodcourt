@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.dishes-list__search {
+  height: auto;
+}
+
+.dishes-list__container {
+  overflow: auto;
+  flex: 1;
+}

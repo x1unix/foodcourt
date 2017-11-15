@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menu-editor__sidenav {
+  border-left: 1px solid #ccc;
+}

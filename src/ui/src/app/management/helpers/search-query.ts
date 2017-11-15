@@ -10,11 +10,11 @@ const PARAM_KEYS = {
 };
 
 export interface SearchQuery {
-  orderBy: string;
-  orderDir: string;
-  searchQuery: string;
-  limit: number;
-  offset: number;
+  orderBy?: string;
+  orderDir?: string;
+  searchQuery?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export const queryFillParams = (q: SearchQuery) => {

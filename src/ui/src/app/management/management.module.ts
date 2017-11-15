@@ -10,6 +10,8 @@ import { ItemsCatalogComponent } from './items-catalog/items-catalog.component';
 import { DishEditorComponent } from './dish-editor/dish-editor.component';
 import {DishesService} from './services/dishes.service';
 import { ImgPickerComponent } from './img-picker/img-picker.component';
+import { MenuEditorComponent } from './menu-editor/menu-editor.component';
+import { DishesListComponent } from './dishes-list/dishes-list.component';
 
 @NgModule({
   imports: [
@@ -20,7 +22,14 @@ import { ImgPickerComponent } from './img-picker/img-picker.component';
     SharedModule,
     ClarityModule
   ],
-  declarations: [ManagementComponent, ItemsCatalogComponent, DishEditorComponent, ImgPickerComponent],
+  declarations: [
+    ManagementComponent,
+    ItemsCatalogComponent,
+    DishEditorComponent,
+    ImgPickerComponent,
+    MenuEditorComponent,
+    DishesListComponent
+  ],
   providers: [
     DishesService
   ]

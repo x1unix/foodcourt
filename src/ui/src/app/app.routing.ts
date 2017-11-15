@@ -7,6 +7,7 @@ import {DashboardComponent} from './container/dashboard/dashboard.component';
 import {ManagementComponent} from './management/management.component';
 import {AdminGuard} from './shared/guards/admin.guard';
 import {ItemsCatalogComponent} from './management/items-catalog/items-catalog.component';
+import {MenuEditorComponent} from './management/menu-editor/menu-editor.component';
 
 const APP_ROUTES: Routes = [
   {
@@ -26,10 +27,9 @@ const APP_ROUTES: Routes = [
         component: ManagementComponent,
         canActivate: [AdminGuard],
         children: [
-          // TODO: replace with schedule
           {
-            path: '',
-            component: ItemsCatalogComponent,
+            path: 'schedule',
+            component: MenuEditorComponent,
             data: {
               title: 'Manage menu'
             }
