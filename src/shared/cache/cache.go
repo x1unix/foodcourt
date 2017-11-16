@@ -30,8 +30,8 @@ func getConnectionOptions() *redis.Options {
 	pass := config.Get(config.REDIS_PASSWORD, DefaultPass)
 
 	return &redis.Options{
-		Addr: host+":"+port,
+		Addr:     host + ":" + port,
 		Password: pass,
-		DB: DefaultDB,
+		DB:       DefaultDB,
 	}
 }

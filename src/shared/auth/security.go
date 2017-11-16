@@ -2,8 +2,8 @@ package auth
 
 import (
 	"../config"
-	"golang.org/x/crypto/scrypt"
 	"encoding/hex"
+	"golang.org/x/crypto/scrypt"
 )
 
 func Password(pass string) string {

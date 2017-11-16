@@ -1,21 +1,21 @@
 package controller
 
 import (
-	"net/http"
-	"path/filepath"
-	"io"
-	"os"
-	"encoding/hex"
-	"crypto/md5"
 	"../shared/environment"
-	"../shared/rest"
 	"../shared/logger"
-	"mime/multipart"
-	"strconv"
+	"../shared/rest"
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
+	"io"
+	"math/rand"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
-	"math/rand"
 )
 
 const UploadDir = "photos"
@@ -45,7 +45,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	// Generate random file name
 	fileName := generateFileName(handler.Filename) + ext
-
 
 	// Define file URL and path
 	furl := "/photos/" + fileName
@@ -89,7 +88,6 @@ func generateFileName(originalFileName string) string {
 	// file hash salt
 	salt := []byte(originalFileName + ":" + now + ":" + rndNum)
 
-
 	hasher := md5.New()
 
 	// hash darling, hash
@@ -103,7 +101,6 @@ func isImageType(handler *multipart.FileHeader) (bool, string) {
 	isImageMime := strings.Contains(mime, "image/")
 	return isImageMime, filepath.Ext(handler.Filename)
 }
-
 
 // Check if upload directory exists
 func checkUploadEnv() {

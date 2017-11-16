@@ -1,8 +1,8 @@
 package rest
 
 import (
-	"io"
 	"encoding/json"
+	"io"
 )
 
 func ReadJSONBody(body *io.ReadCloser, target *interface{}) error {

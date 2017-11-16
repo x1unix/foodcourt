@@ -1,9 +1,9 @@
 package database
 
 import (
-	"fmt"
 	"../config"
 	"../logger"
+	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
@@ -15,16 +15,16 @@ func getSqlConnectParams() string {
 	host, port, dbase, user, pass :=
 		config.Get(config.DB_HOST, "localhost"),
 		config.Get(config.DB_PORT, "3306"),
-		config.Get(config.DB_NAME, "foodcourt"),
-		config.Get(config.DB_USER, "foodcourt"),
+		config.Get(config.DB_NAME, "foodcount"),
+		config.Get(config.DB_USER, "foodcount"),
 		config.Get(config.DB_PASS, "")
 
 	// Create DSN builder
 	dsnConfig := &mysql.Config{
-		User: user,
+		User:   user,
 		Passwd: pass,
-		Net: "tcp",
-		Addr: host + ":" + port,
+		Net:    "tcp",
+		Addr:   host + ":" + port,
 		DBName: dbase,
 	}
 

@@ -1,9 +1,9 @@
 package rest
 
 import (
-	"net/http"
 	"../vault"
 	"github.com/gorilla/context"
+	"net/http"
 )
 
 const QueryParamToken = "token"

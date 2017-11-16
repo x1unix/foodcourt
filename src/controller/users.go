@@ -1,20 +1,18 @@
 package controller
 
 import (
-	"net/http"
-	"../shared/rest"
+	"../shared/auth"
 	"../shared/database"
 	"../shared/logger"
-	"../shared/auth"
+	"../shared/rest"
 	"encoding/json"
 	"gopkg.in/go-playground/validator.v9"
+	"net/http"
 )
-
 
 // Why not VAR_ID? It's official GO code convention
 // and I don't like it too...
 const VarID = "id"
-
 
 // Get user by id
 // (GET /api/users/{id:[0-9]+})
@@ -23,7 +21,7 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 	defer con.Close()
 	userId := rest.Params(r).GetString(VarID)
 
-	err, data := auth.FindById(con, userId);
+	err, data := auth.FindById(con, userId)
 
 	if err != nil {
 		logger.GetLogger().Error(err)
@@ -31,7 +29,6 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 	} else {
 		rest.Success(data).Write(&w)
 	}
-
 
 }
 
@@ -123,7 +120,7 @@ func DropUser(w http.ResponseWriter, r *http.Request) {
 
 	delErr := auth.Delete(db, userId)
 
-	if (delErr != nil) {
+	if delErr != nil {
 		rest.Error(delErr).Write(&w)
 		return
 	}
@@ -164,19 +161,17 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	// Check if user exists
 	err, exists := auth.MailExists(db, user.Email)
 
-
 	if err != nil {
 		// If query error occurred - return error
 		rest.Error(err).Write(&w)
-		return;
+		return
 	}
 
 	if exists {
 		// If user already exists - return error
 		rest.ErrorFromString("User already exists", http.StatusConflict).Write(&w)
-		return;
+		return
 	}
-
 
 	// Create new user
 	err = auth.AddUser(db, &user)

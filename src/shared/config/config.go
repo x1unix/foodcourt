@@ -1,10 +1,10 @@
 package config
 
 import (
-	"os"
-	"fmt"
 	"../environment"
+	"fmt"
 	"github.com/joho/godotenv"
+	"os"
 )
 
 const ENV_NAME = ".env"
@@ -16,16 +16,16 @@ var fileDir = fmt.Sprintf("%s/%s", environment.GetRoot(), ENV_NAME)
 func Bootstrap() {
 	err := godotenv.Load()
 	if err != nil {
-		panic(fmt.Sprintf("Environment file not exists (%s).", fileDir))
+		panic(fmt.Sprintf("Environment file does not exist (%s).", fileDir))
 	}
 }
 
 // Get param value
-func Get(key string, otherwize string) string {
+func Get(key string, otherwise string) string {
 	val := os.Getenv(key)
 
-	if (len(val) == 0) {
-		return otherwize
+	if len(val) == 0 {
+		return otherwise
 	}
 
 	return val

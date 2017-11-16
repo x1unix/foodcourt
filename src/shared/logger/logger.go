@@ -1,11 +1,11 @@
 package logger
 
 import (
+	"../config"
+	"fmt"
+	"github.com/op/go-logging"
 	"os"
 	"path/filepath"
-	"../config"
-	"github.com/op/go-logging"
-	"fmt"
 )
 
 // Log file name
