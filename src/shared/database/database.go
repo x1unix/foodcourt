@@ -15,8 +15,8 @@ func getSqlConnectParams() string {
 	host, port, dbase, user, pass :=
 		config.Get(config.DB_HOST, "localhost"),
 		config.Get(config.DB_PORT, "3306"),
-		config.Get(config.DB_NAME, "foodcount"),
-		config.Get(config.DB_USER, "foodcount"),
+		config.Get(config.DB_NAME, "foodcourt"),
+		config.Get(config.DB_USER, "foodcourt"),
 		config.Get(config.DB_PASS, "")
 
 	// Create DSN builder
