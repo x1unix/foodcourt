@@ -1,21 +1,19 @@
 package environment
 
 import (
+	"fmt"
+	"path"
 	"path/filepath"
 	"strings"
-	"path"
-	"fmt"
 )
 
 const DIR_PUBLIC = "public"
 
-
-
 // Get the application root path
 func GetRoot() string {
-	filename, err  := filepath.Abs(".")
+	filename, err := filepath.Abs(".")
 
-	if (err != nil) {
+	if err != nil {
 		panic(fmt.Sprintf("Failed to get document root path: %s", err.Error()))
 	}
 
@@ -27,7 +25,7 @@ func GetRoot() string {
 func GetPublic(subPath ...string) string {
 	publicPath := GetRoot() + "/" + DIR_PUBLIC
 
-	if (len(subPath) > 0) {
+	if len(subPath) > 0 {
 		publicPath += strings.Join(subPath, "/")
 	}
 

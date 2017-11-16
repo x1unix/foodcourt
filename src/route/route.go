@@ -1,10 +1,10 @@
 package route
 
 import (
-	"github.com/gorilla/mux"
 	"../controller"
 	"../shared/environment"
 	"../shared/rest"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -12,7 +12,6 @@ func Bootstrap() *mux.Router {
 	r := mux.NewRouter()
 
 	dirStatic := environment.DIR_PUBLIC
-
 
 	// == AUTH ==
 
@@ -24,7 +23,6 @@ func Bootstrap() *mux.Router {
 
 	// Session info
 	r.HandleFunc("/api/session", RequireAuth(controller.GetSessionInfo)).Methods("GET")
-
 
 	// === USERS ===
 
@@ -65,8 +63,6 @@ func Bootstrap() *mux.Router {
 	// Upload an image
 	r.HandleFunc("/api/media", RequireAdmin(controller.UploadFile)).Methods("POST")
 
-
-
 	// === ETC ===
 
 	// Serve static files
@@ -78,7 +74,7 @@ func Bootstrap() *mux.Router {
 func HandleNotFound(w http.ResponseWriter, r *http.Request) {
 	apiToken := rest.GetToken(r)
 
-	if (len(apiToken) > 0) {
+	if len(apiToken) > 0 {
 		// If token is defined - sent API error
 		rest.HttpErrorFromString("Not Found", http.StatusNotFound).Write(&w)
 	} else {

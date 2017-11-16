@@ -1,17 +1,17 @@
 package route
 
 import (
+	"../shared/rest"
 	"net/http"
 	"os"
-	"strings"
 	"path"
 	"path/filepath"
-	"../shared/rest"
+	"strings"
 )
 
 // Advanced static server
 type spaFileServer struct {
-	root http.Dir
+	root            http.Dir
 	NotFoundHandler func(http.ResponseWriter, *http.Request)
 }
 
@@ -28,7 +28,6 @@ func (fs *spaFileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		dir = "."
 	}
 
-
 	//add prefix and clean
 	upath := r.URL.Path
 	if !strings.HasPrefix(upath, "/") {
@@ -44,15 +43,14 @@ func (fs *spaFileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	f, err := os.Open(name)
 	if err != nil {
 		if os.IsNotExist(err) {
-			fs.NotFoundHandler(w, r);
-			return;
+			fs.NotFoundHandler(w, r)
+			return
 		}
 	}
 	defer f.Close()
 
 	http.ServeFile(w, r, name)
 }
-
 
 func containsDotDot(v string) bool {
 	if !strings.Contains(v, "..") {

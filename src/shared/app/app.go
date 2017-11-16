@@ -1,14 +1,14 @@
 package app
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/op/go-logging"
-	"time"
 	"net/http"
-	"fmt"
+	"time"
 	//"golang.org/x/sys/unix"
-	"../database"
 	"../config"
+	"../database"
 	// "../vault"
 	"../cache"
 	_ "github.com/go-sql-driver/mysql"
@@ -17,12 +17,12 @@ import (
 
 type Application struct {
 	Router *mux.Router
-	Log *logging.Logger
+	Log    *logging.Logger
 }
 
 // Run app
-func (app *Application) Run(httpHost string, httpPost string) {
-	httpAddr := httpHost + ":" + httpPost
+func (app *Application) Run(httpHost string, httpPort string) {
+	httpAddr := httpHost + ":" + httpPort
 
 	// Check app key
 	app.checkAppKey()
@@ -33,7 +33,7 @@ func (app *Application) Run(httpHost string, httpPost string) {
 	// Check for DB_TEST_CONNECTION param
 	checkConnection, _ := strconv.ParseBool(config.Get(config.DB_TEST_CONNECTION, "true"))
 
-	if (checkConnection) {
+	if checkConnection {
 		// Test db connection if required
 		app.testSQLConnection()
 		app.initializeCache()
@@ -45,8 +45,8 @@ func (app *Application) Run(httpHost string, httpPost string) {
 // Initialize HTTP server
 func (app *Application) initializeHTTPServer(httpAddr string) {
 	server := &http.Server{
-		Handler: app.Router,
-		Addr: httpAddr,
+		Handler:      app.Router,
+		Addr:         httpAddr,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
@@ -72,7 +72,7 @@ func (app *Application) initializeCache() {
 	app.Log.Info("Checking connection to the Redis cache...")
 	err := cache.TestConnection()
 
-	if (err != nil) {
+	if err != nil {
 		msg := fmt.Sprintf("Failed to connect to the Redis: %s. Application will be terminated.", err.Error())
 		app.Log.Error(msg)
 		panic(msg)
@@ -108,7 +108,7 @@ func (app *Application) testSQLConnection() {
 
 	result, err := database.TestConnection()
 
-	if (!result) {
+	if !result {
 		msg := fmt.Sprintf("Failed to connect to the database: %s. Application will be terminated.", err.Error())
 		app.Log.Error(msg)
 		panic(msg)

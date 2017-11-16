@@ -1,18 +1,18 @@
 package rest
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 )
 
 type JSONResponseBody interface{}
 
 // JSON rest structure wrapper over native rest writer
 type JSONResponse struct {
-	Body string
-	Content interface{}
-	Status int
-	Headers map[string]string
+	Body        string
+	Content     interface{}
+	Status      int
+	Headers     map[string]string
 	ContentType string
 }
 
@@ -43,7 +43,7 @@ func (r *JSONResponse) Write(responseWriter *http.ResponseWriter) *http.Response
 
 	w.Header().Add("Content-Type", "application/json")
 
-	if (err != nil) {
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		data, _ = json.Marshal(ErrorResponse{err.Error()})
 	} else {
@@ -55,7 +55,7 @@ func (r *JSONResponse) Write(responseWriter *http.ResponseWriter) *http.Response
 		}
 	}
 
-	w.Write(data);
+	w.Write(data)
 
-	return &w;
+	return &w
 }

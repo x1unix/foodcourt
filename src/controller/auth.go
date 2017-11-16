@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"net/http"
+	"../shared/auth"
 	"../shared/database"
+	"../shared/logger"
 	"../shared/rest"
 	"../shared/vault"
-	"../shared/logger"
-	"../shared/auth"
 	"encoding/json"
 	sq "github.com/Masterminds/squirrel"
+	"net/http"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +35,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	query := sq.Eq{"email": form.Email, "password": auth.Password(form.Password)}
 
 	// Try to find user with specified credentials
-	searchErr, ifExists := auth.UserExists(db, query);
+	searchErr, ifExists := auth.UserExists(db, query)
 
 	// Search error
 	if searchErr != nil {
@@ -50,7 +50,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	matchErr, cuser := auth.Find(db, query);
+	matchErr, cuser := auth.Find(db, query)
 
 	// Check query error
 	if matchErr != nil {

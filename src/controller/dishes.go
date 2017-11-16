@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"net/http"
 	"../shared/database"
-	"../shared/rest"
 	"../shared/dishes"
 	"../shared/logger"
+	"../shared/rest"
 	"encoding/json"
 	"gopkg.in/go-playground/validator.v9"
+	"net/http"
 )
 
 var dishValidator = validator.New()
@@ -32,7 +32,6 @@ func GetDishes(w http.ResponseWriter, r *http.Request) {
 		rest.Success(&items).Write(&w)
 	}
 }
-
 
 // Get dish by id
 // (GET /api/dishes/{id:[0-9]+})
@@ -114,7 +113,6 @@ func DeleteMultipleDishes(w http.ResponseWriter, r *http.Request) {
 		rest.Echo("OK").Write(&w)
 	}
 }
-
 
 // Add new dish
 // (POST /api/users/)
