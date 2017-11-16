@@ -58,6 +58,11 @@ func Bootstrap() *mux.Router {
 	// Delete multiple dishes
 	r.HandleFunc("/api/dishes/purge", RequireAuth(controller.DeleteMultipleDishes)).Methods("POST")
 
+	// == Menu ==
+
+	// Add a single dish
+	r.HandleFunc("/api/menu/{date: [0-9]{8}+}/items", RequireAdmin(controller.AddMenuItem)).Methods("POST")
+
 	// == Files ==
 
 	// Upload an image
