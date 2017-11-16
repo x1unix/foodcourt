@@ -14,7 +14,7 @@ const qsKeyOrderDir = "order_dir"
 
 // Parse data query selector from query params.
 // URL ex: /items?q=some+query&limit=32&offset=2
-func parseQuerySelector(qs *database.QuerySelector ,r *http.Request) {
+func parseQuerySelector(qs *database.QuerySelector, r *http.Request) {
 	queryParams := r.URL.Query()
 
 	qs.SearchQuery = queryParams.Get(qsKeySearchQuery)

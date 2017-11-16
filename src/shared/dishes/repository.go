@@ -1,9 +1,9 @@
 package dishes
 
 import (
+	"../database"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
-	"../database"
 )
 
 const Table = "dishes"
@@ -65,5 +65,3 @@ func Add(dish *Dish, db *sqlx.DB) error {
 
 	return err
 }
-
-

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"./shared/logger"
-	"./shared/config"
-	"./shared/app"
 	"./route"
+	"./shared/app"
+	"./shared/config"
+	"./shared/logger"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 
 	log.Info("Starting application...")
 
-	appInstance := app.Application {
+	appInstance := app.Application{
 		router,
 		log,
 	}

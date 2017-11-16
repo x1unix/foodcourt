@@ -1,20 +1,20 @@
 package database
 
 import (
-	"github.com/Masterminds/squirrel"
 	h "../helpers"
 	"fmt"
+	"github.com/Masterminds/squirrel"
 )
 
 // Selection query builder helper.
 // Used for URL search query params
 type QuerySelector struct {
-	OrderKey string
+	OrderKey       string
 	OrderDirection string
-	Limit int
-	Offset int
-	SearchQuery string
-	SearchKey string
+	Limit          int
+	Offset         int
+	SearchQuery    string
+	SearchKey      string
 }
 
 // Add query selector SQL to existing query
@@ -32,7 +32,6 @@ func (qs *QuerySelector) ApplyOnSelect(query squirrel.SelectBuilder) squirrel.Se
 		key := fmt.Sprintf("%s LIKE ", qs.SearchKey)
 		val := fmt.Sprint("%", qs.SearchQuery, "%")
 		val = h.EscapeString(val)
-
 
 		query = query.Where(key + val)
 	}

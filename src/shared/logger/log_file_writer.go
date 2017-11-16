@@ -11,7 +11,7 @@ type LogFileWriter struct {
 
 // Write entry
 func (w LogFileWriter) Write(p []byte) (n int, err error) {
-	f, err := os.OpenFile(w.filePath, os.O_APPEND | os.O_CREATE | os.O_RDWR, 0666)
+	f, err := os.OpenFile(w.filePath, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
 
 	if err != nil {
 		defer f.Close()
@@ -31,7 +31,7 @@ func (w LogFileWriter) FileExists() bool {
 
 func (w LogFileWriter) PurgeFile() error {
 
-	if (!w.FileExists()) {
+	if !w.FileExists() {
 		return nil
 	}
 

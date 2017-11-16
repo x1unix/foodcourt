@@ -6,22 +6,21 @@ import (
 )
 
 // Superprevileged user
-const LEVEL_ADMIN = 0;
+const LEVEL_ADMIN = 0
 
 // Manager level
-const LEVEL_MANAGER = 1;
+const LEVEL_MANAGER = 1
 
 // Regular user (client)
-const LEVEL_USER = 2;
+const LEVEL_USER = 2
 
-const T_USERS = "users";
+const T_USERS = "users"
 
 // User id column key
-const UserId = "id";
+const UserId = "id"
 
 // User
-const UserEmail = "email";
-
+const UserEmail = "email"
 
 // Find users by id
 func FindById(db *sqlx.DB, id string) (error, *User) {
@@ -34,7 +33,7 @@ func FindById(db *sqlx.DB, id string) (error, *User) {
 }
 
 // Get all users
-func GetAll(db *sqlx.DB, ) (error, *[]User) {
+func GetAll(db *sqlx.DB) (error, *[]User) {
 	q, _, _ := sq.Select("*").From(T_USERS).ToSql()
 
 	users := []User{}
@@ -87,7 +86,7 @@ func AddUser(db *sqlx.DB, u *User) error {
 
 	_, err := sq.Insert(T_USERS).
 		Columns("email", "firstName", "lastName", "password", "level").
-		Values(u.Email, u.FirstName, u.LastName,  password, u.Level).
+		Values(u.Email, u.FirstName, u.LastName, password, u.Level).
 		RunWith(db.DB).
 		Exec()
 

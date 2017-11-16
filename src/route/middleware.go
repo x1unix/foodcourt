@@ -1,12 +1,12 @@
 package route
 
 import (
-	"net/http"
-	"../shared/rest"
-	 "../shared/vault"
-	 "../shared/database"
-	"github.com/gorilla/context"
 	"../shared/auth"
+	"../shared/database"
+	"../shared/rest"
+	"../shared/vault"
+	"github.com/gorilla/context"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -14,7 +14,7 @@ import (
 const TokenQueryParam = "token"
 const errAccessDenied = "Access Denied"
 
-// Middleware guard that required api token to be passed
+// Middleware guard that requires API token to be passed
 func RequireToken(handler rest.RequestHandler) rest.RequestHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token := rest.GetToken(r)
@@ -106,4 +106,3 @@ func RequireLevel(userLevel int, strict bool, handler rest.RequestHandler) rest.
 func RequireAdmin(handler rest.RequestHandler) rest.RequestHandler {
 	return RequireAuth(RequireLevel(0, true, handler))
 }
-

@@ -7,8 +7,8 @@ type RequestHandler func(w http.ResponseWriter, r *http.Request)
 // Create a new success rest
 func Success(data interface{}) *JSONResponse {
 	return &JSONResponse{
-		Status: http.StatusOK,
-		Content: data,
+		Status:      http.StatusOK,
+		Content:     data,
 		ContentType: "application/json",
 	}
 }
@@ -22,7 +22,7 @@ func Echo(message string) *JSONResponse {
 
 // Generate error rest
 func ErrorFromString(errorMessage string, code int) *JSONResponse {
-	if (code == 0) {
+	if code == 0 {
 		code = http.StatusInternalServerError
 	}
 
@@ -30,9 +30,9 @@ func ErrorFromString(errorMessage string, code int) *JSONResponse {
 	var ptrData = &data
 
 	return &JSONResponse{
-		Status: code,
+		Status:      code,
 		ContentType: "application/json",
-		Content: ptrData,
+		Content:     ptrData,
 	}
 }
 
@@ -48,7 +48,6 @@ func BadRequest(w *http.ResponseWriter, err string) {
 
 	ErrorFromString(err, 404).Write(w)
 }
-
 
 // Create a new error rest from app error
 func Error(err error) *JSONResponse {

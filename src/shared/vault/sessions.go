@@ -1,11 +1,11 @@
 package vault
 
 import (
-	"time"
-	"../cache"
-	"github.com/vmihailenco/msgpack"
-	"github.com/go-redis/redis"
 	"../auth"
+	"../cache"
+	"github.com/go-redis/redis"
+	"github.com/vmihailenco/msgpack"
+	"time"
 )
 
 // Token length
@@ -30,11 +30,11 @@ func NewSession(token string, user *auth.User) (*Session, error) {
 
 	// Create session
 	session := &Session{
-		TTL: ttl,
-		Token: token,
+		TTL:        ttl,
+		Token:      token,
 		Authorized: true,
-		UserId: user.ID,
-		User: user,
+		UserId:     user.ID,
+		User:       user,
 	}
 
 	// Serialize data
@@ -84,4 +84,3 @@ func RevealToken(token string) {
 	ssid := ssid(token)
 	cache.Client.Del(ssid).Result()
 }
-
