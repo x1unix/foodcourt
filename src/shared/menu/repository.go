@@ -18,6 +18,27 @@ func AddDish(dishId int, date int, db *sqlx.DB) error {
 	return err
 }
 
+// Set the new list of dishes for specific date.
+// All previous dishes will be deleted.
+func SetDishesForDate(dishesIds []int, date int, db *sqlx.DB) error {
+	// SQL query to delete all previous items
+	delQ, delArgs, _ := squirrel.Delete(Table).Where(squirrel.Eq{Date: date}).ToSql()
+	insertBuilder := squirrel.Insert(Table).Columns(DishId, Date)
+
+	for _, dishId := range dishesIds {
+		insertBuilder = insertBuilder.Values(dishId, date)
+	}
+
+	insQ, insArgs, _ := insertBuilder.ToSql()
+
+	// Start transaction
+	tx := db.MustBegin()
+	tx.MustExec(delQ, delArgs...)
+	tx.MustExec(insQ, insArgs...)
+
+	return tx.Commit()
+}
+
 // Check if specified dish exists in the menu for specific date.
 func DishExistsInMenu(dishId int, date int, db *sqlx.DB) (error, bool) {
 	matcher := squirrel.Eq{DishId: dishId, Date: date}
