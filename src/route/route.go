@@ -60,11 +60,17 @@ func Bootstrap() *mux.Router {
 
 	// == Menu ==
 
+	// Get dishes by day
+	r.HandleFunc("/api/menu/{date:[0-9]+}/dishes", RequireAdmin(RequireValidDate(controller.GetMenuForTheDay))).Methods("GET")
+
 	// Add a single dish to menu for specific date
 	r.HandleFunc("/api/menu/{date:[0-9]+}/dishes", RequireAdmin(RequireValidDate(controller.AddMenuItem))).Methods("PUT")
 
 	// Update/set a list of dishes for specific date
 	r.HandleFunc("/api/menu/{date:[0-9]+}/dishes", RequireAdmin(RequireValidDate(controller.SetMenuItems))).Methods("POST")
+
+	// Clear menu for specific date
+	r.HandleFunc("/api/menu/{date:[0-9]+}", RequireAdmin(RequireValidDate(controller.ClearMenu))).Methods("DELETE")
 
 	// == Files ==
 

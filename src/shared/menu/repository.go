@@ -3,6 +3,7 @@ package menu
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/Masterminds/squirrel"
+	"../dishes"
 )
 
 // Table name
@@ -10,6 +11,21 @@ const Table = "menu"
 
 // Table rows
 const RowId, DishId, Date = "row_id", "dish_id", "date"
+
+// SQL query for selecting dishes in menu
+const sqlQueryMenuDishes = "select d.label, d.description, d.photo_url, m.dish_id as id from dishes d inner join menu m on d.id = m.dish_id where m.date = ?"
+
+
+// Gets list of dishes in menu at specific date
+func GetDishesInMenu(output *[]dishes.Dish, date int, db *sqlx.DB) error {
+	return db.Select(output, sqlQueryMenuDishes, date)
+}
+
+// Delete all dishes from the menu
+func ClearMenu(date int, db *sqlx.DB) error {
+	_, err := squirrel.Delete(Table).Where(squirrel.Eq{Date: date}).RunWith(db.DB).Exec()
+	return err
+}
 
 // Add the dish to the menu for the specific date.
 // The date must be in format YYYYMMDD (20171116)

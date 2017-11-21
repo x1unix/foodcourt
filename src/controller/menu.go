@@ -16,6 +16,55 @@ const menuParamDate = "date"
 
 const errMenuSetFail = "Failed to set menu for date '%d': %s"
 
+const errMenuCommon = "Date: %d, Error: %s"
+
+// Get list of dishes for specific day
+// (GET /api/menu/{date: [0-9]{8}+}/dishes)
+func GetMenuForTheDay(w http.ResponseWriter, r *http.Request) {
+	// Menu date
+	date := rest.Params(r).GetInt(menuParamDate)
+
+	// Output
+	var out []dishes.Dish
+
+	// Create DB connection
+	db := database.GetInstance()
+	defer db.Close()
+
+	// Try to get menu items
+	err := menu.GetDishesInMenu(&out, date, db)
+
+	if err != nil {
+		logger.GetLogger().Error(fmt.Sprintf(errMenuCommon, date, err.Error()))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Success(out).Write(&w)
+}
+
+// Clear menu for specific date
+// (DELETE /api/menu/{date: [0-9]{8}+})
+func ClearMenu(w http.ResponseWriter, r *http.Request) {
+	// Menu date
+	date := rest.Params(r).GetInt(menuParamDate)
+
+	// Create DB connection
+	db := database.GetInstance()
+	defer db.Close()
+
+	err := menu.ClearMenu(date, db)
+
+	if err != nil {
+		logger.GetLogger().Error(fmt.Sprintf(errMenuCommon, date, err.Error()))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Ok(&w)
+	return
+}
+
 
 // Update list of dishes for specific date
 // (POST /api/menu/{date: [0-9]{8}+}/dishes)
@@ -36,6 +85,11 @@ func SetMenuItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(dishIds) == 0 {
+		rest.BadRequest(&w, "Collection is empty")
+		return
+	}
+
 	// Create DB connection
 	db := database.GetInstance()
 	defer db.Close()
@@ -49,7 +103,7 @@ func SetMenuItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rest.Echo("OK").Write(&w)
+	rest.Ok(&w)
 	return
 }
 
@@ -127,5 +181,5 @@ func AddMenuItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Write success message
-	rest.Echo("OK").Write(&w)
+	rest.Ok(&w)
 }
