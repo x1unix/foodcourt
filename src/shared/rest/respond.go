@@ -4,6 +4,10 @@ import "net/http"
 
 type RequestHandler func(w http.ResponseWriter, r *http.Request)
 
+const msgOk = "OK"
+const msgBadRequest = "Bad Request"
+const msgNotFound = "Not Found"
+
 // Create a new success rest
 func Success(data interface{}) *JSONResponse {
 	return &JSONResponse{
@@ -37,16 +41,20 @@ func ErrorFromString(errorMessage string, code int) *JSONResponse {
 }
 
 func NotFound(w *http.ResponseWriter) {
-	ErrorFromString("Not Found", 404).Write(w)
+	ErrorFromString(msgNotFound, 404).Write(w)
 }
 
 func BadRequest(w *http.ResponseWriter, err string) {
 
 	if len(err) == 0 {
-		err = "Bad Request"
+		err = msgBadRequest
 	}
 
 	ErrorFromString(err, 404).Write(w)
+}
+
+func Ok(w *http.ResponseWriter) {
+	Echo(msgOk).Write(w)
 }
 
 // Create a new error rest from app error
