@@ -3,3 +3,4 @@ export * from './sessions.service';
 export * from './auth.service';
 export * from './logger.service';
 export * from './web-helper.service';
+export * from './menu.service';

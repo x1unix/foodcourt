@@ -1,19 +1,53 @@
-<!-- Page header -->
-<app-header-toolbar label="Menu for Wednesday, November 15, 2017">
-  <button type="button" class="btn btn-primary">
-    <clr-icon shape="calendar"></clr-icon>
-    <span>Change date</span>
-  </button>
-  <button type="button" class="btn btn-success">
-    <clr-icon shape="floppy"></clr-icon>
-    <span>Save</span>
-  </button>
-</app-header-toolbar>
-
 <!-- Container -->
 <div class="row" style="flex: 1">
   <div class="col-xs-9 flex">
+    <!-- Page header -->
+    <app-header-toolbar [label]="'Menu for ' + displayedDate" class="menu-editor__header" [smaller]="true">
+      <button type="button" class="btn btn-primary">
+        <clr-icon shape="calendar"></clr-icon>
+        <span>Change date</span>
+      </button>
+      <button type="button" class="btn btn-success">
+        <clr-icon shape="floppy"></clr-icon>
+        <span>Save</span>
+      </button>
+    </app-header-toolbar>
 
+    <!-- Items load fail message -->
+    <app-retry-alert
+      *ngIf="menuItemsStatus.isFailed"
+      text="Failed to get list of dishes"
+      [errorMessage]="menuItemsStatus.error"
+      (retry)="updateMenuItemsList()"
+    ></app-retry-alert>
+
+    <!-- Dish menu items preloader -->
+    <app-spinner *ngIf="menuItemsStatus.isLoading" style="height: 100%"></app-spinner>
+
+    <!-- Menu dishes list -->
+    <div *ngIf="menuItemsStatus.isLoaded" class="menu-editor">
+      <section class="menu-editor__section" *ngFor="let section of menuItems; let i = index">
+        <h3>{{dishTypes[i]}}</h3>
+        <div class="row">
+          <div
+            *ngFor="let item of section"
+            class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+          >
+            <app-food-card
+              [rating]="0"
+              [label]="item.label"
+              [description]="item.description"
+              [category]="getDishCategory(item.type)"
+              [imageUrl]="item.photoUrl"
+              [rateable]="false"
+              [editable]="false"
+              [selectable]="false"
+              [badgeColor]="getDishCategoryColor(item.type)"
+            ></app-food-card>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
   <div class="col-xs-3 flex-row menu-editor__sidenav">
     <app-spinner [inline]="true" *ngIf="dishesStatus.isLoading"></app-spinner>

@@ -7,3 +7,14 @@
 .menu-editor__sidenav {
   border-left: 1px solid #ccc;
 }
+
+.menu-editor__header {
+  position: sticky;
+  top: -24px;
+  background: #fafaface;
+  margin: {
+    top: -24px;
+  }
+  padding-top: 24px;
+  z-index: 1;
+}

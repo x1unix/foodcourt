@@ -9,6 +9,10 @@ import {SearchQuery, queryFillParams} from '../helpers/search-query';
 @Injectable()
 export class DishesService {
 
+  get dishTypes() {
+    return DISH_TYPES;
+  }
+
   constructor(private http: HttpClient) { }
 
   /**

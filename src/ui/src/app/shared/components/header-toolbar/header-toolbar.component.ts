@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class HeaderToolbarComponent implements OnInit {
   @Input() label: string = null;
 
+  @Input() smaller = false;
+
   constructor() { }
 
   ngOnInit() {

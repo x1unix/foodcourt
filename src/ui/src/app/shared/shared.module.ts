@@ -13,7 +13,8 @@ import {
   LoggerService,
   SessionsService,
   AuthService,
-  WebHelperService
+  WebHelperService,
+  MenuService
 } from './services';
 
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -43,7 +44,15 @@ import { PosterComponent } from './components/poster/poster.component';
     RouterModule,
     FormsModule
   ],
-  declarations: [FoodCardComponent, RatingComponent, RetryAlertComponent, SpinnerComponent, HeaderToolbarComponent, AlertComponent, PosterComponent],
+  declarations: [
+    FoodCardComponent,
+    RatingComponent,
+    RetryAlertComponent,
+    SpinnerComponent,
+    HeaderToolbarComponent,
+    AlertComponent,
+    PosterComponent
+  ],
   providers: [
     LocalStorageService,
     LoggerService,
@@ -51,6 +60,7 @@ import { PosterComponent } from './components/poster/poster.component';
     LoggedInGuard,
     AdminGuard,
     AuthService,
+    MenuService,
     WebHelperService,
     {
       provide: HTTP_INTERCEPTORS,
