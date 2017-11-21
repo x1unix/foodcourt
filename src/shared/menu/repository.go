@@ -13,7 +13,7 @@ const Table = "menu"
 const RowId, DishId, Date = "row_id", "dish_id", "date"
 
 // SQL query for selecting dishes in menu
-const sqlQueryMenuDishes = "select d.label, d.description, d.photo_url, m.dish_id as id from dishes d inner join menu m on d.id = m.dish_id where m.date = ?"
+const sqlQueryMenuDishes = "select d.label, d.description, d.photo_url, d.type, m.dish_id as id from dishes d inner join menu m on d.id = m.dish_id where m.date = ?"
 
 
 // Gets list of dishes in menu at specific date
