@@ -14,8 +14,47 @@ import (
 
 const menuParamDate = "date"
 
+const errMenuSetFail = "Failed to set menu for date '%d': %s"
+
+
+// Update list of dishes for specific date
+// (POST /api/menu/{date: [0-9]{8}+}/dishes)
+func SetMenuItems(w http.ResponseWriter, r *http.Request) {
+	// Menu date
+	date := rest.Params(r).GetInt(menuParamDate)
+
+	// Request body (dish ids)
+	var dishIds []int
+
+	// Extract request JSON data
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&dishIds)
+	defer r.Body.Close()
+
+	if err != nil {
+		rest.BadRequest(&w, err.Error())
+		return
+	}
+
+	// Create DB connection
+	db := database.GetInstance()
+	defer db.Close()
+
+	// Try to set menu
+	err = menu.SetDishesForDate(dishIds, date, db)
+
+	if err != nil {
+		logger.GetLogger().Error(fmt.Sprintf(errMenuSetFail, date, err.Error()))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Echo("OK").Write(&w)
+	return
+}
+
 // Add a single menu item for specific day.
-// (POST /api/menu/{date: [0-9]{8}+}/items)
+// (PUT /api/menu/{date: [0-9]{8}+}/dishes)
 func AddMenuItem(w http.ResponseWriter, r *http.Request) {
 	// Menu date
 	date := rest.Params(r).GetInt(menuParamDate)

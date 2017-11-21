@@ -106,3 +106,18 @@ func RequireLevel(userLevel int, strict bool, handler rest.RequestHandler) rest.
 func RequireAdmin(handler rest.RequestHandler) rest.RequestHandler {
 	return RequireAuth(RequireLevel(0, true, handler))
 }
+
+const dateParamLength = 8
+
+func RequireValidDate(handler rest.RequestHandler) rest.RequestHandler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		date := rest.Params(r).GetString("date")
+
+		// Date must be in format YYYYMMDD
+		if len(date) == dateParamLength {
+			handler(w, r)
+		} else {
+			rest.ErrorFromString("Invalid date format (expected: YYYYMMDD)", 400).Write(&w)
+		}
+	}
+}
