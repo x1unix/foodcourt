@@ -3,13 +3,19 @@
   <div class="menu-editor__container flex">
     <!-- Page header -->
     <app-header-toolbar [label]="'Menu for ' + displayedDate" class="menu-editor__header" [smaller]="true">
+      <button
+        type="button"
+        class="btn btn-success"
+        *ngIf="collectionChanged"
+        [disabled]="saveStatus.isLoading"
+      >
+        <clr-icon shape="floppy"></clr-icon>
+        <span>Save</span>
+      </button>
+
       <button type="button" class="btn btn-primary">
         <clr-icon shape="calendar"></clr-icon>
         <span>Change date</span>
-      </button>
-      <button type="button" class="btn btn-success">
-        <clr-icon shape="floppy"></clr-icon>
-        <span>Save</span>
       </button>
     </app-header-toolbar>
 
@@ -53,6 +59,7 @@
                 <app-food-card
                   class="menu-editor__item"
                   dnd-draggable
+                  [dragEnabled]="!saveStatus.isLoading"
                   [dropZones]="catalogDropZone"
                   [dragData]="item"
                   (onDragStart)="dragTrashStart = true"
@@ -83,7 +90,7 @@
       [selectedIds]="selectedIds"
       [catalogDropZone]="catalogDropZone"
       [cartDropZone]="cartDropZone"
-      [allowDrag]="menuItemsStatus.isLoaded"
+      [allowDrag]="menuItemsStatus.isLoaded && (!saveStatus.isLoading)"
       (drop)="onItemRemove($event)"
       [(showDragBanner)]="dragTrashStart"
     ></app-dishes-list>

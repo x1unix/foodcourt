@@ -72,7 +72,17 @@ export class MenuEditorComponent implements OnInit {
 
   cartDropZone = ['selectedItemsZone'];
 
+  /**
+   * Is drag-and-drop in process
+   * @type {boolean}
+   */
   dragTrashStart = false;
+
+  /**
+   * Is collection changed
+   * @type {boolean}
+   */
+  collectionChanged = false;
 
   /**
    * Date to be send on server
@@ -137,6 +147,7 @@ export class MenuEditorComponent implements OnInit {
   updateMenuItemsList() {
     this.menuItemsStatus.isLoading = true;
     this.selectedIds = [];
+    this.collectionChanged = false;
     this.menu.getDishes(this.servedDate)
       .subscribe((i) => this.onMenuItemsFetch(i), (e) => this.onMenuItemsFail(e));
   }
@@ -180,12 +191,14 @@ export class MenuEditorComponent implements OnInit {
 
   onDrop(data: DropEvent<IDish>) {
     const dish = data.dragData;
+    this.collectionChanged = true;
     this.menuItems[dish.type].push(dish);
     this.selectedIds.push(dish.id);
   }
 
   onItemRemove(dish: IDish) {
     this.dragTrashStart = false;
+    this.collectionChanged = true;
     const src = this.menuItems[dish.type];
 
     if (isNil(src)) {
