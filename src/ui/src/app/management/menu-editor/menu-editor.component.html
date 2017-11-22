@@ -55,6 +55,10 @@
   <div class="col-xs-3 flex-row menu-editor__sidenav">
     <app-spinner [inline]="true" *ngIf="dishesStatus.isLoading"></app-spinner>
     <!-- Dishes list -->
-    <app-dishes-list *ngIf="dishesStatus.isLoaded" [items]="dishes"></app-dishes-list>
+    <app-dishes-list
+      *ngIf="dishesStatus.isLoaded"
+      [items]="dishes"
+      [selectedIds]="selectedIds"
+    ></app-dishes-list>
   </div>
 </div>

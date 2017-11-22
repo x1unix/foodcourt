@@ -6,6 +6,7 @@ import {DishesService} from '../services/dishes.service';
 import {IDish} from '../../shared/interfaces/dish';
 import {ResourceStatus} from '../../shared/helpers/resource-status';
 import {WebHelperService, MenuService} from '../../shared/services';
+import { DropEvent } from '../../shared/interfaces/drop-event';
 
 const ITEMS_QUERY = {
   orderBy: 'label',
@@ -60,6 +61,12 @@ export class MenuEditorComponent implements OnInit {
    * @type {any}
    */
   displayedDate: string = null;
+
+  /**
+   * List of selected id's
+   * @type {Array}
+   */
+  selectedIds: number[] = [];
 
   /**
    * Date to be send on server
@@ -119,6 +126,7 @@ export class MenuEditorComponent implements OnInit {
 
   updateMenuItemsList() {
     this.menuItemsStatus.isLoading = true;
+    this.selectedIds = [];
     this.menu.getDishes(this.servedDate)
       .subscribe((i) => this.onMenuItemsFetch(i), (e) => this.onMenuItemsFail(e));
   }
@@ -132,6 +140,9 @@ export class MenuEditorComponent implements OnInit {
 
     // Group by class and fill the collection
     if (!isNil(items)) {
+      // Fill selected ids list
+      this.selectedIds = items.map((i) => i.id);
+
       const grouped = groupBy(items, 'type');
       Object.keys(grouped).forEach((groupId) => {
         this.menuItems[groupId] = [...grouped[groupId]];
@@ -157,8 +168,10 @@ export class MenuEditorComponent implements OnInit {
     );
   }
 
-  onDrop(data: any) {
-    console.log(data);
+  onDrop(data: DropEvent<IDish>) {
+    const dish = data.dragData;
+    this.menuItems[dish.type].push(dish);
+    this.selectedIds.push(dish.id);
   }
 
 }
