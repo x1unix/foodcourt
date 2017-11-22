@@ -157,4 +157,8 @@ export class MenuEditorComponent implements OnInit {
     );
   }
 
+  onDrop(data: any) {
+    console.log(data);
+  }
+
 }

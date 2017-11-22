@@ -25,7 +25,7 @@
     <app-spinner *ngIf="menuItemsStatus.isLoading" style="height: 100%"></app-spinner>
 
     <!-- Menu dishes list -->
-    <div *ngIf="menuItemsStatus.isLoaded" class="menu-editor">
+    <div *ngIf="menuItemsStatus.isLoaded" class="menu-editor" dnd-droppable (onDropSuccess)="onDrop($event)">
       <section class="menu-editor__section" *ngFor="let section of menuItems; let i = index">
         <h3 class="menu-editor__section__title">{{dishTypes[i]}}</h3>
         <div class="menu-editor__no-items" *ngIf="section.length == 0">

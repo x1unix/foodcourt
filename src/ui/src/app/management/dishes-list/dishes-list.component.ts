@@ -15,6 +15,8 @@ export class DishesListComponent implements OnInit, OnDestroy {
 
   @Input() items: IDish[] = [];
 
+  @Input() selectedIds: number[] = [];
+
   displayedItems: IDish[] = [];
 
   searchBoxControl: FormControl = null;

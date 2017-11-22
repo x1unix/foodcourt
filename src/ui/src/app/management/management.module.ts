@@ -5,6 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ClarityModule } from 'clarity-angular';
 import { SharedModule } from '../shared/shared.module';
 
+import {DndModule} from 'ng2-dnd';
+
 import { ManagementComponent } from './management.component';
 import { ItemsCatalogComponent } from './items-catalog/items-catalog.component';
 import { DishEditorComponent } from './dish-editor/dish-editor.component';
@@ -20,7 +22,8 @@ import { DishesListComponent } from './dishes-list/dishes-list.component';
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    ClarityModule
+    ClarityModule,
+    DndModule.forRoot()
   ],
   declarations: [
     ManagementComponent,
