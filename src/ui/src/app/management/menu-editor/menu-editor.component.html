@@ -25,7 +25,13 @@
     <app-spinner *ngIf="menuItemsStatus.isLoading" style="height: 100%"></app-spinner>
 
     <!-- Menu dishes list -->
-    <div *ngIf="menuItemsStatus.isLoaded" class="menu-editor" dnd-droppable (onDropSuccess)="onDrop($event)">
+    <div
+      *ngIf="menuItemsStatus.isLoaded"
+      class="menu-editor"
+      [dropZones]="cartDropZone"
+      dnd-droppable
+      (onDropSuccess)="onDrop($event)"
+    >
       <section class="menu-editor__section" *ngFor="let section of menuItems; let i = index">
         <h3 class="menu-editor__section__title">{{dishTypes[i]}}</h3>
         <div class="menu-editor__no-items" *ngIf="section.length == 0">
@@ -37,6 +43,12 @@
             class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
           >
             <app-food-card
+              class="menu-editor__item"
+              dnd-draggable
+              [dropZones]="catalogDropZone"
+              [dragData]="item.id"
+              (onDragStart)="dragTrashStart = true"
+              (onDragEnd)="dragTrashStart = false"
               [rating]="0"
               [label]="item.label"
               [description]="item.description"
@@ -59,6 +71,10 @@
       *ngIf="dishesStatus.isLoaded"
       [items]="dishes"
       [selectedIds]="selectedIds"
+      [catalogDropZone]="catalogDropZone"
+      [cartDropZone]="cartDropZone"
+      (drop)="onItemRemove($event)"
+      [showDragBanner]="dragTrashStart"
     ></app-dishes-list>
   </div>
 </div>

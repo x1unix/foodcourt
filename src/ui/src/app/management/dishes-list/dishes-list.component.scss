@@ -11,9 +11,42 @@
   padding: 15px 0;
 }
 
+.dishes-list {
+  position: relative;
+}
+
+
+.dishes-list__poster--delete {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: red;
+}
+
+.dishes-list__items {
+  position: relative;
+}
+
 .dishes-list__container {
   overflow: auto;
   flex: 1;
+
+  &.dishes-list__container--drag {
+    border: 2px dashed #000;
+
+    .dishes-list__items {
+      // opacity: 0.5;
+      filter: blur(5px);
+      z-index: -1;
+    }
+
+    .dishes-list__poster--delete {
+      display: flex;
+    }
+  }
 }
 
 .card-header.dishes-list__label {
@@ -33,5 +66,5 @@
 .dishes-list__card.card {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  cursor: pointer
+  cursor: grab !important;
 }

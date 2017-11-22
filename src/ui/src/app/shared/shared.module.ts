@@ -77,7 +77,8 @@ import { PosterComponent } from './components/poster/poster.component';
     RatingComponent,
     SpinnerComponent,
     HeaderToolbarComponent,
-    AlertComponent
+    AlertComponent,
+    PosterComponent
     // ...FORM_DIRECTIVES,
     // ...COMPONENTS,
     // ...DIRECTIVES,

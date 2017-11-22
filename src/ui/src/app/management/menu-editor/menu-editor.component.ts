@@ -68,6 +68,12 @@ export class MenuEditorComponent implements OnInit {
    */
   selectedIds: number[] = [];
 
+  catalogDropZone = ['allItemsZone'];
+
+  cartDropZone = ['selectedItemsZone'];
+
+  dragTrashStart = false;
+
   /**
    * Date to be send on server
    * @type {any}
@@ -172,6 +178,10 @@ export class MenuEditorComponent implements OnInit {
     const dish = data.dragData;
     this.menuItems[dish.type].push(dish);
     this.selectedIds.push(dish.id);
+  }
+
+  onItemRemove(dishId: number) {
+    console.log(dishId);
   }
 
 }

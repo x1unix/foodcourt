@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.poster__label,
+.poster__description {
+  display: block;
+  text-align: center;
+}
+
+.poster__label {
+  color: inherit;
+}
+
+.poster__icon {
+  height: 64px;
+  width: 64px;
+  margin-bottom: 32px;
+}
+
+.poster__description {
+  color: black;
+  margin-top: 12px;
+}

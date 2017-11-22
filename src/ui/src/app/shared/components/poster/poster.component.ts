@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-poster',
@@ -6,6 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./poster.component.scss']
 })
 export class PosterComponent implements OnInit {
+
+  @Input() icon = 'info-standard';
+
+  @Input() label = 'Banner';
 
   constructor() { }
 

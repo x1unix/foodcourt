@@ -7,24 +7,34 @@
     placeholder="Search by name..."
   />
 </div>
-<div class="dishes-list__container">
+<div
+  class="dishes-list__container"
+  dnd-droppable
+  [dropZones]="catalogDropZone"
+  (onDropSuccess)="onDropEnter($event)"
+  [ngClass]="{'dishes-list__container--drag': showDragBanner}"
+>
   <div class="dishes-list" *ngIf="displayedItems.length > 0">
-    <ng-template ngFor let-item [ngForOf]="displayedItems">
-      <div
-        *ngIf="!selectedIds.includes(item.id)"
-        class="card dishes-list__card"
-        title="Click to add an item to the menu"
-        dnd-draggable
-        [dragData]="item"
-      >
-        <div class="card-header dishes-list__label">
-          {{item.label}}
+    <div class="dishes-list__items">
+      <ng-template ngFor let-item [ngForOf]="displayedItems">
+        <div
+          *ngIf="!selectedIds.includes(item.id)"
+          class="card dishes-list__card"
+          title="Drag an item to add"
+          dnd-draggable
+          [dragData]="item"
+          [dropZones]="cartDropZone"
+        >
+          <div class="card-header dishes-list__label">
+            {{item.label}}
 
-          <span class="label label-{{getDishCategoryColor(item.type)}} dishes-list__type">
-          {{getDishCategory(item.type)}}
-        </span>
+            <span class="label label-{{getDishCategoryColor(item.type)}} dishes-list__type">
+              {{getDishCategory(item.type)}}
+            </span>
+          </div>
         </div>
-      </div>
-    </ng-template>
+      </ng-template>
+    </div>
   </div>
+  <app-poster class="dishes-list__poster--delete" icon="trash" label="Drag to delete">Drag item here to delete</app-poster>
 </div>

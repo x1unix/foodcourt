@@ -5,6 +5,10 @@
   margin-top: -24px;
 }
 
+.menu-editor {
+  cursor: default !important;
+}
+
 .menu-editor__sidenav {
   border-left: 1px solid #ccc;
   position: fixed;
@@ -40,4 +44,8 @@
 .menu-editor__no-items {
   padding: 64px;
   text-align: center;
+}
+
+.menu-editor__item {
+
 }

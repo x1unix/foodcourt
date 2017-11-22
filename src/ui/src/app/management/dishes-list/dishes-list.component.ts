@@ -1,8 +1,9 @@
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {IDish} from '../../shared/interfaces/dish';
 import {DishesService} from '../services/dishes.service';
 import {FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs/Rx';
+import {DropEvent} from '../../shared/interfaces/drop-event';
 
 const SEARCH_INPUT_TIMEOUT = 300;
 
@@ -16,6 +17,14 @@ export class DishesListComponent implements OnInit, OnDestroy {
   @Input() items: IDish[] = [];
 
   @Input() selectedIds: number[] = [];
+
+  @Input() catalogDropZone: string[] = [];
+
+  @Input() cartDropZone: string[] = [];
+
+  @Input() showDragBanner = false;
+
+  @Output() drop = new EventEmitter<number>();
 
   displayedItems: IDish[] = [];
 
@@ -69,6 +78,11 @@ export class DishesListComponent implements OnInit, OnDestroy {
     this.displayedItems = this.items.filter((i) => searchExpr.test(i.label));
 
     searchExpr = oQuery = null;
+  }
+
+  onDropEnter(data: DropEvent<number>) {
+    const dishId = data.dragData;
+    this.drop.emit(dishId);
   }
 
 }
