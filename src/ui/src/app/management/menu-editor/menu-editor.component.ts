@@ -9,7 +9,7 @@ import {WebHelperService, MenuService} from '../../shared/services';
 
 const ITEMS_QUERY = {
   orderBy: 'label',
-  orderDir: 'desc'
+  orderDir: 'asc'
 };
 
 const DISPLAYED_DATE_FORMAT = 'dddd, MMMM DD YYYY';

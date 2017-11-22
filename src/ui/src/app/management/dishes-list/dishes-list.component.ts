@@ -3,7 +3,8 @@ import {IDish} from '../../shared/interfaces/dish';
 import {DishesService} from '../services/dishes.service';
 import {FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs/Rx';
-import * as lunr from 'lunr';
+
+const SEARCH_INPUT_TIMEOUT = 300;
 
 @Component({
   selector: 'app-dishes-list',
@@ -16,8 +17,6 @@ export class DishesListComponent implements OnInit, OnDestroy {
 
   displayedItems: IDish[] = [];
 
-  lunr: any = null;
-
   searchBoxControl: FormControl = null;
 
   searchChange$: Subscription;
@@ -29,24 +28,13 @@ export class DishesListComponent implements OnInit, OnDestroy {
 
     this.searchBoxControl = new FormControl('');
 
-    this.genSearchIndex();
-
     this.searchChange$ = this.searchBoxControl.valueChanges
-      .debounceTime(500)
+      .debounceTime(SEARCH_INPUT_TIMEOUT)
       .subscribe(newValue => this.search(newValue));
   }
 
   ngOnDestroy() {
     this.searchChange$.unsubscribe();
-  }
-
-  private genSearchIndex() {
-    let docs = this.items;
-    this.lunr = lunr(function () {
-      this.ref('label');
-      docs.forEach((item) => this.add(item));
-    });
-    docs = null;
   }
 
   /**
@@ -68,14 +56,17 @@ export class DishesListComponent implements OnInit, OnDestroy {
   }
 
   search(searchQuery: string) {
-    const oQuery = searchQuery.trim();
+    let oQuery = searchQuery.trim();
 
     if (oQuery.length === 0) {
       this.displayedItems = this.items;
       return;
     }
 
-    this.displayedItems = this.lunr.search(oQuery);
+    let searchExpr = new RegExp(oQuery, 'gi');
+    this.displayedItems = this.items.filter((i) => searchExpr.test(i.label));
+
+    searchExpr = oQuery = null;
   }
 
 }

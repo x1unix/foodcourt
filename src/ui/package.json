@@ -29,7 +29,6 @@
     "clarity-ui": "^0.10.12",
     "core-js": "^2.4.1",
     "lodash": "^4.17.4",
-    "lunr": "^2.1.4",
     "moment": "^2.19.1",
     "mutationobserver-shim": "^0.3.2",
     "ng2-toasty": "^4.0.3",
