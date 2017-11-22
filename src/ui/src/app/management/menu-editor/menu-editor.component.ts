@@ -12,7 +12,7 @@ const ITEMS_QUERY = {
   orderDir: 'desc'
 };
 
-const DISPLAYED_DATE_FORMAT = 'dddd, MMMM Do YYYY';
+const DISPLAYED_DATE_FORMAT = 'dddd, MMMM DD YYYY';
 const SERVED_DATE_FORMAT = 'YYYYMMDD';
 
 /**

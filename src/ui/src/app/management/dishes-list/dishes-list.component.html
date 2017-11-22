@@ -1,9 +1,15 @@
 <div class="dishes-list__search">
-  <input type="text" name="dishSearch" [formControl]="searchBoxControl" />
+  <input
+    type="text"
+    name="dishSearch"
+    class="dishes-list__omnibox"
+    [formControl]="searchBoxControl"
+    placeholder="Search by name..."
+  />
 </div>
 <div class="dishes-list__container">
   <div class="dishes-list" *ngIf="displayedItems.length > 0">
-    <div class="card" *ngFor="let item of displayedItems">
+    <div class="card dishes-list__card" *ngFor="let item of displayedItems">
       <div class="card-header dishes-list__label">
         {{item.label}}
 

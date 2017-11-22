@@ -1,6 +1,6 @@
 <!-- Container -->
 <div class="row" style="flex: 1">
-  <div class="col-xs-9 flex">
+  <div class="menu-editor__container flex">
     <!-- Page header -->
     <app-header-toolbar [label]="'Menu for ' + displayedDate" class="menu-editor__header" [smaller]="true">
       <button type="button" class="btn btn-primary">
@@ -27,8 +27,11 @@
     <!-- Menu dishes list -->
     <div *ngIf="menuItemsStatus.isLoaded" class="menu-editor">
       <section class="menu-editor__section" *ngFor="let section of menuItems; let i = index">
-        <h3>{{dishTypes[i]}}</h3>
-        <div class="row">
+        <h3 class="menu-editor__section__title">{{dishTypes[i]}}</h3>
+        <div class="menu-editor__no-items" *ngIf="section.length == 0">
+          Section is empty. Drag items from the right column to add.
+        </div>
+        <div class="row" *ngIf="section.length > 0">
           <div
             *ngFor="let item of section"
             class="col-lg-3 col-md-6 col-sm-12 col-xs-12"

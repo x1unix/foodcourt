@@ -2,19 +2,42 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  margin-top: -24px;
 }
 
 .menu-editor__sidenav {
   border-left: 1px solid #ccc;
+  position: fixed;
+  right: 0;
+  height: calc(100vh - 61px);
+  //padding-left: 0;
+  //padding-right: 0;
 }
 
 .menu-editor__header {
+  display: block;
   position: sticky;
   top: -24px;
-  background: #fafaface;
+  background: #fafafaef;
   margin: {
     top: -24px;
   }
   padding-top: 24px;
+  padding-bottom: 24px;
   z-index: 1;
+}
+
+.menu-editor__container {
+  max-width: 70%;
+  flex: 0 0 70%;
+  padding-top: 24px;
+}
+
+.menu-editor__section:first-child .menu-editor__section__title {
+  margin-top: 0;
+}
+
+.menu-editor__no-items {
+  padding: 64px;
+  text-align: center;
 }

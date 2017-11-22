@@ -6,6 +6,8 @@
 
 .dishes-list__search {
   height: auto;
+  margin-right: 14px;
+  padding: 15px 0;
 }
 
 .dishes-list__container {
@@ -20,4 +22,14 @@
 .dishes-list__type {
   float: right;
   margin-right: 0;
+}
+
+.dishes-list__omnibox {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dishes-list__card.card {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
