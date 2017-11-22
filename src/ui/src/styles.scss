@@ -19,6 +19,13 @@
   }
 }
 
+.sith {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%,-50%);
+}
+
 // Drag and drop styles for ng2-dnd
 .dnd-drag-start {
   //-moz-transform:scale(0.8);

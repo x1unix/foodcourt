@@ -24,7 +24,9 @@ export class DishesListComponent implements OnInit, OnDestroy {
 
   @Input() showDragBanner = false;
 
-  @Output() drop = new EventEmitter<number>();
+  @Input() allowDrag = true;
+
+  @Output() drop = new EventEmitter<IDish>();
 
   displayedItems: IDish[] = [];
 
@@ -80,9 +82,10 @@ export class DishesListComponent implements OnInit, OnDestroy {
     searchExpr = oQuery = null;
   }
 
-  onDropEnter(data: DropEvent<number>) {
-    const dishId = data.dragData;
-    this.drop.emit(dishId);
+  onDropEnter(data: DropEvent<IDish>) {
+    this.showDragBanner = false;
+    const dish = data.dragData;
+    this.drop.emit(dish);
   }
 
 }

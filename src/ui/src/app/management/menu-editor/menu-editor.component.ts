@@ -104,6 +104,10 @@ export class MenuEditorComponent implements OnInit {
     return this.dishesCatalogue.dishTypes;
   }
 
+  get menuEmpty(): boolean {
+    return this.selectedIds.length === 0;
+  }
+
   constructor(private dishesCatalogue: DishesService, private helper: WebHelperService, private menu: MenuService) {}
 
   ngOnInit() {
@@ -180,8 +184,24 @@ export class MenuEditorComponent implements OnInit {
     this.selectedIds.push(dish.id);
   }
 
-  onItemRemove(dishId: number) {
-    console.log(dishId);
+  onItemRemove(dish: IDish) {
+    this.dragTrashStart = false;
+    const src = this.menuItems[dish.type];
+
+    if (isNil(src)) {
+      return;
+    }
+
+    const index = src.indexOf(dish);
+
+    if (index === -1) {
+      return;
+    }
+
+    src.splice(index, 1);
+
+    // remove from selected id's
+    this.selectedIds.splice(this.selectedIds.indexOf(dish.id), 1);
   }
 
 }

@@ -22,6 +22,7 @@
           class="card dishes-list__card"
           title="Drag an item to add"
           dnd-draggable
+          [dragEnabled]="allowDrag"
           [dragData]="item"
           [dropZones]="cartDropZone"
         >

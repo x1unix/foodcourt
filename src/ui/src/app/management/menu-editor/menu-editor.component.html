@@ -32,36 +32,46 @@
       dnd-droppable
       (onDropSuccess)="onDrop($event)"
     >
-      <section class="menu-editor__section" *ngFor="let section of menuItems; let i = index">
-        <h3 class="menu-editor__section__title">{{dishTypes[i]}}</h3>
-        <div class="menu-editor__no-items" *ngIf="section.length == 0">
-          Section is empty. Drag items from the right column to add.
-        </div>
-        <div class="row" *ngIf="section.length > 0">
-          <div
-            *ngFor="let item of section"
-            class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
-          >
-            <app-food-card
-              class="menu-editor__item"
-              dnd-draggable
-              [dropZones]="catalogDropZone"
-              [dragData]="item.id"
-              (onDragStart)="dragTrashStart = true"
-              (onDragEnd)="dragTrashStart = false"
-              [rating]="0"
-              [label]="item.label"
-              [description]="item.description"
-              [category]="getDishCategory(item.type)"
-              [imageUrl]="item.photoUrl"
-              [rateable]="false"
-              [editable]="false"
-              [selectable]="false"
-              [badgeColor]="getDishCategoryColor(item.type)"
-            ></app-food-card>
-          </div>
-        </div>
-      </section>
+      <app-poster
+        *ngIf="menuEmpty"
+        class="sith"
+        label="No items"
+        icon="add-text"
+      >
+        The menu is empty. Drag items from the right side to add items.
+      </app-poster>
+
+      <div *ngIf="!menuEmpty" class="menu-editor__sections">
+        <ng-template ngFor let-section [ngForOf]="menuItems" let-i="index">
+          <section *ngIf="section.length > 0" class="menu-editor__section">
+            <h3 class="menu-editor__section__title">{{dishTypes[i]}}</h3>
+            <div class="row" *ngIf="section.length > 0">
+              <div
+                *ngFor="let item of section"
+                class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+              >
+                <app-food-card
+                  class="menu-editor__item"
+                  dnd-draggable
+                  [dropZones]="catalogDropZone"
+                  [dragData]="item"
+                  (onDragStart)="dragTrashStart = true"
+                  (onDragEnd)="dragTrashStart = false"
+                  [rating]="0"
+                  [label]="item.label"
+                  [description]="item.description"
+                  [category]="getDishCategory(item.type)"
+                  [imageUrl]="item.photoUrl"
+                  [rateable]="false"
+                  [editable]="false"
+                  [selectable]="false"
+                  [badgeColor]="getDishCategoryColor(item.type)"
+                ></app-food-card>
+              </div>
+            </div>
+          </section>
+        </ng-template>
+      </div>
     </div>
   </div>
   <div class="col-xs-3 flex-row menu-editor__sidenav">
@@ -73,8 +83,9 @@
       [selectedIds]="selectedIds"
       [catalogDropZone]="catalogDropZone"
       [cartDropZone]="cartDropZone"
+      [allowDrag]="menuItemsStatus.isLoaded"
       (drop)="onItemRemove($event)"
-      [showDragBanner]="dragTrashStart"
+      [(showDragBanner)]="dragTrashStart"
     ></app-dishes-list>
   </div>
 </div>
