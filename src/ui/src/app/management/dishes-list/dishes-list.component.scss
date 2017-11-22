@@ -2,11 +2,12 @@
   display: flex;
   height: 100%;
   flex-direction: column;
+  padding-left: 15px;
+  padding-right: 30px;
 }
 
 .dishes-list__search {
   height: auto;
-  margin-right: 14px;
   padding: 15px 0;
 }
 
