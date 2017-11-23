@@ -2,22 +2,37 @@
 <div class="row" style="flex: 1">
   <div class="menu-editor__container flex">
     <!-- Page header -->
-    <app-header-toolbar [label]="'Menu for ' + displayedDate" class="menu-editor__header" [smaller]="true">
-      <button
-        type="button"
-        class="btn btn-success"
-        *ngIf="collectionChanged"
-        [disabled]="saveStatus.isLoading"
-      >
-        <clr-icon shape="floppy"></clr-icon>
-        <span>Save</span>
-      </button>
+    <div class="menu-editor__header">
+      <app-header-toolbar [label]="'Menu for ' + displayedDate" [smaller]="true">
+        <button
+          type="button"
+          class="btn btn-success"
+          *ngIf="collectionChanged"
+          [clrLoading]="saveStatus.isLoading"
+          [disabled]="saveStatus.isLoading"
+          (click)="saveChanges()"
+        >
+          <clr-icon *ngIf="!saveStatus.isLoading" shape="floppy"></clr-icon>
+          <span *ngIf="!saveStatus.isLoading">Save</span>
+          <span *ngIf="saveStatus.isLoading">Saving...</span>
+        </button>
 
-      <button type="button" class="btn btn-primary">
-        <clr-icon shape="calendar"></clr-icon>
-        <span>Change date</span>
-      </button>
-    </app-header-toolbar>
+        <button type="button" class="btn btn-primary" [disabled]="saveStatus.isLoading">
+          <clr-icon shape="calendar"></clr-icon>
+          <span>Change date</span>
+        </button>
+      </app-header-toolbar>
+
+      <!-- Dishes save success message -->
+      <app-alert *ngIf="saveStatus.isLoaded" type="success" icon="check-circle" [dismissable]="false">
+        Changes saved successfully
+      </app-alert>
+
+      <!-- Dishes save fail message -->
+      <app-alert *ngIf="saveStatus.isFailed" type="danger" icon="exclamation-circle" [dismissable]="false">
+        Failed to save changes: {{saveStatus.error}}
+      </app-alert>
+    </div>
 
     <!-- Items load fail message -->
     <app-retry-alert

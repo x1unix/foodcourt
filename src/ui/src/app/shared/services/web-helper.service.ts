@@ -20,7 +20,7 @@ export class WebHelperService {
 
     if (isObject(err.error)) {
       const msg: IMessage = <IMessage> err.error;
-      return msg.msg;
+      return `${err.status} ${msg.msg}`;
     }
 
     return `${err.status} ${err.statusText}`;

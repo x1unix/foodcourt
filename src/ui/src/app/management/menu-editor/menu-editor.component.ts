@@ -217,4 +217,17 @@ export class MenuEditorComponent implements OnInit {
     this.selectedIds.splice(this.selectedIds.indexOf(dish.id), 1);
   }
 
+  saveChanges() {
+    this.saveStatus.isLoading = true;
+    this.menu.setDishesForDate(this.servedDate, this.selectedIds).subscribe(
+      () => {
+        this.saveStatus.isLoaded = true;
+        setTimeout(() => this.saveStatus.isIdle = true, 3000);
+      }, (err) => {
+        this.saveStatus.isFailed = true;
+        this.saveStatus.error = this.helper.extractResponseError(err);
+      }
+    );
+  }
+
 }

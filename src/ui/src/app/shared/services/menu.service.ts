@@ -18,4 +18,14 @@ export class MenuService {
     return <Observable<IDish[]>> this.http.get(`/api/menu/${date}/dishes`);
   }
 
+  /**
+   * Set a list of dishes as a menu for specific date
+   * @param {string} date Date (format: YYYYMMDD)
+   * @param {number[]} dishesIds List of dishes IDs
+   * @returns {Observable<Object>}
+   */
+  setDishesForDate(date: string, dishesIds: number[]) {
+    return this.http.post(`/api/menu/${date}/dishes`, dishesIds);
+  }
+
 }
