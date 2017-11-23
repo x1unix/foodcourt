@@ -1413,6 +1413,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+date-fns@^1.29.0:
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -3618,6 +3622,10 @@ ng2-validation@^4.2.0:
   resolved "https://registry.yarnpkg.com/ng2-validation/-/ng2-validation-4.2.0.tgz#f38d441d3fb7e862155166480045aaff9ad11dbb"
   dependencies:
     libphonenumber-js "^0.4.5"
+
+ngx-slimscroll@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/ngx-slimscroll/-/ngx-slimscroll-3.4.1.tgz#6a0f6bd8cc7738b023030739f83759a0b0dd3926"
 
 no-case@^2.2.0:
   version "2.3.2"

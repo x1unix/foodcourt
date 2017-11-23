@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isNil, groupBy } from 'lodash';
 import * as moment from 'moment';
+import { DatepickerOptions } from '../../shared/components/datepicker';
 
 import {DishesService} from '../services/dishes.service';
 import {IDish} from '../../shared/interfaces/dish';
@@ -97,6 +98,14 @@ export class MenuEditorComponent implements OnInit {
   collectionChanged = false;
 
   /**
+   * ng2-datepicker options
+   * @type {any}
+   */
+  datePickerOptions: DatepickerOptions = null;
+
+  pickedDate: Date = null;
+
+  /**
    * Date to be send on server
    * @type {any}
    */
@@ -134,8 +143,19 @@ export class MenuEditorComponent implements OnInit {
 
   ngOnInit() {
     this.date = moment().utc();
+    this.pickedDate = this.date.toDate();
+    this.initDatePickerOptions();
     this.getAllDishes();
     this.updateMenuItemsList();
+  }
+
+  initDatePickerOptions() {
+    const currentYear = this.date.year();
+    this.datePickerOptions = {
+      minYear: currentYear,
+      firstCalendarDay: 1,
+      displayFormat: SERVED_DATE_FORMAT
+    };
   }
 
   /**
@@ -162,6 +182,7 @@ export class MenuEditorComponent implements OnInit {
     this.menuItemsStatus.isLoading = true;
     this.selectedIds = [];
     this.collectionChanged = false;
+    this.initialSize = 0;
     this.menu.getDishes(this.servedDate)
       .subscribe((i) => this.onMenuItemsFetch(i), (e) => this.onMenuItemsFail(e));
   }
@@ -268,6 +289,11 @@ export class MenuEditorComponent implements OnInit {
         this.saveStatus.error = this.helper.extractResponseError(err);
       }
     );
+  }
+
+  onDateChange(newDate: Date) {
+    this.date = moment(newDate);
+    this.updateMenuItemsList();
   }
 
 }

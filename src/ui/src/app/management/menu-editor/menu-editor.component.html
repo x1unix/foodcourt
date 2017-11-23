@@ -30,10 +30,23 @@
           <span *ngIf="saveStatus.isLoading">Saving...</span>
         </button>
 
-        <button type="button" class="btn btn-primary" [disabled]="saveStatus.isLoading || deleteStatus.isLoading">
-          <clr-icon shape="calendar"></clr-icon>
-          <span>Change date</span>
-        </button>
+        <app-datepicker
+          [(ngModel)]="pickedDate"
+          (ngModelChange)="onDateChange($event)"
+          [options]="datePickerOptions"
+          [showDateInput]="false"
+          #picker
+        >
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
+            (click)="picker.toggle()"
+          >
+            <clr-icon shape="calendar"></clr-icon>
+            <span>Change date</span>
+          </button>
+        </app-datepicker>
       </app-header-toolbar>
 
       <!-- Dishes save success message -->
