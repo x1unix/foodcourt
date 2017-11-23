@@ -6,10 +6,23 @@
       <app-header-toolbar [label]="'Menu for ' + displayedDate" [smaller]="true">
         <button
           type="button"
+          class="btn btn-danger"
+          *ngIf="menuItemsStatus.isLoaded && (initialSize > 0)"
+          [clrLoading]="deleteStatus.isLoading"
+          [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
+          (click)="deleteMenu()"
+        >
+          <clr-icon *ngIf="!deleteStatus.isLoading" shape="trash"></clr-icon>
+          <span *ngIf="!deleteStatus.isLoading">Delete</span>
+          <span *ngIf="deleteStatus.isLoading">Deleting...</span>
+        </button>
+
+        <button
+          type="button"
           class="btn btn-success"
-          *ngIf="collectionChanged"
+          *ngIf="collectionChanged && (selectedIds.length > 0) && (menuItemsStatus.isLoaded)"
           [clrLoading]="saveStatus.isLoading"
-          [disabled]="saveStatus.isLoading"
+          [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
           (click)="saveChanges()"
         >
           <clr-icon *ngIf="!saveStatus.isLoading" shape="floppy"></clr-icon>
@@ -17,7 +30,7 @@
           <span *ngIf="saveStatus.isLoading">Saving...</span>
         </button>
 
-        <button type="button" class="btn btn-primary" [disabled]="saveStatus.isLoading">
+        <button type="button" class="btn btn-primary" [disabled]="saveStatus.isLoading || deleteStatus.isLoading">
           <clr-icon shape="calendar"></clr-icon>
           <span>Change date</span>
         </button>
@@ -31,6 +44,16 @@
       <!-- Dishes save fail message -->
       <app-alert *ngIf="saveStatus.isFailed" type="danger" icon="exclamation-circle" [dismissable]="false">
         Failed to save changes: {{saveStatus.error}}
+      </app-alert>
+
+      <!-- Dishes save success message -->
+      <app-alert *ngIf="deleteStatus.isLoaded" type="success" icon="check-circle" [dismissable]="false">
+        Menu deleted successfully
+      </app-alert>
+
+      <!-- Dishes save fail message -->
+      <app-alert *ngIf="deleteStatus.isFailed" type="danger" icon="exclamation-circle" [dismissable]="false">
+        Failed to delete the menu: {{deleteStatus.error}}
       </app-alert>
     </div>
 

@@ -51,6 +51,12 @@ export class MenuEditorComponent implements OnInit {
   saveStatus = new ResourceStatus();
 
   /**
+   * Menu delete progress status
+   * @type {ResourceStatus}
+   */
+  deleteStatus = new ResourceStatus();
+
+  /**
    * Menu items fetch status
    * @type {ResourceStatus}
    */
@@ -67,6 +73,12 @@ export class MenuEditorComponent implements OnInit {
    * @type {Array}
    */
   selectedIds: number[] = [];
+
+  /**
+   * Initial size of the collection
+   * @type {number}
+   */
+  initialSize = 0;
 
   catalogDropZone = ['allItemsZone'];
 
@@ -145,6 +157,8 @@ export class MenuEditorComponent implements OnInit {
   }
 
   updateMenuItemsList() {
+    this.deleteStatus.isIdle = true;
+    this.saveStatus.isIdle = true;
     this.menuItemsStatus.isLoading = true;
     this.selectedIds = [];
     this.collectionChanged = false;
@@ -156,6 +170,9 @@ export class MenuEditorComponent implements OnInit {
     // Set load status
     this.menuItemsStatus.isLoaded = true;
 
+    this.collectionChanged = false;
+    this.selectedIds = [];
+
     // Create new empty collection with empty sub-arrays for each category
     this.menuItems = this.dishTypes.map((i) => []);
 
@@ -163,6 +180,7 @@ export class MenuEditorComponent implements OnInit {
     if (!isNil(items)) {
       // Fill selected ids list
       this.selectedIds = items.map((i) => i.id);
+      this.initialSize = this.selectedIds.length;
 
       const grouped = groupBy(items, 'type');
       Object.keys(grouped).forEach((groupId) => {
@@ -217,11 +235,32 @@ export class MenuEditorComponent implements OnInit {
     this.selectedIds.splice(this.selectedIds.indexOf(dish.id), 1);
   }
 
+  deleteMenu() {
+    const confirmed = window.confirm('Are you sure that you want to delete this menu?');
+
+    if (confirmed) {
+      this.deleteStatus.isLoading = true;
+      this.menu.clearMenu(this.servedDate).subscribe(
+        () => {
+          this.deleteStatus.isLoaded = true;
+          setTimeout(() => this.deleteStatus.isIdle = true, 3000);
+
+          // Fill empty collection
+          this.onMenuItemsFetch([]);
+        }, (err) => {
+          this.deleteStatus.isFailed = true;
+          this.deleteStatus.error = this.helper.extractResponseError(err);
+        }
+      );
+    }
+  }
+
   saveChanges() {
     this.saveStatus.isLoading = true;
     this.menu.setDishesForDate(this.servedDate, this.selectedIds).subscribe(
       () => {
         this.saveStatus.isLoaded = true;
+        this.initialSize = this.selectedIds.length;
         setTimeout(() => this.saveStatus.isIdle = true, 3000);
       }, (err) => {
         this.saveStatus.isFailed = true;

@@ -28,4 +28,12 @@ export class MenuService {
     return this.http.post(`/api/menu/${date}/dishes`, dishesIds);
   }
 
+  /**
+   * Clear menu items
+   * @param date Date (format: YYYYMMDD)
+   */
+  clearMenu(date) {
+    return this.http.delete(`/api/menu/${date}`);
+  }
+
 }
