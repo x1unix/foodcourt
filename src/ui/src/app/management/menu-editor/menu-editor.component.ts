@@ -261,6 +261,7 @@ export class MenuEditorComponent implements OnInit {
       () => {
         this.saveStatus.isLoaded = true;
         this.initialSize = this.selectedIds.length;
+        this.collectionChanged = false;
         setTimeout(() => this.saveStatus.isIdle = true, 3000);
       }, (err) => {
         this.saveStatus.isFailed = true;
