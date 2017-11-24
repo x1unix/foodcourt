@@ -42,3 +42,8 @@ func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
 
 	return commitErr
 }
+
+// Get list of ordered items in menu
+//func GetOrderedItems(output *[]int, userId int, date int, db *sqlx.DB) error {
+//
+//}

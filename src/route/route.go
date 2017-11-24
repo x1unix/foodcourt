@@ -72,6 +72,11 @@ func Bootstrap() *mux.Router {
 	// Clear menu for specific date
 	r.HandleFunc("/api/menu/{date:[0-9]+}", RequireAdmin(RequireValidDate(controller.ClearMenu))).Methods("DELETE")
 
+	// == Orders ==
+
+	// Make an order
+	r.HandleFunc("/api/orders/{userId:[0-9}+/{date:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.OrderDishes)))).Methods("POST")
+
 	// == Files ==
 
 	// Upload an image
