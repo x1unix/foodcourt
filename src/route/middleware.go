@@ -13,6 +13,7 @@ import (
 
 const TokenQueryParam = "token"
 const errAccessDenied = "Access Denied"
+const paramUserId = "userId"
 
 // Middleware guard that requires API token to be passed
 func RequireToken(handler rest.RequestHandler) rest.RequestHandler {
@@ -109,6 +110,7 @@ func RequireAdmin(handler rest.RequestHandler) rest.RequestHandler {
 
 const dateParamLength = 8
 
+// Middleware checks if the passed date in request is correct
 func RequireValidDate(handler rest.RequestHandler) rest.RequestHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date := rest.Params(r).GetString("date")
@@ -120,4 +122,28 @@ func RequireValidDate(handler rest.RequestHandler) rest.RequestHandler {
 			rest.ErrorFromString("Invalid date format (expected: YYYYMMDD)", 400).Write(&w)
 		}
 	}
+}
+
+// Allow access only if client's group is equals or higher that specified
+// of if the section belongs to the client's user (for ex. route like /foo/bar/{userId})
+func OnlySelfOrGroup(handler rest.RequestHandler, minAccessGroup int) rest.RequestHandler {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := rest.GetToken(r)
+		session, _ := vault.GetSession(token)
+		targetUserId := rest.Params(r).GetInt(paramUserId)
+		currentUser := session.User
+
+		// Check access
+		if (currentUser.Level <= minAccessGroup) || (currentUser.ID == targetUserId) {
+			handler(w, r)
+		} else {
+			rest.ErrorFromString("access denied", http.StatusForbidden)
+		}
+	}
+}
+
+// Allow access only if client is manager (or higher)
+// of if the section belongs to the client's user (for ex. route like /foo/bar/{userId})
+func OnlySelfOrManager(handler rest.RequestHandler) rest.RequestHandler {
+	return OnlySelfOrGroup(handler, auth.LEVEL_MANAGER)
 }
