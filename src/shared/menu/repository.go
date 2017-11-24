@@ -89,13 +89,9 @@ func DeleteMenu(date int, db *sqlx.DB) error {
 
 
 // Gets item ids of dishes in menu
-func GetMenuItemsIds(dishIds []int, date string, db *sqlx.DB) (error, *[]int) {
+func GetMenuItemsIds(output *[]int, dishIds []int, date int, db *sqlx.DB) error {
 	// Build sql query
 	q, a, _ := squirrel.Select(RowId).From(Table).Where(squirrel.Eq{DishId: dishIds, Date: date}).ToSql()
 
-	var ids []int
-
-	err := db.Select(&ids, q, a...)
-
-	return err, &ids
+	return db.Select(output, q, a...)
 }
