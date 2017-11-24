@@ -9,3 +9,20 @@ type User struct {
 	Password  string `db:"password" json:"password,omitempty" msgpack:"-" validate:"required"`
 	Level     int    `db:"level" json:"level" msgpack:""`
 }
+
+// Checks if the user belongs to specific group
+func (u *User) IsInGroup(group int) bool {
+	return u.Level == group
+}
+
+func (u *User) IsAdmin() bool {
+	return u.IsInGroup(LEVEL_ADMIN)
+}
+
+func (u *User) IsManager() bool {
+	return u.IsInGroup(LEVEL_MANAGER)
+}
+
+func (u *User) IsClient() bool {
+	return u.IsInGroup(LEVEL_USER)
+}
