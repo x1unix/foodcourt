@@ -7,15 +7,15 @@ import (
 )
 
 // Query params reader wrapper
-type QueryParams struct {
+type RouteParams struct {
 	Params map[string]string
 }
 
-func (q *QueryParams) GetString(key string) string {
+func (q *RouteParams) GetString(key string) string {
 	return q.Params[key]
 }
 
-func (q *QueryParams) GetInt(key string) int {
+func (q *RouteParams) GetInt(key string) int {
 	val, err := strconv.Atoi(q.GetString(key))
 
 	if err != nil {
@@ -26,8 +26,8 @@ func (q *QueryParams) GetInt(key string) int {
 }
 
 // Read query params from the request
-func Params(request *http.Request) *QueryParams {
-	qp := QueryParams{
+func Params(request *http.Request) *RouteParams {
+	qp := RouteParams{
 		Params: mux.Vars(request),
 	}
 

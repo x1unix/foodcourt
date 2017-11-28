@@ -43,7 +43,13 @@ func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
 	return commitErr
 }
 
-// Get list of ordered items in menu
-//func GetOrderedItems(output *[]int, userId int, date int, db *sqlx.DB) error {
-//
-//}
+// Get list of ordered dishes
+func GetUserOrderMenuItems(output *[]int, userId int, date int, db *sqlx.DB) error {
+	// SELECT m.dish_id FROM `menu` m JOIN `orders` o on o.`item_id` = m.`row_id` where  WHERE m.`date`=? AND o.`user_id`=?
+	q, a, _ := squirrel.Select("m.dish_id").From(menu.Table + " m").
+		Join(Table + " o on o.item_id = m.row_id").
+		Where(squirrel.Eq{"m.date": date, "o.user_id": userId}).
+		ToSql()
+
+	return db.Select(output, q, a...)
+}

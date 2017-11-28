@@ -9,8 +9,8 @@ import (
 )
 
 
-// Order items from menu
-// (POST /api/orders/{userId: [0-9}+/{date: [0-9]{8}+})
+// Order items from menu for specific user
+// (POST /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
 func OrderDishes(w http.ResponseWriter, r *http.Request) {
 	// Extract request payload
 	var dishes []int
@@ -49,4 +49,27 @@ func OrderDishes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rest.Ok(&w)
+}
+
+// Get ordered dish ids for specific user
+// (GET /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
+func GetOrderedMenuItems(w http.ResponseWriter, r *http.Request) {
+	// Get route params
+	params := rest.Params(r)
+	date := params.GetInt(paramDate)
+	userId := params.GetInt(paramUserId)
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	var ids []int
+
+	err := orders.GetUserOrderMenuItems(&ids, userId, date, db)
+
+	if err != nil {
+		log.Error(err.Error())
+		rest.Error(err).Write(&w)
+	} else {
+		rest.Success(ids).Write(&w)
+	}
 }

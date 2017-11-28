@@ -75,7 +75,10 @@ func Bootstrap() *mux.Router {
 	// == Orders ==
 
 	// Make an order
-	r.HandleFunc("/api/orders/{userId:[0-9}+/{date:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.OrderDishes)))).Methods("POST")
+	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.OrderDishes)))).Methods("POST")
+
+	// Get ordered dish ids
+	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.GetOrderedMenuItems)))).Methods("GET")
 
 	// == Files ==
 
