@@ -15,7 +15,8 @@ import {
   SessionsService,
   AuthService,
   WebHelperService,
-  MenuService
+  MenuService,
+  OrdersService
 } from './services';
 
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -66,6 +67,7 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
     AuthService,
     MenuService,
     WebHelperService,
+    OrdersService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
