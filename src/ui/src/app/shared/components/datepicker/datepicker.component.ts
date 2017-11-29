@@ -54,6 +54,12 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
    */
   @Input() isOpened = false;
 
+  /**
+   * Dropdown position
+   * @type {string}
+   */
+  @Input() position = 'bottom-right';
+
   innerValue: Date;
   displayValue: string;
   displayFormat: string;
@@ -77,6 +83,8 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
     isSelected: boolean;
   }[];
   locale: object;
+
+  private positions = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 
   private onTouchedCallback: () => void = () => { };
   private onChangeCallback: (_: any) => void = () => { };
@@ -109,6 +117,11 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
     this.setOptions();
     this.initDayNames();
     this.initYears();
+
+    // Check if 'position' property is correct
+    if (this.positions.indexOf(this.position) === -1) {
+      throw new TypeError(`ng-datepicker: invalid position property value '${this.position}' (expected: ${this.positions.join(', ')})`);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
