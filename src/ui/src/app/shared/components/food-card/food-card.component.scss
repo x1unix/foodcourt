@@ -66,6 +66,17 @@ $color-active: #0094d2;
   -webkit-user-drag: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+
+  &:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    background-image: url('/assets/dish_no_image.jpg');
+    background-position: center;
+    background-size: contain;
+  }
 }
 
 .food-card__title {
