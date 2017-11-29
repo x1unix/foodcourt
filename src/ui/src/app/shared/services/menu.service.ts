@@ -1,12 +1,38 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
-import {IDish} from '../interfaces/dish';
+import {IDish, DISH_TYPES, DISH_TYPE_COLORS, DishType} from '../interfaces/dish';
 
 @Injectable()
 export class MenuService {
 
   constructor(private http: HttpClient) { }
+
+  get dishType() {
+    return DishType;
+  }
+
+  get dishTypes() {
+    return DISH_TYPES;
+  }
+
+  /**
+   * Get dish category name
+   * @param {number} categoryId Category index
+   * @returns {string}
+   */
+  getDishCategory(categoryId: number): string {
+    return this.dishTypes[categoryId];
+  }
+
+  /**
+   * Get dish category color
+   * @param {number} catId Category index
+   * @returns {string}
+   */
+  getDishCategoryColor(catId: number): string {
+    return DISH_TYPE_COLORS[catId];
+  }
 
   /**
    * Get list of dishes in menu for a specific date.

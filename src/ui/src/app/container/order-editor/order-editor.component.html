@@ -1,0 +1,132 @@
+<div class="row" style="flex: 1">
+  <div class="order-editor__container flex">
+    <!-- Page container -->
+    <div class="order-editor__header">
+      <app-header-toolbar [label]="'Orders for ' + displayedDate" [smaller]="false">
+        <!-- Delete button -->
+        <button
+          type="button"
+          class="btn btn-danger"
+          *ngIf="!menuEmpty && isLoaded && (initialSize > 0)"
+          [clrLoading]="deleteStatus.isLoading"
+          [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
+          (click)="deleteMenu()"
+        >
+          <clr-icon *ngIf="!deleteStatus.isLoading" shape="trash"></clr-icon>
+          <span *ngIf="!deleteStatus.isLoading">Cancel order</span>
+          <span *ngIf="deleteStatus.isLoading">Processing...</span>
+        </button>
+
+        <!-- Save button -->
+        <button
+          type="button"
+          class="btn btn-success"
+          *ngIf="!menuEmpty && collectionChanged && (selectedIds.length > 0) && (isLoaded)"
+          [clrLoading]="saveStatus.isLoading"
+          [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
+          (click)="saveChanges()"
+        >
+          <clr-icon *ngIf="!saveStatus.isLoading" shape="floppy"></clr-icon>
+          <span *ngIf="!saveStatus.isLoading">Save</span>
+          <span *ngIf="saveStatus.isLoading">Saving...</span>
+        </button>
+
+        <!-- Picker -->
+        <app-datepicker
+          [(ngModel)]="pickedDate"
+          (ngModelChange)="onDateChange($event)"
+          [options]="datePickerOptions"
+          [showDateInput]="false"
+          position="bottom-left"
+          #picker
+        >
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading || saveStatus.isLoading || deleteStatus.isLoading"
+            (click)="picker.toggle()"
+          >
+            <clr-icon shape="calendar"></clr-icon>
+            <span>Change date</span>
+          </button>
+        </app-datepicker>
+      </app-header-toolbar>
+    </div>
+
+    <!-- Dishes save success message -->
+    <app-alert *ngIf="saveStatus.isLoaded" type="success" icon="check-circle" [dismissable]="false">
+      Changes saved successfully
+    </app-alert>
+
+    <!-- Dishes save fail message -->
+    <app-alert *ngIf="saveStatus.isFailed" type="danger" icon="exclamation-circle" [dismissable]="false">
+      Failed to save changes: {{saveStatus.error}}
+    </app-alert>
+
+    <!-- Dishes save success message -->
+    <app-alert *ngIf="deleteStatus.isLoaded" type="success" icon="check-circle" [dismissable]="false">
+      Order canceled successfuly
+    </app-alert>
+
+    <!-- Dishes save fail message -->
+    <app-alert *ngIf="deleteStatus.isFailed" type="danger" icon="exclamation-circle" [dismissable]="false">
+      Failed to cancel order: {{deleteStatus.error}}
+    </app-alert>
+
+    <!-- Items load fail message -->
+    <app-retry-alert
+      *ngIf="isFailed"
+      text="Failed to get orders data"
+      [errorMessage]="error"
+      (retry)="updateMenuAndOrder()"
+    ></app-retry-alert>
+
+    <!-- Dish items preloader -->
+    <app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
+
+
+    <div
+      *ngIf="isLoaded"
+      class="order-editor"
+    >
+
+      <app-poster
+        *ngIf="menuEmpty"
+        class="sith"
+        label="Menu empty"
+        icon="calendar"
+      >
+        No available menu for this date, please select other date.
+      </app-poster>
+
+      <div *ngIf="!menuEmpty" class="order-editor__sections">
+        <ng-template ngFor let-section [ngForOf]="menuItems" let-i="index">
+          <section *ngIf="section.length > 0" class="order-editor__section">
+            <h3 class="order-editor__section__title">{{dishTypes[i]}}</h3>
+            <div class="row" *ngIf="section.length > 0">
+              <div
+                *ngFor="let item of section"
+                class="col-lg-3 col-md-6 col-sm-12 col-xs-12"
+              >
+                <app-food-card
+                  class="order-editor__item"
+                  [rating]="0"
+                  [label]="item.label"
+                  [description]="item.description"
+                  [category]="getDishCategory(item.type)"
+                  [imageUrl]="item.photoUrl"
+                  [rateable]="false"
+                  [editable]="false"
+                  [selectable]="true"
+                  [selected]="selectedClassItems[item.type] === item.id"
+                  [badgeColor]="getDishCategoryColor(item.type)"
+                  (checkChange)="onItemCheckToggle($event, item.type, item.id)"
+                ></app-food-card>
+              </div>
+            </div>
+          </section>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

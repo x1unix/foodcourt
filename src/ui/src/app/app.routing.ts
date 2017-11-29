@@ -8,6 +8,8 @@ import {ManagementComponent} from './management/management.component';
 import {AdminGuard} from './shared/guards/admin.guard';
 import {ItemsCatalogComponent} from './management/items-catalog/items-catalog.component';
 import {MenuEditorComponent} from './management/menu-editor/menu-editor.component';
+import {OrderEditorComponent} from './container/order-editor/order-editor.component';
+import {TodayComponent} from './container/today/today.component';
 
 const APP_ROUTES: Routes = [
   {
@@ -16,11 +18,27 @@ const APP_ROUTES: Routes = [
     canActivate: [LoggedInGuard],
     children: [
       {
-        path: 'dashboard',
+        path: 'orders',
         component: DashboardComponent,
         data: {
-          title: 'Dashboard'
-        }
+          title: 'Orders'
+        },
+        children: [
+          {
+            path: '',
+            component: TodayComponent,
+            data: {
+              title: 'Order for today'
+            }
+          },
+          {
+            path: 'edit',
+            component: OrderEditorComponent,
+            data: {
+              title: 'Edit order'
+            }
+          }
+        ]
       },
       {
         path: 'management',
