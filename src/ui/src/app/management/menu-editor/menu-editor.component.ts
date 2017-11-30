@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { isNil, groupBy } from 'lodash';
+import { isNil, groupBy, isObject } from 'lodash';
 import * as moment from 'moment';
 import { DatepickerOptions } from '../../shared/components/datepicker';
 
@@ -8,6 +8,8 @@ import {IDish} from '../../shared/interfaces/dish';
 import {ResourceStatus} from '../../shared/helpers/resource-status';
 import {WebHelperService, MenuService} from '../../shared/services';
 import { DropEvent } from '../../shared/interfaces/drop-event';
+import {forkJoin} from 'rxjs/observable/forkJoin';
+import {ILockStatus} from '../../shared/interfaces/lock-status';
 
 const ITEMS_QUERY = {
   orderBy: 'label',
@@ -106,6 +108,12 @@ export class MenuEditorComponent implements OnInit {
   pickedDate: Date = null;
 
   /**
+   * If menu is editable
+   * @type {boolean}
+   */
+  menuEditable = true;
+
+  /**
    * Date to be send on server
    * @type {any}
    */
@@ -183,16 +191,30 @@ export class MenuEditorComponent implements OnInit {
     this.selectedIds = [];
     this.collectionChanged = false;
     this.initialSize = 0;
-    this.menu.getDishes(this.servedDate)
-      .subscribe((i) => this.onMenuItemsFetch(i), (e) => this.onMenuItemsFail(e));
+    this.menuEditable = true;
+
+    const menu = this.menu.getDishes(this.servedDate);
+    const status = this.menu.getMenuStatus(this.servedDate);
+
+    forkJoin([menu, status]).subscribe(
+      (results) => this.onMenuItemsFetch.apply(this, results),
+      (e) => this.onMenuItemsFail(e)
+    );
   }
 
-  onMenuItemsFetch(items: IDish[] = null) {
+  /**
+   * Menu data fetch event handler
+   * @param {IDish[]} items Menu items
+   * @param {ILockStatus} menuStatus Menu lock status
+   */
+  onMenuItemsFetch(items: IDish[] = null, menuStatus: ILockStatus) {
     // Set load status
     this.menuItemsStatus.isLoaded = true;
 
     this.collectionChanged = false;
     this.selectedIds = [];
+
+    this.menuEditable = isObject(menuStatus) && (menuStatus.locked === false);
 
     // Create new empty collection with empty sub-arrays for each category
     this.menuItems = this.dishTypes.map((i) => []);
@@ -267,7 +289,7 @@ export class MenuEditorComponent implements OnInit {
           setTimeout(() => this.deleteStatus.isIdle = true, 3000);
 
           // Fill empty collection
-          this.onMenuItemsFetch([]);
+          this.onMenuItemsFetch([], null);
         }, (err) => {
           this.deleteStatus.isFailed = true;
           this.deleteStatus.error = this.helper.extractResponseError(err);

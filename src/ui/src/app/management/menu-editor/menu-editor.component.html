@@ -68,6 +68,11 @@
       <app-alert *ngIf="deleteStatus.isFailed" type="danger" icon="exclamation-circle" [dismissable]="false">
         Failed to delete the menu: {{deleteStatus.error}}
       </app-alert>
+
+      <!-- Notification about read only mode -->
+      <app-alert *ngIf="!menuEditable" type="warning" icon="exclamation-triangle" [dismissable]="false">
+        This menu was processed and cannot be changed
+      </app-alert>
     </div>
 
     <!-- Items load fail message -->
