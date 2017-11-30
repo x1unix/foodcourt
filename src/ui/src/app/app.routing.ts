@@ -18,7 +18,7 @@ const APP_ROUTES: Routes = [
     canActivate: [LoggedInGuard],
     children: [
       {
-        path: 'orders',
+        path: '',
         component: DashboardComponent,
         data: {
           title: 'Orders'
@@ -32,10 +32,10 @@ const APP_ROUTES: Routes = [
             }
           },
           {
-            path: 'edit',
+            path: 'orders',
             component: OrderEditorComponent,
             data: {
-              title: 'Edit order'
+              title: 'Manage orders'
             }
           }
         ]
@@ -46,7 +46,7 @@ const APP_ROUTES: Routes = [
         canActivate: [AdminGuard],
         children: [
           {
-            path: 'schedule',
+            path: '',
             component: MenuEditorComponent,
             data: {
               title: 'Manage menu'
