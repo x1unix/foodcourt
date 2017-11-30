@@ -8,12 +8,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const ENV_NAME = ".env"
+// EnvFileName file name
+const EnvFileName = ".env"
 
 // Dotenv file location
-var fileDir = fmt.Sprintf("%s/%s", environment.GetRoot(), ENV_NAME)
+var fileDir = fmt.Sprintf("%s/%s", environment.GetRoot(), EnvFileName)
 
-// Load configuration from dotenv file
+// Bootstrap loads configuration from dotenv file
 func Bootstrap(quiet bool) {
 	err := godotenv.Load()
 	if err != nil {
