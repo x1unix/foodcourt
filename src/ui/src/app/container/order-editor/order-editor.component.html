@@ -2,15 +2,15 @@
   <div class="order-editor__container flex">
     <!-- Page container -->
     <div class="order-editor__header">
-      <app-header-toolbar [label]="'Order for ' + displayedDate" [smaller]="false">
+      <app-header-toolbar [label]="'Edit order for ' + displayedDate" [smaller]="false">
         <!-- Delete button -->
         <button
           type="button"
           class="btn btn-danger"
-          *ngIf="!menuEmpty && orderEditable && isLoaded && (initialSize > 0)"
+          *ngIf="(!menuEmpty) && orderEditable && isLoaded && (initialSize > 0)"
           [clrLoading]="deleteStatus.isLoading"
           [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
-          (click)="deleteMenu()"
+          (click)="deleteItems()"
         >
           <clr-icon *ngIf="!deleteStatus.isLoading" shape="trash"></clr-icon>
           <span *ngIf="!deleteStatus.isLoading">Cancel order</span>
@@ -75,6 +75,11 @@
       <!-- Notification about read only mode -->
       <app-alert *ngIf="!orderEditable" type="warning" icon="exclamation-triangle" [dismissable]="false">
         This order cannot be changed
+      </app-alert>
+
+      <!-- order structure error -->
+      <app-alert *ngIf="orderStructError.length > 0" type="danger" icon="exclamation-circle" [dismissable]="false">
+        {{orderStructError}}
       </app-alert>
     </div>
 

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import { isNil, groupBy, isObject } from 'lodash';
+import { isNil, groupBy, isObject, flatten } from 'lodash';
 import * as moment from 'moment';
 
 import { WebHelperService, MenuService, OrdersService, SessionsService } from '../../shared/services';
@@ -110,6 +110,8 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
   pickedDate: Date = null;
 
   selectedClassItems: number[] = [];
+
+  orderStructError = '';
 
   /**
    * Date to be send on server
@@ -230,7 +232,7 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
   }
 
   openPicker(picker: DatepickerComponent) {
-    if ((!picker.isOpened) && this.collectionChanged) {
+    if ((!picker.isOpened) && (this.collectionChanged === true)) {
       const confirm = window.confirm(MSG_CONFIRM);
 
       if (!confirm) {
@@ -251,6 +253,7 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
     this.orderEditable = true;
     this.initialSize = 0;
     this.selectedClassItems = [];
+    this.orderStructError = '';
 
     // Fetch menu items & order data
     const menu = this.menu.getDishes(this.servedDate);
@@ -279,6 +282,7 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
 
     // Create new empty collection with empty sub-arrays for each category
     this.menuItems = this.dishTypes.map((i) => []);
+    this.selectedClassItems.length = 0;
     this.selectedClassItems.length = this.dishTypes.length;
 
     if (isNil(orderedIds)) {
@@ -298,7 +302,7 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
         return i.id;
       });
 
-      this.initialSize = this.selectedIds.length;
+      this.initialSize = orderedIds.length;
 
       const grouped = groupBy(menuItems, 'type');
       Object.keys(grouped).forEach((groupId) => {
@@ -344,7 +348,83 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
   }
 
   saveChanges() {
+    this.orderStructError = '';
 
+    // Just delete items if selected collection is empty
+    if (this.selectedClassItems.length === 0) {
+      return this.deleteItems();
+    }
+
+    let structOk, structErr;
+
+    [structOk, structErr] = this.checkMenuStructure();
+
+    if (!structOk) {
+      this.orderStructError = structErr;
+      return;
+    }
+
+    const dishes = flatten(this.selectedClassItems);
+
+    this.saveStatus.isLoading = true;
+    this.orders.orderDishes(dishes, this.servedDate, this.userId).subscribe(
+      () => this.onSaveSuccess(),
+      (err) => this.onSaveFail(err)
+    );
+  }
+
+  deleteItems() {
+    this.deleteStatus.isLoading = true;
+    this.orders.deleteOrder(this.servedDate, this.userId).subscribe(
+      () => this.onDeleteSuccess(),
+      (err) => this.onDeleteFail(err)
+    );
+  }
+
+  onDeleteSuccess() {
+    this.collectionChanged = false;
+
+    // Rebuild selected sorted items array
+    this.selectedClassItems.length = 0;
+    this.selectedClassItems.length = this.dishTypes.length;
+
+    this.initialSize = 0;
+    this.deleteStatus.isLoaded = true;
+    setTimeout(() => this.deleteStatus.isIdle = true, 3000);
+  }
+
+  onDeleteFail(error) {
+    this.deleteStatus.error = this.helper.extractResponseError(error);
+    this.deleteStatus.isFailed = true;
+  }
+
+  onSaveSuccess() {
+    this.collectionChanged = false;
+    this.initialSize = flatten(this.selectedClassItems).length;
+    this.saveStatus.isLoaded = true;
+    setTimeout(() => this.saveStatus.isIdle = true, 3000);
+  }
+
+  onSaveFail(error) {
+    this.saveStatus.error = this.helper.extractResponseError(error);
+    this.saveStatus.isFailed = true;
+  }
+
+  /**
+   * Check if the main dish + garnish pair was selected correctly
+   * @returns {[boolean , string]}
+   */
+  private checkMenuStructure(): [boolean, string] {
+    const selected = this.selectedClassItems;
+    if (!isNil(selected[DishType.garnish]) && isNil(selected[DishType.main])) {
+      return [false, 'Please select the main dish'];
+    }
+
+    if (!isNil(selected[DishType.main]) && isNil(selected[DishType.garnish])) {
+      return [false, 'Please select the garnish'];
+    }
+
+    return [true, ''];
   }
 
 }

@@ -23,6 +23,16 @@ export class OrdersService {
   }
 
   /**
+   * Delete order for specific user at specific date
+   * @param {string} date Date (YYYYMMDD)
+   * @param {number} userId User ID
+   * @returns {Observable<IMessage>}
+   */
+  deleteOrder(date: string, userId: string): Observable<IMessage> {
+    return <Observable<IMessage>> this.http.delete(`/api/orders/${date}/users/${userId}`);
+  }
+
+  /**
    * Get list of ordered dishes
    * @param {string} date Date (YYYYMMDD)
    * @param {string} userId User ID
