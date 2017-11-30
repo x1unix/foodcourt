@@ -62,4 +62,13 @@ export class MenuService {
     return this.http.delete(`/api/menu/${date}`);
   }
 
+  /**
+   * Gets menu status
+   * @param {string} date
+   * @returns {Observable<ILockStatus>}
+   */
+  getMenuStatus(date: string) {
+    return this.http.get(`/api/menu/${date}/status`);
+  }
+
 }

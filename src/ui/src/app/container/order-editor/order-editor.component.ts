@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import { isNil, groupBy } from 'lodash';
+import { isNil, groupBy, isObject } from 'lodash';
 import * as moment from 'moment';
 
 import { WebHelperService, MenuService, OrdersService, SessionsService } from '../../shared/services';
@@ -10,6 +10,8 @@ import {ResourceStatus} from '../../shared/helpers/resource-status';
 import {LoadStatusComponent} from '../../shared/helpers/load-status-component';
 import {Subscription} from 'rxjs/Rx';
 import {forkJoin} from 'rxjs/observable/forkJoin';
+import {DatepickerComponent} from '../../shared/components/datepicker/datepicker.component';
+import {ILockStatus} from '../../shared/interfaces/lock-status';
 
 const DISPLAYED_DATE_FORMAT = 'dddd, MMMM DD YYYY';
 const SERVED_DATE_FORMAT = 'YYYYMMDD';
@@ -17,6 +19,8 @@ const SERVED_DATE_FORMAT = 'YYYYMMDD';
 // Route params names
 const PARAM_UID = 'userId';
 const PARAM_DATE = 'date';
+
+const MSG_CONFIRM = 'Do you want to move to other date without saving changes? All unsaved changes will be lost.';
 
 @Component({
   selector: 'app-order-editor',
@@ -54,6 +58,12 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
    * @type {boolean}
    */
   menuEmpty = true;
+
+  /**
+   * Is order editable
+   * @type {boolean}
+   */
+  orderEditable = true;
 
   /**
    * Menu save progress status
@@ -159,6 +169,10 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
     });
   }
 
+  private detectOrderEditable() {
+
+  }
+
   private setSelectedCategoryValue(catId, value: number = null) {
     this.selectedClassItems[catId] = value;
   }
@@ -170,6 +184,8 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
    * @param {number} itemId dish id
    */
   onItemCheckToggle(isChecked: boolean, category: number, itemId: number) {
+    this.collectionChanged = true;
+
     if (!isChecked) {
       // Just remove item if it's unchecked
       this.setSelectedCategoryValue(category, null);
@@ -213,6 +229,18 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
     };
   }
 
+  openPicker(picker: DatepickerComponent) {
+    if ((!picker.isOpened) && this.collectionChanged) {
+      const confirm = window.confirm(MSG_CONFIRM);
+
+      if (!confirm) {
+        return;
+      }
+    }
+
+    picker.toggle();
+  }
+
   updateMenuAndOrder() {
     this.deleteStatus.isIdle = true;
     this.saveStatus.isIdle = true;
@@ -220,22 +248,26 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
     this.isLoading = true;
     this.selectedIds = [];
     this.collectionChanged = false;
+    this.orderEditable = true;
     this.initialSize = 0;
     this.selectedClassItems = [];
 
     // Fetch menu items & order data
     const menu = this.menu.getDishes(this.servedDate);
     const order = this.orders.getOrderedDishIds(this.servedDate, this.userId);
+    const status = this.menu.getMenuStatus(this.servedDate);
 
-    forkJoin([menu, order]).subscribe(
-      results => this.onDataLoaded.call(this, results[0], results[1]),
+    forkJoin([menu, order, status]).subscribe(
+      results => this.onDataLoaded.apply(this, results),
       error => this.onInitFail(error)
     );
   }
 
-  onDataLoaded(menuItems: IDish[] = null, orderedIds: number[] = []) {
+  onDataLoaded(menuItems: IDish[] = null, orderedIds: number[] = [], menuStatus: ILockStatus) {
     this.isLoaded = true;
     this.menuEmpty = isNil(menuItems) || menuItems.length === 0;
+
+    this.orderEditable = isObject(menuStatus) && (menuStatus.locked === false);
 
     // Break if menu is empty
     if (this.menuEmpty) {
