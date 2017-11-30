@@ -9,8 +9,8 @@ import (
 )
 
 // Log file name
-const LOG_FILE_NAME = "fc.log"
-const LOG_NAME = "fc"
+var LogFileName = "fc.log"
+var LogName = "fc"
 
 // Console output formatter
 var consoleFormatter = logging.MustStringFormatter(
@@ -37,14 +37,17 @@ func GetLogPath() string {
 func GetLogFilePath() string {
 	logPath := GetLogPath()
 
-	return fmt.Sprintf("%s/%s", logPath, LOG_FILE_NAME)
+	return fmt.Sprintf("%s/%s", logPath, LogFileName)
 }
 
 // Initialize the application logger
-func Bootstrap() *logging.Logger {
+func Bootstrap(logName string) *logging.Logger {
+
+	LogName = logName
+	LogFileName = logName + ".log"
 
 	// Logger instance
-	var log = logging.MustGetLogger(LOG_NAME)
+	var log = logging.MustGetLogger(logName)
 
 	// Get log file name and path
 	logFilePath := GetLogFilePath()
@@ -80,5 +83,5 @@ func Bootstrap() *logging.Logger {
 }
 
 func GetLogger() *logging.Logger {
-	return logging.MustGetLogger(LOG_NAME)
+	return logging.MustGetLogger(LogName)
 }
