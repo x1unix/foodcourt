@@ -10,7 +10,7 @@ import (
 func main() {
 	config.Bootstrap()
 
-	log := logger.Bootstrap("fc-server")
+	log := logger.Bootstrap("fc")
 	router := route.Bootstrap()
 
 	httpPort := config.Get(config.HTTP_PORT, "80")
