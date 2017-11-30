@@ -1,10 +1,11 @@
 package config
 
 import (
-	"../environment"
 	"fmt"
-	"github.com/joho/godotenv"
 	"os"
+
+	"../environment"
+	"github.com/joho/godotenv"
 )
 
 const ENV_NAME = ".env"
@@ -13,10 +14,17 @@ const ENV_NAME = ".env"
 var fileDir = fmt.Sprintf("%s/%s", environment.GetRoot(), ENV_NAME)
 
 // Load configuration from dotenv file
-func Bootstrap() {
+func Bootstrap(quiet bool) {
 	err := godotenv.Load()
 	if err != nil {
-		panic(fmt.Sprintf("Environment file does not exist (%s).", fileDir))
+		errMsg := fmt.Sprintf("Environment file does not exist (%s).", fileDir)
+
+		if quiet {
+			panic(errMsg)
+		} else {
+			fmt.Println("config:Bootstrap/WARN: " + errMsg)
+		}
+
 	}
 }
 

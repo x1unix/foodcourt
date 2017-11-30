@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	config.Bootstrap()
+	config.Bootstrap(true)
 
 	log := logger.Bootstrap("fc")
 	router := route.Bootstrap()
