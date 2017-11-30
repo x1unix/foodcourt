@@ -5,10 +5,12 @@ import (
 	"../shared/rest"
 	"../shared/orders"
 	"../shared/database"
+	"../shared/dishes"
 	"encoding/json"
 	"fmt"
 )
 
+const userDebugErrorTpl = "User: %d; Date: %d; Error: %s"
 
 // Order items from menu for specific user
 // (POST /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
@@ -106,10 +108,36 @@ func DeleteOrder(w http.ResponseWriter, r *http.Request) {
 	err := orders.DeleteOrder(date, userId, db)
 
 	if err != nil {
-		errMsg := "User: %d; Date: %d; Error: %s"
-		log.Error(fmt.Sprintf(errMsg, userId, date, err.Error()))
+		log.Error(fmt.Sprintf(userDebugErrorTpl, userId, date, err.Error()))
 		rest.Error(err).Write(&w)
+		return
 	}
 
 	rest.Ok(&w)
+}
+
+// Get list of ordered dishes
+// (GET /api/orders/{date:[0-9]+}/users/{userId:[0-9]+}/dishes)
+func GetOrderedDishes(w http.ResponseWriter, r *http.Request) {
+	// Get route params
+	params := rest.Params(r)
+	date := params.GetInt(paramDate)
+	userId := params.GetInt(paramUserId)
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	// Output data
+	var dishesList []dishes.Dish
+
+	// Get data
+	err := orders.GetOrderedDishes(&dishesList, date, userId, db)
+
+	if err != nil {
+		log.Error(fmt.Sprintf(userDebugErrorTpl, userId, date, err.Error()))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Success(&dishesList).Write(&w)
 }

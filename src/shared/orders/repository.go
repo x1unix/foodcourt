@@ -1,12 +1,13 @@
 package orders
 
 import (
-	"github.com/jmoiron/sqlx"
-	"github.com/Masterminds/squirrel"
-	"../menu"
 	"fmt"
-)
 
+	"../dishes"
+	"../menu"
+	"github.com/Masterminds/squirrel"
+	"github.com/jmoiron/sqlx"
+)
 
 // Order dishes from the menu for specific date
 func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
@@ -18,8 +19,8 @@ func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
 
 	// Build insertion que`ry
 	sqlQ, args, _ := squirrel.Insert(Table).Columns(ItemId, UserId).
-			Select(squirrel.Select("m.row_id, u.id").From(menu.Table + " m").Join("users u").
-					Where(squirrel.Eq{"m.dish_id": dishIds, "m.date": date, "u.id": userId})).ToSql()
+		Select(squirrel.Select("m.row_id, u.id").From(menu.Table + " m").Join("users u").
+			Where(squirrel.Eq{"m.dish_id": dishIds, "m.date": date, "u.id": userId})).ToSql()
 
 	// Add insertion query
 	tx.MustExec(sqlQ, args...)
@@ -44,18 +45,44 @@ func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
 }
 
 // Get list of ordered dishes
-func GetUserOrderMenuItems(output *[]int, userId int, date int, db *sqlx.DB) error {
+func GetUserOrderMenuItems(output *[]int, userID int, date int, db *sqlx.DB) error {
 	// SELECT m.dish_id FROM `menu` m JOIN `orders` o on o.`item_id` = m.`row_id` where  WHERE m.`date`=? AND o.`user_id`=?
 	q, a, _ := squirrel.Select("m.dish_id").From(menu.Table + " m").
 		Join(Table + " o on o.item_id = m.row_id").
-		Where(squirrel.Eq{"m.date": date, "o.user_id": userId}).
+		Where(squirrel.Eq{"m.date": date, "o.user_id": userID}).
 		ToSql()
 
 	return db.Select(output, q, a...)
 }
 
-// Delete order
-func DeleteOrder(date int, userId int, db *sqlx.DB) error {
-	_, err := db.Query(sqOrdersPurge, date, userId)
+// DeleteOrder deletes order
+func DeleteOrder(date int, userID int, db *sqlx.DB) error {
+	_, err := db.Query(sqOrdersPurge, date, userID)
 	return err
+}
+
+// GetOrderedDishes returns list of ordered dishes for specific date by specific user
+func GetOrderedDishes(output *[]dishes.Dish, date int, userID int, db *sqlx.DB) error {
+	/*
+		SELECT d.id,
+			d.label,
+			d.description,
+			d.type,
+			d.photo_url
+		FROM   orders o
+			JOIN menu m
+				ON o.item_id = m.row_id
+			JOIN dishes d
+				ON d.id = m.dish_id
+		WHERE  o.user_id = 1
+			AND m.date = 20171130;
+	*/
+
+	q, a, _ := squirrel.Select("d.id, d.label, d.description, d.type, d.photo_url").From(Table + " o").
+		Join(menu.Table + " m on o.item_id = m.row_id").
+		Join(dishes.Table + "d on d.id = m.dish_id").
+		Where(squirrel.Eq{"o.user_id": userID, "m.date": date}).
+		ToSql()
+
+	return db.Select(output, q, a...)
 }
