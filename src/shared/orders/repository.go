@@ -16,7 +16,7 @@ func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
 	// Delete previous items
 	tx.MustExec(sqOrdersPurge, date, userId)
 
-	// Build insertion query
+	// Build insertion que`ry
 	sqlQ, args, _ := squirrel.Insert(Table).Columns(ItemId, UserId).
 			Select(squirrel.Select("m.row_id, u.id").From(menu.Table + " m").Join("users u").
 					Where(squirrel.Eq{"m.dish_id": dishIds, "m.date": date, "u.id": userId})).ToSql()
@@ -52,4 +52,10 @@ func GetUserOrderMenuItems(output *[]int, userId int, date int, db *sqlx.DB) err
 		ToSql()
 
 	return db.Select(output, q, a...)
+}
+
+// Delete order
+func DeleteOrder(date int, userId int, db *sqlx.DB) error {
+	_, err := db.Query(sqOrdersPurge, date, userId)
+	return err
 }

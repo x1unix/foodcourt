@@ -83,6 +83,9 @@ func Bootstrap() *mux.Router {
 	// Get ordered dish ids
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.GetOrderedMenuItems)))).Methods("GET")
 
+	// Delete order
+	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.DeleteOrder)))).Methods("DELETE")
+
 	// == Files ==
 
 	// Upload an image

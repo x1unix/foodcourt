@@ -6,6 +6,7 @@ import (
 	"../shared/orders"
 	"../shared/database"
 	"encoding/json"
+	"fmt"
 )
 
 
@@ -81,4 +82,34 @@ func GetOrderedMenuItems(w http.ResponseWriter, r *http.Request) {
 	} else {
 		rest.Success(ids).Write(&w)
 	}
+}
+
+// Delete order for specific user
+// (GET /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
+func DeleteOrder(w http.ResponseWriter, r *http.Request) {
+	// Get route params
+	params := rest.Params(r)
+	date := params.GetInt(paramDate)
+	userId := params.GetInt(paramUserId)
+
+	// Check if menu and orders are locked
+	isWritable := CheckMenuPermissions(date, &w)
+
+	if !isWritable {
+		// Break if menu is in read-only mode. Response already built
+		return
+	}
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	err := orders.DeleteOrder(date, userId, db)
+
+	if err != nil {
+		errMsg := "User: %d; Date: %d; Error: %s"
+		log.Error(fmt.Sprintf(errMsg, userId, date, err.Error()))
+		rest.Error(err).Write(&w)
+	}
+
+	rest.Ok(&w)
 }

@@ -75,7 +75,7 @@ func CheckMenuPermissions(date int, w *http.ResponseWriter) bool {
 	}
 
 	if isLocked {
-		rest.ErrorFromString("Menu for this day is not available for edit", http.StatusBadRequest)
+		rest.ErrorFromString("menu and orders for this day are not editable", http.StatusBadRequest).Write(w)
 		return false
 	}
 
