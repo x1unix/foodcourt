@@ -7,7 +7,7 @@
         <button
           type="button"
           class="btn btn-danger"
-          *ngIf="menuItemsStatus.isLoaded && (initialSize > 0)"
+          *ngIf="menuItemsStatus.isLoaded && menuEditable && (initialSize > 0)"
           [clrLoading]="deleteStatus.isLoading"
           [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
           (click)="deleteMenu()"
@@ -20,7 +20,7 @@
         <button
           type="button"
           class="btn btn-success"
-          *ngIf="collectionChanged && (selectedIds.length > 0) && (menuItemsStatus.isLoaded)"
+          *ngIf="menuEditable && collectionChanged && (selectedIds.length > 0) && (menuItemsStatus.isLoaded)"
           [clrLoading]="saveStatus.isLoading"
           [disabled]="saveStatus.isLoading || deleteStatus.isLoading"
           (click)="saveChanges()"
@@ -115,7 +115,7 @@
                 <app-food-card
                   class="menu-editor__item"
                   dnd-draggable
-                  [dragEnabled]="!saveStatus.isLoading"
+                  [dragEnabled]="menuEditable && (!saveStatus.isLoading)"
                   [dropZones]="catalogDropZone"
                   [dragData]="item"
                   (onDragStart)="dragTrashStart = true"
@@ -146,7 +146,7 @@
       [selectedIds]="selectedIds"
       [catalogDropZone]="catalogDropZone"
       [cartDropZone]="cartDropZone"
-      [allowDrag]="menuItemsStatus.isLoaded && (!saveStatus.isLoading)"
+      [allowDrag]="menuEditable && menuItemsStatus.isLoaded && (!saveStatus.isLoading)"
       (drop)="onItemRemove($event)"
       [(showDragBanner)]="dragTrashStart"
     ></app-dishes-list>
