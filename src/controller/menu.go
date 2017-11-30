@@ -18,6 +18,8 @@ const errMenuSetFail = "Failed to set menu for date '%d': %s"
 
 const errMenuCommon = "Date: %d, Error: %s"
 
+const errMenuStatus = "Failed to check menu lock status - " + errMenuCommon
+
 // Get list of dishes for specific day
 // (GET /api/menu/{date: [0-9]{8}+}/dishes)
 func GetMenuForTheDay(w http.ResponseWriter, r *http.Request) {
@@ -43,11 +45,56 @@ func GetMenuForTheDay(w http.ResponseWriter, r *http.Request) {
 	rest.Success(out).Write(&w)
 }
 
+// Check if menu status
+// (GET /api/menu/{date: [0-9]{8}+}/status)
+func GetMenuLockState(w http.ResponseWriter, r *http.Request) {
+	// Menu date
+	date := rest.Params(r).GetInt(menuParamDate)
+
+	isLocked, err := menu.GetMenuLockStatus(date)
+
+	if err != nil {
+		log.Error(fmt.Sprintf(errMenuStatus, date, err))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	status := menu.LockStatus{Locked: isLocked}
+
+	rest.Success(status).Write(&w)
+}
+
+func CheckMenuPermissions(date int, w *http.ResponseWriter) bool {
+	// Check if menu is locked
+	isLocked, err := menu.GetMenuLockStatus(date)
+
+	if err != nil {
+		log.Error(fmt.Sprintf(errMenuCommon, date, err.Error()))
+		rest.Error(err).Write(w)
+		return false
+	}
+
+	if isLocked {
+		rest.ErrorFromString("Menu for this day is not available for edit", http.StatusBadRequest)
+		return false
+	}
+
+	return true
+}
+
 // Clear menu for specific date
 // (DELETE /api/menu/{date: [0-9]{8}+})
 func ClearMenu(w http.ResponseWriter, r *http.Request) {
 	// Menu date
 	date := rest.Params(r).GetInt(menuParamDate)
+
+	// Check if menu is locked
+	isWritable := CheckMenuPermissions(date, &w)
+
+	if !isWritable {
+		// Break if menu is in read-only mode. Response already built
+		return
+	}
 
 	// Create DB connection
 	db := database.GetInstance()
@@ -71,6 +118,14 @@ func ClearMenu(w http.ResponseWriter, r *http.Request) {
 func SetMenuItems(w http.ResponseWriter, r *http.Request) {
 	// Menu date
 	date := rest.Params(r).GetInt(menuParamDate)
+
+	// Check if menu is locked
+	isWritable := CheckMenuPermissions(date, &w)
+
+	if !isWritable {
+		// Break if menu is in read-only mode. Response already built
+		return
+	}
 
 	// Request body (dish ids)
 	var dishIds []int
@@ -112,6 +167,14 @@ func SetMenuItems(w http.ResponseWriter, r *http.Request) {
 func AddMenuItem(w http.ResponseWriter, r *http.Request) {
 	// Menu date
 	date := rest.Params(r).GetInt(menuParamDate)
+
+	// Check if menu is locked
+	isWritable := CheckMenuPermissions(date, &w)
+
+	if !isWritable {
+		// Break if menu is in read-only mode. Response already built
+		return
+	}
 
 	// Request body
 	var menuItem menu.MenuItem

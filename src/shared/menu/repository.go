@@ -4,6 +4,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/Masterminds/squirrel"
 	"../dishes"
+	"../cache"
+	"fmt"
 )
 
 // Table name
@@ -15,6 +17,8 @@ const RowId, DishId, Date = "row_id", "dish_id", "date"
 // SQL query for selecting dishes in menu
 const sqlQueryMenuDishes = "select d.label, d.description, d.photo_url, d.type, m.dish_id as id from dishes d inner join menu m on d.id = m.dish_id where m.date = ?"
 
+// Redis key prefix for menus
+const rdKeyMenuPrefix = "menu_lock_%d";
 
 // Gets list of dishes in menu at specific date
 func GetDishesInMenu(output *[]dishes.Dish, date int, db *sqlx.DB) error {
@@ -94,4 +98,45 @@ func GetMenuItemsIds(output *[]int, dishIds []int, date int, db *sqlx.DB) error 
 	q, a, _ := squirrel.Select(RowId).From(Table).Where(squirrel.Eq{DishId: dishIds, Date: date}).ToSql()
 
 	return db.Select(output, q, a...)
+}
+
+func getMenuLockKey(date int) string {
+	return fmt.Sprintf(rdKeyMenuPrefix, date)
+}
+
+// Check if menu is locked for the new orders
+func GetMenuLockStatus(date int) (bool, error) {
+	key := getMenuLockKey(date)
+
+	val, keErr := cache.Client.Exists(key).Result()
+	exists := val > 0
+
+	return exists, keErr
+}
+
+// Set menu status
+func SetMenuLockStatus(lockState bool, date int) error {
+	isLocked, chkErr := GetMenuLockStatus(date)
+
+	if chkErr != nil {
+		return chkErr
+	}
+
+	rdKey := getMenuLockKey(date)
+
+	if isLocked {
+
+		// Skip if menu is already been locked
+		if lockState == true {
+			return nil
+		}
+
+		// Set lock key
+		_, err := cache.Client.Set(rdKey, true, 0).Result()
+		return err
+	} else {
+		// Unset lock key
+		_, err := cache.Client.Del(rdKey).Result()
+		return err
+	}
 }

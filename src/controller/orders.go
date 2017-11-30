@@ -12,6 +12,20 @@ import (
 // Order items from menu for specific user
 // (POST /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
 func OrderDishes(w http.ResponseWriter, r *http.Request) {
+	// Extract date and user data
+	params := rest.Params(r)
+	date := params.GetInt(paramDate)
+	targetUser := params.GetInt(paramUserId)
+
+	// Check if menu is locked
+	isWritable := CheckMenuPermissions(date, &w)
+
+	if !isWritable {
+		// Break if menu is in read-only mode. Response already built
+		return
+	}
+
+
 	// Extract request payload
 	var dishes []int
 
@@ -31,11 +45,6 @@ func OrderDishes(w http.ResponseWriter, r *http.Request) {
 		rest.BadRequest(&w, "order list cannot be empty")
 		return
 	}
-
-	// Extract date and user data
-	params := rest.Params(r)
-	date := params.GetInt(paramDate)
-	targetUser := params.GetInt(paramUserId)
 
 	// Create DB connection
 	db := database.GetInstance()
