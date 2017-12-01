@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
-import { isObject, isString } from 'lodash';
+import { isObject, isString, isNil } from 'lodash';
 import {IMessage} from '../interfaces/message';
+
+const ERR_DEFAULT = 'failed to perform request to API service';
 
 @Injectable()
 export class WebHelperService {
@@ -23,7 +25,7 @@ export class WebHelperService {
       return `${err.status} ${msg.msg}`;
     }
 
-    return `${err.status} ${err.statusText}`;
+    return `${err.status} ${err.statusText || ERR_DEFAULT}`;
   }
 
 }
