@@ -10,6 +10,7 @@ import {ItemsCatalogComponent} from './management/items-catalog/items-catalog.co
 import {MenuEditorComponent} from './management/menu-editor/menu-editor.component';
 import {OrderEditorComponent} from './container/order-editor/order-editor.component';
 import {TodayComponent} from './container/today/today.component';
+import {UsersManagerComponent} from './management/users-manager/users-manager.component';
 
 const APP_ROUTES: Routes = [
   {
@@ -37,6 +38,13 @@ const APP_ROUTES: Routes = [
             data: {
               title: 'Manage orders'
             }
+          },
+          {
+            path: 'orders/:date/:userId',
+            component: OrderEditorComponent,
+            data: {
+              title: 'Manage orders'
+            }
           }
         ]
       },
@@ -57,6 +65,13 @@ const APP_ROUTES: Routes = [
             component: ItemsCatalogComponent,
             data: {
               title: 'Manage dishes'
+            }
+          },
+          {
+            path: 'users',
+            component: UsersManagerComponent,
+            data: {
+              title: 'Manage users'
             }
           }
         ]

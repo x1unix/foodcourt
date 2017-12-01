@@ -5,3 +5,4 @@ export * from './orders.service';
 export * from './logger.service';
 export * from './menu.service';
 export * from './auth.service';
+export * from './users.service';

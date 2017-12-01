@@ -4,5 +4,5 @@ export interface IUser {
   email: string;
   firstName: string;
   lastName: string;
-  level: 0;
+  level: number;
 }

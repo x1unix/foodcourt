@@ -1,0 +1,70 @@
+<app-header-toolbar label="Users">
+  <button type="button" class="btn btn-danger" *ngIf="checkedIds.length > 0">
+    <clr-icon shape="trash"></clr-icon>
+    <span>Delete selected</span>
+  </button>
+
+  <button type="button" class="btn btn-success">
+    <clr-icon shape="plus"></clr-icon>
+    <span>Add new</span>
+  </button>
+</app-header-toolbar>
+
+<!-- data fetch error message -->
+<app-poster
+  *ngIf="isFailed"
+  class="poster--error"
+  icon="bug"
+  label="Failed to get users list"
+>
+  <code class="poster__error">{{error}}</code>
+  <a href="#" (click)="fetchUsers()">Try again</a>
+</app-poster>
+
+<!-- Data fetch preloader -->
+<app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
+
+<!-- Users data grid -->
+<div class="users-list">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" disabled />
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          Email
+        </th>
+        <th>
+          Group
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>
+          <input
+            type="checkbox"
+            [checked]="isUserChecked(user.id)"
+            (change)="toggleUserCheck(user.id)"
+          />
+        </td>
+
+        <td>
+          {{user.firstName}} {{user.lastName}}
+        </td>
+
+        <td>
+          {{user.email}}
+        </td>
+
+        <td>
+          {{getGroupName(user.level)}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

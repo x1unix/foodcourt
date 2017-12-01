@@ -14,6 +14,7 @@ import {DishesService} from './services/dishes.service';
 import { ImgPickerComponent } from './img-picker/img-picker.component';
 import { MenuEditorComponent } from './menu-editor/menu-editor.component';
 import { DishesListComponent } from './dishes-list/dishes-list.component';
+import { UsersManagerComponent } from './users-manager/users-manager.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { DishesListComponent } from './dishes-list/dishes-list.component';
     DishEditorComponent,
     ImgPickerComponent,
     MenuEditorComponent,
-    DishesListComponent
+    DishesListComponent,
+    UsersManagerComponent
   ],
   providers: [
     DishesService
