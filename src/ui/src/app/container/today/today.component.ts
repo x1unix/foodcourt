@@ -58,6 +58,7 @@ export class TodayComponent extends LoadStatusComponent implements OnInit, OnDes
     this.userId = this.session.userId;
     this.orderDate = moment().format(DATE_FORMAT);
     this.displayedDate = moment().format(DISPLAYED_DATE_FORMAT);
+
     this.fetchOrder();
   }
 
@@ -94,6 +95,7 @@ export class TodayComponent extends LoadStatusComponent implements OnInit, OnDes
   fetchOrder() {
     this.isLoading = true;
     this.dishes = [];
+
     this.orders.getOrderedDishes(this.orderDate, this.userId).subscribe(
       (data) => this.onFetchSuccess(data),
       (err) => this.onFetchFail(err)

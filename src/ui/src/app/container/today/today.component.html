@@ -1,12 +1,31 @@
-<h1>Food order for today</h1>
-<h6>Today is {{displayedDate}}</h6>
+<div class="today-header" [ngClass]="{'pos-a': !isLoaded || orderEmpty}">
+  <h1 style="margin-top: 0">Food order for today</h1>
+  <h6>Today is {{displayedDate}}</h6>
+</div>
 
-<app-retry-alert
+<!-- Dish menu items preloader -->
+<app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
+
+<!-- error message -->
+<app-poster
   *ngIf="isFailed"
-  text="Failed to get order info"
-  [errorMessage]="error"
-  (retry)="fetchOrder()"
-></app-retry-alert>
+  class="poster--error"
+  icon="bug"
+  label="Failed to get order information"
+>
+  <code class="poster__error">{{error}}</code>
+  <a href="#" (click)="fetchOrder()">Try again</a>
+</app-poster>
+
+<!-- empty order list message -->
+<app-poster
+  *ngIf="isLoaded && orderEmpty"
+  icon="wand"
+  label="Your order is empty"
+>
+  You can manage your order in <a routerLink="/orders">orders</a> section.
+</app-poster>
+
 <div class="row" *ngIf="isLoaded && !orderEmpty">
 
   <div *ngFor="let dish of dishes" class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
