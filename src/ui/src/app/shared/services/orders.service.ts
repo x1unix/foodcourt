@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {IMessage} from '../interfaces/message';
+import {IDish} from '../interfaces/dish';
 
 /**
  * Orders management service
@@ -40,6 +41,16 @@ export class OrdersService {
    */
   getOrderedDishIds(date: string, userId: string): Observable<number[]> {
     return <Observable<number[]>> this.http.get(`/api/orders/${date}/users/${userId}`);
+  }
+
+  /**
+   * Get ordered dishes by user at specific date
+   * @param {string} date Date (YYYYMMDD)
+   * @param {number} userId User id
+   * @returns {Observable<IDish>}
+   */
+  getOrderedDishes(date: string, userId: number): Observable<IDish[]> {
+    return <Observable<IDish[]>> this.http.get(`/api/orders/${date}/users/${userId}/dishes`);
   }
 
 }

@@ -1,47 +1,25 @@
 <h1>Food order for today</h1>
-<h6>Today is {{todayString}}</h6>
-<div class="row">
+<h6>Today is {{displayedDate}}</h6>
 
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+<app-retry-alert
+  *ngIf="isFailed"
+  text="Failed to get order info"
+  [errorMessage]="error"
+  (retry)="fetchOrder()"
+></app-retry-alert>
+<div class="row" *ngIf="isLoaded && !orderEmpty">
+
+  <div *ngFor="let dish of dishes" class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
     <app-food-card
-      [rating]="2.5"
-      label="Бульйон з індика"
-      category="soup"
-      [rateable]="true"
-      [editable]="true"
-      [selectable]="true"
-      badgeColor="purple"
+      [rating]="0"
+      [label]="dish.label"
+      [description]="dish.description"
+      [category]="getDishCategory(dish.type)"
+      [rateable]="false"
+      [editable]="false"
+      [selectable]="false"
+      [badgeColor]="getDishCategoryColor(dish.type)"
+      [imageUrl]="dish.photoUrl"
     ></app-food-card>
   </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-    <app-food-card
-      [rating]="3.5"
-      label="Гречка"
-      imageUrl="/assets/sushi.jpg"
-      category="main course"
-      badgeColor="blue"
-      [editable]="true"
-      [selectable]="true"
-    ></app-food-card>
-  </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-    <app-food-card
-      [rating]="3.5"
-      label="Биточок під грибним соусом"
-      imageUrl="/assets/sushi.jpg"
-      category="main course"
-      badgeColor="blue"
-      [editable]="true"
-      [selectable]="true"
-    ></app-food-card>
-  </div>
-
-
-  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-    <app-food-card
-      label="Салат з квашеної капусти"
-      category="salad"
-    ></app-food-card>
-  </div>
+</div>
