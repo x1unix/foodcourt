@@ -1,0 +1,132 @@
+<app-alert
+  *ngIf="isFailed"
+  type="danger"
+  icon="exclamation-circle"
+  [dismissable]="false"
+>
+  {{error}}
+</app-alert>
+
+<form
+  class="form"
+  [formGroup]="userForm"
+  (ngSubmit)="onSubmit()"
+>
+
+  <section class="form-block" style="margin-bottom: 0">
+    <div class="form-group">
+      <label for="firstName">First name</label>
+      <label
+        for="firstName"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('firstName')"
+      >
+        <input
+          id="firstName"
+          type="text"
+          maxlength="64"
+          formControlName="firstName"
+        >
+        <span class="tooltip-content">
+          First name is required.
+        </span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last name</label>
+      <label
+        for="lastName"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('lastName')"
+      >
+        <input
+          id="lastName"
+          type="text"
+          maxlength="64"
+          formControlName="lastName"
+        >
+        <span class="tooltip-content">
+          Last name is required.
+        </span>
+      </label>
+    </div>
+
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <label
+        for="email"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('email')"
+      >
+        <input
+          id="email"
+          type="email"
+          maxlength="64"
+          formControlName="email"
+        >
+        <span class="tooltip-content">
+          Email is required.
+        </span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <label
+        for="password"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('password')"
+      >
+        <input
+          id="password"
+          type="text"
+          maxlength="64"
+          formControlName="password"
+        >
+        <span class="tooltip-content">
+          Password is required.
+        </span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="level">User type</label>
+      <div class="select">
+        <select
+          id="level"
+          name="level"
+          formControlName="level"
+          [disabled]="userExists && (userId === currentUserId)"
+        >
+          <option
+            *ngFor="let group of groups; let i = index"
+            [value]="i"
+          >
+            {{group}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [clrLoading]="isLoading"
+        [disabled]="userForm.invalid || isLoading"
+      >
+        Submit
+      </button>
+    </div>
+  </section>
+</form>

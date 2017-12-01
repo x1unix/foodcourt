@@ -5,6 +5,8 @@ import {SessionsService} from '../../shared/services/sessions.service';
 import {UsersService} from '../../shared/services/users.service';
 import {WebHelperService} from '../../shared/services/web-helper.service';
 
+const SUCCESS_ALERT_TIMEOUT = 5000;
+
 @Component({
   selector: 'app-users-manager',
   templateUrl: './users-manager.component.html',
@@ -17,6 +19,16 @@ export class UsersManagerComponent extends LoadStatusComponent implements OnInit
   currentUserId: number = null;
 
   checkedIds: number[] = [];
+
+  blockModal = false;
+
+  showEditor = false;
+
+  editableUser: IUser = null;
+
+  editorOperation = 0;
+
+  showSuccessMessage = false;
 
   constructor(private usersService: UsersService, private session: SessionsService, private helper: WebHelperService) {
     super();
@@ -67,6 +79,63 @@ export class UsersManagerComponent extends LoadStatusComponent implements OnInit
 
   isUserChecked(uid: number): boolean {
     return this.checkedIds.includes(uid);
+  }
+
+  /**
+   * Editor progress event
+   */
+  onEditLoading() {
+    this.blockModal = true;
+  }
+
+  /**
+   * Editor work finish event
+   * @param {boolean} isSuccess Is successful
+   */
+  onEditFinish(isSuccess: boolean) {
+    this.blockModal = false;
+    this.showEditor = false;
+    this.editableUser = null;
+
+    if (isSuccess === true) {
+      this.showSuccessMessage = true;
+
+      // Hide success message after timeout finish
+      setTimeout(() => this.showSuccessMessage = false, SUCCESS_ALERT_TIMEOUT);
+
+      // Refresh data
+      this.fetchUsers();
+    }
+  }
+
+  /**
+   * Create new item in the editor
+   */
+  openItemCreator() {
+    this.editableUser = null;
+    this.showEditor = true;
+    this.editorOperation = 0;
+  }
+
+  /**
+   * Open item editor with the specified dish
+   * @param {IUser} user Selected dish
+   */
+  editItem(user: IUser) {
+    // Clear previous state
+    this.editableUser = null;
+    this.editorOperation = 1;
+    this.editableUser = user;
+    this.showEditor = true;
+  }
+
+  /**
+   * Editor button close click event
+   */
+  onEditDismiss() {
+    this.editableUser = null;
+    this.blockModal = false;
+    this.showEditor = false;
   }
 
 }
