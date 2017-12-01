@@ -3,6 +3,7 @@ import {LoadStatusComponent} from '../../shared/helpers/load-status-component';
 import {IUser} from '../../shared/interfaces/user';
 import {SessionsService} from '../../shared/services/sessions.service';
 import {UsersService} from '../../shared/services/users.service';
+import {WebHelperService} from '../../shared/services/web-helper.service';
 
 @Component({
   selector: 'app-users-manager',
@@ -11,37 +12,42 @@ import {UsersService} from '../../shared/services/users.service';
 })
 export class UsersManagerComponent extends LoadStatusComponent implements OnInit {
 
-  users: IUser[] = [
-    {
-      id: 1,
-      email: 'admin@llnw.com',
-      firstName: 'Super',
-      lastName: 'Admin',
-      level: 0
-    },
-    {
-      id: 2,
-      email: 'dsedchenko@llnw.com',
-      firstName: 'Denis',
-      lastName: 'Sedchenko',
-      level: 2
-    }
-  ];
+  users: IUser[] = [];
 
   currentUserId: number = null;
 
   checkedIds: number[] = [];
 
-  constructor(private usersService: UsersService, private session: SessionsService) {
+  constructor(private usersService: UsersService, private session: SessionsService, private helper: WebHelperService) {
     super();
   }
 
   ngOnInit() {
     this.currentUserId = this.session.userId;
+    this.fetchUsers();
   }
 
   fetchUsers() {
+    this.isLoading = true;
 
+    // Just a tricky way to clear an array in JS (it's over 9000 ways to do it)
+    this.checkedIds.length = 0;
+
+    this.usersService.getAll().subscribe(
+      (u) => this.onFetch(u),
+      (e) => this.onFetchFail(e)
+    );
+
+  }
+
+  onFetch(users: IUser[]) {
+    this.users = users;
+    this.isLoaded = true;
+  }
+
+  onFetchFail(err) {
+    this.isFailed = true;
+    this.error = this.helper.extractResponseError(err);
   }
 
   getGroupName(grpId: number): string {

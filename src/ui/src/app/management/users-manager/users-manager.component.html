@@ -50,11 +50,14 @@
             type="checkbox"
             [checked]="isUserChecked(user.id)"
             (change)="toggleUserCheck(user.id)"
+            [disabled]="user.id == currentUserId"
           />
         </td>
 
         <td>
-          {{user.firstName}} {{user.lastName}}
+          <span class="text-link">
+            {{user.firstName}} {{user.lastName}}
+          </span>
         </td>
 
         <td>

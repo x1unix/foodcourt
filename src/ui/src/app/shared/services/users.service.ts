@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
+import {IUser} from '../interfaces/user';
 
 const GROUP_NAMES = [
   'Administrator',
@@ -9,7 +12,7 @@ const GROUP_NAMES = [
 @Injectable()
 export class UsersService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   /**
    * List of user groups
@@ -26,6 +29,14 @@ export class UsersService {
    */
   getGroupName(grpId: number): string {
     return GROUP_NAMES[grpId];
+  }
+
+  /**
+   * Gets list of all users
+   * @returns {Observable<IUser[]>}
+   */
+  getAll(): Observable<IUser[]> {
+    return <Observable<IUser[]>> this.http.get(`/api/users`);
   }
 
 }

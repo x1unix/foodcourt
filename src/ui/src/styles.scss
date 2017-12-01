@@ -2,6 +2,21 @@
 @import 'styles/anim';
 @import 'styles/poster';
 
+.text-link {
+  color: #007cbb;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:active, &:focus {
+    color: #5659b9;
+    text-decoration: underline;
+  }
+}
+
 .pos-a  {
   position: absolute;
 }
