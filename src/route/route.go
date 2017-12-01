@@ -13,6 +13,11 @@ func Bootstrap() *mux.Router {
 
 	dirStatic := environment.DIR_PUBLIC
 
+	// == COMMON ==
+
+	// Get server api information
+	r.HandleFunc("/api", controller.GetServerInfo).Methods("GET")
+
 	// == AUTH ==
 
 	// Login
