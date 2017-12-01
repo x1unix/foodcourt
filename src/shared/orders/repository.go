@@ -80,7 +80,7 @@ func GetOrderedDishes(output *[]dishes.Dish, date int, userID int, db *sqlx.DB) 
 
 	q, a, _ := squirrel.Select("d.id, d.label, d.description, d.type, d.photo_url").From(Table + " o").
 		Join(menu.Table + " m on o.item_id = m.row_id").
-		Join(dishes.Table + "d on d.id = m.dish_id").
+		Join(dishes.Table + " d on d.id = m.dish_id").
 		Where(squirrel.Eq{"o.user_id": userID, "m.date": date}).
 		ToSql()
 
