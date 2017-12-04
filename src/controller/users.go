@@ -77,7 +77,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	decodeErr := decoder.Decode(&user)
 	defer r.Body.Close()
 
-	if err != nil {
+	if decodeErr != nil {
 		rest.HttpError(decodeErr, http.StatusBadRequest).Write(&w)
 		return
 	}
@@ -87,7 +87,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	// Write error if occurred
 	if createErr != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(createErr)
 		rest.Error(createErr).Write(&w)
 		return
 	}
