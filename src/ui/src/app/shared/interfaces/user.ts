@@ -1,6 +1,6 @@
 // App user
 export interface IUser {
-  id: number;
+  id?: number;
   email: string;
   firstName: string;
   lastName: string;

@@ -9,6 +9,12 @@ const GROUP_NAMES = [
   'Customer'
 ];
 
+export enum Level {
+  Administrator,
+  Manager,
+  Customer
+}
+
 @Injectable()
 export class UsersService {
 
@@ -37,6 +43,25 @@ export class UsersService {
    */
   getAll(): Observable<IUser[]> {
     return <Observable<IUser[]>> this.http.get(`/api/users`);
+  }
+
+  /**
+   * Adds a new user
+   * @param {IUser | any} user User
+   * @returns {Observable<Object>}
+   */
+  addUser(user: IUser|any) {
+    return this.http.post('/api/users', user);
+  }
+
+  /**
+   * Modify a current user
+   * @param {number} userId User id
+   * @param {IUser | any} changes Changes to apply
+   * @returns {Observable<Object>}
+   */
+  updateUser(userId: number, changes: IUser|any) {
+    return this.http.put(`/api/users/${userId}`, changes);
   }
 
 }

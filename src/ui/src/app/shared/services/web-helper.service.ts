@@ -22,7 +22,7 @@ export class WebHelperService {
 
     if (isObject(err.error)) {
       const msg: IMessage = <IMessage> err.error;
-      return `${err.status} ${msg.msg}`;
+      return `${msg.msg} (${err.status} ${err.statusText})`;
     }
 
     return `${err.status} ${err.statusText || ERR_DEFAULT}`;

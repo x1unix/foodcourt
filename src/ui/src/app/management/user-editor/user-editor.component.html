@@ -4,7 +4,7 @@
   icon="exclamation-circle"
   [dismissable]="false"
 >
-  {{error}}
+  Failed to <span *ngIf="userExists">update</span><span *ngIf="!userExists">create</span> user: {{error}}
 </app-alert>
 
 <form
@@ -89,7 +89,7 @@
       >
         <input
           id="password"
-          type="text"
+          type="password"
           maxlength="64"
           formControlName="password"
         >
@@ -99,14 +99,13 @@
       </label>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="!userExists">
       <label for="level">User type</label>
       <div class="select">
         <select
           id="level"
           name="level"
           formControlName="level"
-          [disabled]="userExists && (userId === currentUserId)"
         >
           <option
             *ngFor="let group of groups; let i = index"
@@ -117,13 +116,24 @@
         </select>
       </div>
     </div>
-
-    <div class="modal-footer">
+    <div class="modal-footer" *ngIf="userExists">
       <button
-        type="submit"
+        type="button"
+        class="btn btn-primary"
+        [clrLoading]="isLoading"
+        [disabled]="(!userForm.dirty) || userForm.invalid || isLoading"
+        (click)="onSubmit()"
+      >
+        Submit
+      </button>
+    </div>
+    <div class="modal-footer" *ngIf="!userExists">
+      <button
+        type="button"
         class="btn btn-primary"
         [clrLoading]="isLoading"
         [disabled]="userForm.invalid || isLoading"
+        (click)="onSubmit()"
       >
         Submit
       </button>

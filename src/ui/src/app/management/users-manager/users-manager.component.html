@@ -80,18 +80,16 @@
   [clrModalStaticBackdrop]="!blockModal"
 >
   <h3 class="modal-title">
-    <span *ngIf="editorOperation == 0">Create a new</span><span *ngIf="editorOperation == 1">Edit the</span> dish
+    <span *ngIf="editorOperation == 0">Create a new</span><span *ngIf="editorOperation == 1">Edit the</span> user
   </h3>
   <div class="modal-body">
     <app-user-editor
       *ngIf="showEditor"
       [enabled]="showEditor"
       [user]="editableUser"
-      [compactMode]="true"
       (success)="onEditFinish(true)"
       (error)="onEditFinish(false)"
       (loading)="onEditLoading()"
-      (dismiss)="onEditDismiss()"
     ></app-user-editor>
   </div>
 </clr-modal>
