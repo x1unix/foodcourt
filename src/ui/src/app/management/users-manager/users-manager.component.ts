@@ -4,6 +4,7 @@ import {IUser} from '../../shared/interfaces/user';
 import {SessionsService} from '../../shared/services/sessions.service';
 import {UsersService} from '../../shared/services/users.service';
 import {WebHelperService} from '../../shared/services/web-helper.service';
+import {ResourceStatus} from '../../shared/helpers/resource-status';
 
 const SUCCESS_ALERT_TIMEOUT = 5000;
 
@@ -29,6 +30,8 @@ export class UsersManagerComponent extends LoadStatusComponent implements OnInit
   editorOperation = 0;
 
   showSuccessMessage = false;
+
+  deleteStatus = new ResourceStatus();
 
   constructor(private usersService: UsersService, private session: SessionsService, private helper: WebHelperService) {
     super();
@@ -136,6 +139,34 @@ export class UsersManagerComponent extends LoadStatusComponent implements OnInit
     this.editableUser = null;
     this.blockModal = false;
     this.showEditor = false;
+  }
+
+  /**
+   * Delete selected items
+   */
+  deleteSelected() {
+    const confirm = window.confirm(`Delete ${this.checkedIds.length} item(s)?`);
+
+    if (!confirm) {
+      return;
+    }
+
+    this.deleteStatus.isLoading = true;
+
+    // Hide delete operation result alert
+    setTimeout(() => {
+      this.deleteStatus.isIdle = true;
+    }, 5000);
+
+    this.usersService.removeMultiple(this.checkedIds).subscribe(
+      () => {
+        this.deleteStatus.isLoaded = true;
+        this.fetchUsers();
+      }, (e) => {
+        this.deleteStatus.isFailed = true;
+        this.deleteStatus.error = this.helper.extractResponseError(e);
+      }
+    );
   }
 
 }

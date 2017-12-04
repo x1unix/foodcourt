@@ -1,5 +1,12 @@
 <app-header-toolbar label="Users">
-  <button type="button" class="btn btn-danger" *ngIf="checkedIds.length > 0">
+  <button
+    type="button"
+    class="btn btn-danger"
+    *ngIf="checkedIds.length > 0"
+    [clrLoading]="deleteStatus.isLoading"
+    [disabled]="deleteStatus.isLoading"
+    (click)="deleteSelected()"
+  >
     <clr-icon shape="trash"></clr-icon>
     <span>Delete selected</span>
   </button>
@@ -34,8 +41,28 @@
   Changes have been saved successfully
 </app-alert>
 
+<!-- Delete success message -->
+<app-alert
+  *ngIf="deleteStatus.isLoaded"
+  type="success"
+  icon="check-circle"
+  [dismissable]="false"
+>
+  Items deleted successfully
+</app-alert>
+
+<!-- Delete error message -->
+<app-alert
+  *ngIf="deleteStatus.isFailed"
+  type="danger"
+  icon="exclamation-circle"
+  [dismissable]="false"
+>
+  Failed to delete items: {{this.deleteStatus.error}}
+</app-alert>
+
 <!-- Users data grid -->
-<div class="users-list">
+<div class="users-list" *ngIf="isLoaded">
   <table class="table">
     <thead>
       <tr>

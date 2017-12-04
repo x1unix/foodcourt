@@ -64,4 +64,13 @@ export class UsersService {
     return this.http.put(`/api/users/${userId}`, changes);
   }
 
+  /**
+   * Remove multiple users
+   * @param {number[]} uids User IDs
+   * @returns {Observable<Object>}
+   */
+  removeMultiple(uids: number[]) {
+    return this.http.post('/api/users/purge', uids);
+  }
+
 }
