@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
+	"fmt"
 )
 
 // Why not VAR_ID? It's official GO code convention
@@ -180,5 +181,53 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		rest.Error(err).Write(&w)
 	} else {
 		rest.Echo("Success").Write(&w)
+	}
+}
+
+// Delete multiple users
+// (POST /api/users/purge)
+func PurgeUsers(w http.ResponseWriter, r *http.Request) {
+	// Users array
+	var users []int
+
+	// Extract request data
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&users)
+	defer r.Body.Close()
+
+	if err != nil {
+		log.Error(err.Error())
+		rest.Error(err).Write(&w)
+	}
+
+	if len(users) == 0 {
+		rest.ErrorFromString("Users list is empty", http.StatusBadRequest).Write(&w)
+		return
+	}
+
+	// Check if the list includes the current user's id
+	sess := rest.GetSession(r)
+	cuid := sess.UserId
+
+	// Prevent of self-user purge
+	if auth.ListIncludesUser(cuid, users) {
+		rest.ErrorFromString("Users list cannot contain the current user", http.StatusBadRequest).Write(&w)
+		return
+	}
+
+	// ListIncludesUser
+
+	// New sql connection
+	db := database.GetInstance()
+	defer db.Close()
+
+
+	err = auth.PurgeUsers(db, users)
+
+	if err != nil {
+		log.Error(fmt.Sprintf("%s (Users: %v)", err.Error(), users))
+		rest.Error(err).Write(&w)
+	} else {
+		rest.Ok(&w)
 	}
 }

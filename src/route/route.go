@@ -18,6 +18,9 @@ func Bootstrap() *mux.Router {
 	// Get server api information
 	r.HandleFunc("/api", controller.GetServerInfo).Methods("GET")
 
+
+
+
 	// == AUTH ==
 
 	// Login
@@ -29,7 +32,14 @@ func Bootstrap() *mux.Router {
 	// Session info
 	r.HandleFunc("/api/session", RequireAuth(controller.GetSessionInfo)).Methods("GET")
 
+
+
+
+
 	// === USERS ===
+
+	// Delete a list of users
+	r.HandleFunc("/api/users/purge", RequireAdmin(controller.PurgeUsers)).Methods("POST")
 
 	// Get user by id
 	r.HandleFunc("/api/users/{id:[0-9]+}", RequireAuth(controller.GetUserById)).Methods("GET")
@@ -45,6 +55,10 @@ func Bootstrap() *mux.Router {
 
 	// Update a user
 	r.HandleFunc("/api/users/{id:[0-9]+}", RequireAuth(controller.UpdateUser)).Methods("PUT")
+
+
+
+
 
 	// == Dishes ==
 
@@ -63,6 +77,11 @@ func Bootstrap() *mux.Router {
 	// Delete multiple dishes
 	r.HandleFunc("/api/dishes/purge", RequireAuth(controller.DeleteMultipleDishes)).Methods("POST")
 
+
+
+
+
+
 	// == Menu ==
 
 	// Get dishes by day
@@ -80,6 +99,10 @@ func Bootstrap() *mux.Router {
 	// Get menu status
 	r.HandleFunc("/api/menu/{date:[0-9]+}/status", RequireAuth(RequireValidDate(controller.GetMenuLockState))).Methods("GET")
 
+
+
+
+
 	// == Orders ==
 
 	// Make an order
@@ -94,10 +117,19 @@ func Bootstrap() *mux.Router {
 	// Get ordered dishes
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}/dishes", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.GetOrderedDishes)))).Methods("GET")
 
+
+
+
+
 	// == Files ==
 
 	// Upload an image
 	r.HandleFunc("/api/media", RequireAdmin(controller.UploadFile)).Methods("POST")
+
+
+
+
+
 
 	// === ETC ===
 

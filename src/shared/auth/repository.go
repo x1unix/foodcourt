@@ -139,3 +139,21 @@ func GetIdForEmail(db *sqlx.DB, mail string) (error, int) {
 
 	return err, uid
 }
+
+// Delete multiple users by id
+func PurgeUsers(db *sqlx.DB, users []int) error {
+	_, err := sq.Delete(T_USERS).Where(sq.Eq{"id": users}).RunWith(db.DB).Exec()
+	return err
+}
+
+
+// Checks if a specified list includes specified user id
+func ListIncludesUser(userId int, usersList []int) bool {
+	for _, v := range usersList {
+		if v == userId {
+			return true;
+		}
+	}
+
+	return false;
+}
