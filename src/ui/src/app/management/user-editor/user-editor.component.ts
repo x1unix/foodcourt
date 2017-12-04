@@ -114,7 +114,7 @@ export class UserEditorComponent extends LoadStatusComponent implements OnInit {
 
         case 'level':
           if (this.user.level !== data.level) {
-            output.level = data.level;
+            output.level = Number(data.level);
           }
           return;
 
@@ -135,6 +135,14 @@ export class UserEditorComponent extends LoadStatusComponent implements OnInit {
   onSubmit() {
     const data = this.userExists ? this.getFormChanges() : this.userForm.value;
     const req = this.userExists ? this.users.updateUser(this.userId, data) : this.users.addUser(data);
+
+
+    // Workaround to pass only numbers as user level
+    data.level = Number(data.level);
+
+    if (isNaN(data.level)) {
+      delete data.level;
+    }
 
     if (isEmpty(data)) {
       this.isFailed = true;
