@@ -16,6 +16,7 @@ import { MenuEditorComponent } from './menu-editor/menu-editor.component';
 import { DishesListComponent } from './dishes-list/dishes-list.component';
 import { UsersManagerComponent } from './users-manager/users-manager.component';
 import { UserEditorComponent } from './user-editor/user-editor.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { UserEditorComponent } from './user-editor/user-editor.component';
     MenuEditorComponent,
     DishesListComponent,
     UsersManagerComponent,
-    UserEditorComponent
+    UserEditorComponent,
+    SettingsComponent
   ],
   providers: [
     DishesService

@@ -11,6 +11,7 @@ import {MenuEditorComponent} from './management/menu-editor/menu-editor.componen
 import {OrderEditorComponent} from './container/order-editor/order-editor.component';
 import {TodayComponent} from './container/today/today.component';
 import {UsersManagerComponent} from './management/users-manager/users-manager.component';
+import {SettingsComponent} from './management/settings/settings.component';
 
 const APP_ROUTES: Routes = [
   {
@@ -72,6 +73,13 @@ const APP_ROUTES: Routes = [
             component: UsersManagerComponent,
             data: {
               title: 'Manage users'
+            }
+          },
+          {
+            path: 'system',
+            component: SettingsComponent,
+            data: {
+              title: 'System settings'
             }
           }
         ]

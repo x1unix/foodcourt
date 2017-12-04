@@ -1,0 +1,15 @@
+<app-header-toolbar label="System settings">
+  <button type="button" class="btn btn-success">
+    <clr-icon shape="plus"></clr-icon>
+    <span>Save</span>
+  </button>
+</app-header-toolbar>
+
+<app-poster
+  *ngIf="isFailed"
+  class="poster--error"
+  icon="bug"
+  label="Under Construction"
+>
+  <span class="poster__error">Entry is not available yet</span>
+</app-poster>
