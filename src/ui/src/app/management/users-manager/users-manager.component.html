@@ -24,6 +24,16 @@
 <!-- Data fetch preloader -->
 <app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
 
+<!-- Save success message -->
+<app-alert
+  *ngIf="showSuccessMessage"
+  type="success"
+  icon="check-circle"
+  [dismissable]="false"
+>
+  Changes have been saved successfully
+</app-alert>
+
 <!-- Users data grid -->
 <div class="users-list">
   <table class="table">
