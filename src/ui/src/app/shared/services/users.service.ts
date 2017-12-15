@@ -73,4 +73,13 @@ export class UsersService {
     return this.http.post('/api/users/purge', uids);
   }
 
+  /**
+   * Get user by id
+   * @param {number} id User ID
+   * @returns {Observable<IUser>}
+   */
+  findById(id: number): Observable<IUser> {
+    return <Observable<IUser>> this.http.get(`/api/users/${id}`);
+  }
+
 }
