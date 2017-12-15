@@ -12,7 +12,8 @@ import (
 )
 
 const TokenQueryParam = "token"
-const errAccessDenied = "Access Denied"
+const errUnauthorized = "unauthorized"
+const errAccessDenied = "access denied"
 const paramUserId = "userId"
 
 // Middleware guard that requires API token to be passed
@@ -21,7 +22,7 @@ func RequireToken(handler rest.RequestHandler) rest.RequestHandler {
 		token := rest.GetToken(r)
 
 		if len(token) == 0 {
-			rest.HttpErrorFromString(errAccessDenied, http.StatusUnauthorized).Write(&w)
+			rest.HttpErrorFromString(errUnauthorized, http.StatusUnauthorized).Write(&w)
 			return
 		}
 
@@ -36,7 +37,7 @@ func RequireAuth(handler rest.RequestHandler) rest.RequestHandler {
 		token := rest.GetToken(r)
 
 		if len(token) == 0 {
-			rest.HttpErrorFromString(errAccessDenied, http.StatusUnauthorized).Write(&w)
+			rest.HttpErrorFromString(errUnauthorized, http.StatusUnauthorized).Write(&w)
 			return
 		}
 
@@ -50,7 +51,7 @@ func RequireAuth(handler rest.RequestHandler) rest.RequestHandler {
 		}
 
 		if !exists {
-			rest.HttpErrorFromString(errAccessDenied, http.StatusUnauthorized).Write(&w)
+			rest.HttpErrorFromString(errUnauthorized, http.StatusUnauthorized).Write(&w)
 			return
 		}
 
@@ -61,7 +62,7 @@ func RequireAuth(handler rest.RequestHandler) rest.RequestHandler {
 
 		if now >= session.TTL {
 			vault.RevealToken(token)
-			rest.HttpErrorFromString("Session timed out", http.StatusUnauthorized).Write(&w)
+			rest.HttpErrorFromString("session timed out", http.StatusUnauthorized).Write(&w)
 			return
 		}
 
