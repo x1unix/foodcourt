@@ -30,7 +30,7 @@
       </button>
       <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
         <a href="..." clrDropdownItem>About</a>
-        <a href="..." clrDropdownItem>Preferences</a>
+        <a routerLink="/profile" routerLinkActive="active" clrDropdownItem>Preferences</a>
         <a href="#" clrDropdownItem (click)="logout.emit()">Log out</a>
       </clr-dropdown-menu>
     </clr-dropdown>

@@ -1,0 +1,135 @@
+<app-header-toolbar label="Edit profile information">
+  <button
+    *ngIf="isLoaded"
+    type="button"
+    class="btn btn-success"
+    [clrLoading]="saveStatus.isLoading"
+    [disabled]="(!userForm.dirty) || userForm.invalid || saveStatus.isLoading"
+    (click)="onSubmit()"
+  >
+    <clr-icon shape="floppy"></clr-icon>
+    <span>Save</span>
+  </button>
+</app-header-toolbar>
+
+<!-- data fetch error message -->
+<app-poster
+  *ngIf="isFailed"
+  class="poster--error"
+  icon="bug"
+  label="Failed to get user information"
+>
+  <code class="poster__error">{{error}}</code>
+  <a href="#" (click)="fetchUserInfo()">Try again</a>
+</app-poster>
+
+<!-- Data fetch preloader -->
+<app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
+
+<app-alert
+  *ngIf="saveStatus.isFailed || saveStatus.isLoaded"
+  [type]="saveStatus.isFailed ? 'danger' : 'success'"
+  [icon]="saveStatus.isFailed ? 'exclamation-circle' : 'check-circle'"
+  [dismissable]="false"
+>
+  <span *ngIf="saveStatus.isLoaded">Changes have been saved successfully</span>
+  <span *ngIf="saveStatus.isFailed">Failed to save changes: {{saveStatus.error}}</span>
+</app-alert>
+
+<form
+  *ngIf="isLoaded"
+  class="form"
+  [formGroup]="userForm"
+  (ngSubmit)="onSubmit()"
+>
+  <section class="form-block">
+    <label>Basic information</label>
+    <div class="form-group">
+      <label for="firstName">First name</label>
+      <label
+        for="firstName"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('firstName')"
+      >
+        <input
+          id="firstName"
+          type="text"
+          maxlength="64"
+          formControlName="firstName"
+        >
+        <span class="tooltip-content">
+          First name is required.
+        </span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last name</label>
+      <label
+        for="lastName"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('lastName')"
+      >
+        <input
+          id="lastName"
+          type="text"
+          maxlength="64"
+          formControlName="lastName"
+        >
+        <span class="tooltip-content">
+          Last name is required.
+        </span>
+      </label>
+    </div>
+
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <label
+        for="email"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('email')"
+      >
+        <input
+          id="email"
+          type="email"
+          maxlength="64"
+          formControlName="email"
+        >
+        <span class="tooltip-content">
+          Email is required.
+        </span>
+      </label>
+    </div>
+  </section>
+  <section class="form-block">
+    <label>Security</label>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <label
+        for="password"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('password')"
+      >
+        <input
+          id="password"
+          type="password"
+          maxlength="64"
+          formControlName="password"
+        >
+        <span class="tooltip-content">
+          Password cannot be empty.
+        </span>
+      </label>
+    </div>
+  </section>
+</form>
+

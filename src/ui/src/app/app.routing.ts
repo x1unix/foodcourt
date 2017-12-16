@@ -12,6 +12,7 @@ import {OrderEditorComponent} from './container/order-editor/order-editor.compon
 import {TodayComponent} from './container/today/today.component';
 import {UsersManagerComponent} from './management/users-manager/users-manager.component';
 import {SettingsComponent} from './management/settings/settings.component';
+import {ProfileEditorComponent} from './auth/profile-editor/profile-editor.component';
 
 const APP_ROUTES: Routes = [
   {
@@ -45,6 +46,13 @@ const APP_ROUTES: Routes = [
             component: OrderEditorComponent,
             data: {
               title: 'Manage orders'
+            }
+          },
+          {
+            path: 'profile',
+            component: ProfileEditorComponent,
+            data: {
+              title: 'Edit profile'
             }
           }
         ]

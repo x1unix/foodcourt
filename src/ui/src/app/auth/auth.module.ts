@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { SharedModule } from '../shared/shared.module';
 import { ClarityModule } from 'clarity-angular';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
 
 @NgModule({
@@ -13,7 +13,8 @@ import { ProfileEditorComponent } from './profile-editor/profile-editor.componen
     RouterModule,
     SharedModule,
     FormsModule,
-    ClarityModule
+    ClarityModule,
+    ReactiveFormsModule
   ],
   declarations: [AuthComponent, ProfileEditorComponent]
 })
