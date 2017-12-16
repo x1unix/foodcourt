@@ -83,6 +83,8 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user.ID = userId;
+
 	// Modify data in DB
 	createErr := auth.UpdateUser(db, &user)
 
