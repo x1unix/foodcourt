@@ -98,6 +98,10 @@ func UpdateUser(db *sqlx.DB, u *User) error {
 	builder := sq.Update(T_USERS).Where(sq.Eq{"id": u.ID})
 
 	// TODO: add method to autofill UPDATE query with non-empty fields
+	if u.Email != "" {
+		builder = builder.Set("email", u.Email)
+	}
+
 	if u.FirstName != "" {
 		builder = builder.Set("firstName", u.FirstName)
 	}
