@@ -78,6 +78,9 @@
         <th>
           Group
         </th>
+        <th>
+          Actions
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -103,6 +106,14 @@
 
         <td>
           {{getGroupName(user.level)}}
+        </td>
+        <td>
+          <a
+            [routerLink]="['/orders/', todayDate, user.id]"
+            target="_blank"
+          >
+            Edit orders
+          </a>
         </td>
       </tr>
     </tbody>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 import {LoadStatusComponent} from '../../shared/helpers/load-status-component';
 import {IUser} from '../../shared/interfaces/user';
 import {SessionsService} from '../../shared/services/sessions.service';
@@ -7,6 +8,8 @@ import {WebHelperService} from '../../shared/services/web-helper.service';
 import {ResourceStatus} from '../../shared/helpers/resource-status';
 
 const SUCCESS_ALERT_TIMEOUT = 5000;
+
+const SERVED_DATE_FORMAT = 'YYYYMMDD';
 
 @Component({
   selector: 'app-users-manager',
@@ -33,12 +36,15 @@ export class UsersManagerComponent extends LoadStatusComponent implements OnInit
 
   deleteStatus = new ResourceStatus();
 
+  todayDate: string = null;
+
   constructor(private usersService: UsersService, private session: SessionsService, private helper: WebHelperService) {
     super();
   }
 
   ngOnInit() {
     this.currentUserId = this.session.userId;
+    this.todayDate = moment().format(SERVED_DATE_FORMAT);
     this.fetchUsers();
   }
 
