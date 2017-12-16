@@ -81,6 +81,10 @@
       <app-alert *ngIf="orderStructError.length > 0" type="danger" icon="exclamation-circle" [dismissable]="false">
         {{orderStructError}}
       </app-alert>
+
+      <app-alert *ngIf="asDifferentUser" type="warning" icon="exclamation-triangle" [dismissable]="false">
+        You're editing an order of other user, please be careful!
+      </app-alert>
     </div>
 
     <!-- Items load fail message -->

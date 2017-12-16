@@ -113,6 +113,8 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
 
   orderStructError = '';
 
+  asDifferentUser = false;
+
   /**
    * Date to be send on server
    * @type {any}
@@ -162,6 +164,9 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
       // Read route params (date & user id) (optional)
       this.userId = isNil(params[PARAM_UID]) ? this.session.userId : params[PARAM_UID];
       this.date = isNil(params[PARAM_DATE]) ? moment().utc() : moment(params[PARAM_DATE], SERVED_DATE_FORMAT);
+
+      // Check user mode
+      this.asDifferentUser = `${this.userId}` !== `${this.session.userId}`;
 
       // Init component state
       this.pickedDate = this.date.toDate();
