@@ -6,13 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
+
 import { ManagementModule} from './management/management.module';
 import { SharedModule } from './shared/shared.module';
 import { ContainerModule } from './container/container.module';
 import { AuthModule } from './auth/auth.module';
 import { AppRoutingModule } from './app.routing';
-
 import { AppComponent } from './app.component';
+import {ReportsModule} from './reports/reports.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AppComponent } from './app.component';
     ContainerModule,
     SharedModule,
     AppRoutingModule,
-    ManagementModule
+    ManagementModule,
+    ReportsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
