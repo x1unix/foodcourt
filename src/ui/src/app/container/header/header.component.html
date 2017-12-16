@@ -20,6 +20,14 @@
     >
       Management
     </a>
+    <a
+      *ngIf="isAdmin"
+      routerLink="/reports"
+      routerLinkActive="active"
+      class="nav-link nav-text"
+    >
+      Reports
+    </a>
   </div>
   <div class="header-actions">
     <b class="nav-link nav-text">Wellcome, {{user.firstName}} {{user.lastName}}</b>
