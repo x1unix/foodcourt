@@ -8,9 +8,15 @@ import (
 	"../shared/dishes"
 	"encoding/json"
 	"fmt"
+	"strconv"
 )
 
 const userDebugErrorTpl = "User: %d; Date: %d; Error: %s"
+
+const queryDateFrom = "from"
+const queryDateTill = "till"
+
+const errBadDateFormat = "bad date format"
 
 // Order items from menu for specific user
 // (POST /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
@@ -140,4 +146,41 @@ func GetOrderedDishes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rest.Success(&dishesList).Write(&w)
+}
+
+// Get order report for date range
+// (GET /api/orders/report?from=[0-9]+&till=[0-9]+)
+func GetOrdersReport(w http.ResponseWriter, r *http.Request) {
+	queryParams := r.URL.Query()
+
+	strDateFrom, strDateTill := queryParams.Get(queryDateFrom), queryParams.Get(queryDateTill)
+
+	if !(rest.DateFormatValid(strDateFrom) && rest.DateFormatValid(strDateTill)) {
+		rest.BadRequest(&w, errBadDateFormat)
+		return
+	}
+
+	// Convert string args to int
+	dateFrom, dfErr := strconv.Atoi(strDateFrom)
+	dateTill, dtErr := strconv.Atoi(strDateTill)
+
+	if (dtErr != nil) || (dfErr != nil) {
+		rest.BadRequest(&w, errBadDateFormat)
+		return
+	}
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	var orderStats []orders.UserOrderCounter
+
+	err := orders.GetOrderStatsBetweenDates(&orderStats, dateFrom, dateTill, db)
+
+	if err != nil {
+		log.Error(fmt.Sprintf("Range: %d - %d; Error: %s", dateFrom, dateTill, err.Error()))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Success(&orderStats).Write(&w)
 }

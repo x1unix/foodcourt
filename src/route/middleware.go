@@ -109,7 +109,6 @@ func RequireAdmin(handler rest.RequestHandler) rest.RequestHandler {
 	return RequireAuth(RequireLevel(0, true, handler))
 }
 
-const dateParamLength = 8
 
 // Middleware checks if the passed date in request is correct
 func RequireValidDate(handler rest.RequestHandler) rest.RequestHandler {
@@ -117,7 +116,7 @@ func RequireValidDate(handler rest.RequestHandler) rest.RequestHandler {
 		date := rest.Params(r).GetString("date")
 
 		// Date must be in format YYYYMMDD
-		if len(date) == dateParamLength {
+		if rest.DateFormatValid(date) {
 			handler(w, r)
 		} else {
 			rest.ErrorFromString("Invalid date format (expected: YYYYMMDD)", 400).Write(&w)

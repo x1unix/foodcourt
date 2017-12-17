@@ -118,7 +118,8 @@ func Bootstrap() *mux.Router {
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}/dishes", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.GetOrderedDishes)))).Methods("GET")
 
 
-
+	// Get order stats for period
+	r.HandleFunc("/api/orders/report", RequireAuth(controller.GetOrdersReport)).Methods("GET")
 
 
 	// == Files ==

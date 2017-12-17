@@ -86,3 +86,36 @@ func GetOrderedDishes(output *[]dishes.Dish, date int, userID int, db *sqlx.DB) 
 
 	return db.Select(output, q, a...)
 }
+
+
+// Gets list of users that made orders in range ow two dates
+func GetOrderStatsBetweenDates(output *[]UserOrderCounter, dateFrom int, dateTill int, db *sqlx.DB) error {
+	 /**
+select o.user_id,
+	m.date
+from orders o
+	join menu m
+		on o.item_id = m.row_id
+where m.date >= 20171216 and m.date <= 20171219
+	group by o.user_id, m.date;
+	  */
+
+	q, a, _ := squirrel.Select("o.user_id, m.date").From(Table + " o").
+		Join(menu.Table + "m o.item_id = m.row_id").
+		Where("m.date >= ? and m.date <= ?", dateFrom, dateTill).
+		GroupBy("o,user_id, m.date").
+		ToSql()
+
+	return db.Select(output, q, a...)
+}
+
+/*
+	select o.user_id,
+		count(distinct o.item_id) as count,
+		m.date
+	from orders o
+		join menu m
+			on o.item_id = m.row_id
+	where m.date = 20171219
+		group by o.user_id;
+ */
