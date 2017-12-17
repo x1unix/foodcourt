@@ -19,6 +19,6 @@ func ReadJSONBody(body *io.ReadCloser, target *interface{}) error {
 
 // Checks if date format valid
 func DateFormatValid(dateString string) bool {
-	return len(date) == dateParamLength;
+	return len(dateString) == dateParamLength;
 }
 
