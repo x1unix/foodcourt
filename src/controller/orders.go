@@ -182,5 +182,7 @@ func GetOrdersReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rest.Success(&orderStats).Write(&w)
+	formatted := orders.FormatOrdersReport(&orderStats)
+
+	rest.Success(formatted).Write(&w)
 }
