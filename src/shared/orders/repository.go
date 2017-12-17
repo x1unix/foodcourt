@@ -101,9 +101,9 @@ where m.date >= 20171216 and m.date <= 20171219
 	  */
 
 	q, a, _ := squirrel.Select("o.user_id, m.date").From(Table + " o").
-		Join(menu.Table + "m o.item_id = m.row_id").
+		Join(menu.Table + " m on o.item_id = m.row_id").
 		Where("m.date >= ? and m.date <= ?", dateFrom, dateTill).
-		GroupBy("o,user_id, m.date").
+		GroupBy("o.user_id, m.date").
 		ToSql()
 
 	return db.Select(output, q, a...)

@@ -177,7 +177,7 @@ func GetOrdersReport(w http.ResponseWriter, r *http.Request) {
 	err := orders.GetOrderStatsBetweenDates(&orderStats, dateFrom, dateTill, db)
 
 	if err != nil {
-		log.Error(fmt.Sprintf("Range: %d - %d; Error: %s", dateFrom, dateTill, err.Error()))
+		log.Error(fmt.Sprintf("%s (range: %d - %d)", err.Error(), dateFrom, dateTill))
 		rest.Error(err).Write(&w)
 		return
 	}
