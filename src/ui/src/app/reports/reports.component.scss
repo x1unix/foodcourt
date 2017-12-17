@@ -1,0 +1,32 @@
+:host {
+  padding: 24px;
+}
+
+.order-grid.table {
+  border-collapse: collapse;
+}
+
+.order-grid__th--client {
+  width: 200px;
+}
+
+.order-grid__cell {
+  //height: 32px;
+  &:after {
+    content: '-';
+  }
+}
+
+.order-grid__cell--ordered {
+  background: #feecb5;
+  border: 1px solid #ffdc0b;
+  &:after {
+    content: '+';
+  }
+}
+
+.order-grid__user {
+  background: #fafafa;
+  font-weight: bold;
+  border-right: 1px solid #ccc;
+}

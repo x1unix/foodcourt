@@ -1,1 +1,65 @@
-<app-header-toolbar label="Order statistics"></app-header-toolbar>
+<app-header-toolbar label="Order reports">
+  <div class="order-report__form">
+    From <button class="btn btn-link">22/12/2017</button> till <button class="btn btn-link">29/12/2017</button>
+  </div>
+  <!--<app-datepicker-->
+    <!--[(ngModel)]="pickedDate"-->
+    <!--(ngModelChange)="onDateChange($event)"-->
+    <!--[options]="datePickerOptions"-->
+    <!--[showDateInput]="false"-->
+    <!--#picker-->
+  <!--&gt;</app-datepicker>-->
+</app-header-toolbar>
+<div class="order-report__data">
+  <table class="table order-grid">
+    <thead>
+      <tr>
+        <th class="order-grid__th--client left">Client</th>
+        <th>Sun, 22 December</th>
+        <th>Mon, 23 December</th>
+        <th>Tue, 24 December</th>
+        <th>Wed, 25 December</th>
+        <th>Thu, 26 December</th>
+        <th>Fri, 27 December</th>
+        <th>Sat, 28 December</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left order-grid__user">Denis Sedchenko</td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+      </tr>
+      <tr>
+        <td class="left order-grid__user">Max Bilichenko</td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+        <td class="order-grid__cell order-grid__cell--ordered"></td>
+      </tr>
+      <tr>
+        <td class="left order-grid__user">Oleh Suliy</td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+        <td class="order-grid__cell"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<p class="order-reports__disclaimer p7">
+  <b>Attention</b> - any order is considered to be committed if at least one dish was ordered in the menu
+</p>
