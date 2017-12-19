@@ -47,7 +47,13 @@
       <tbody>
       <tr *ngFor="let user of usersList;">
         <td class="left order-grid__user">
-          {{user.firstName}} {{user.lastName}}
+          <a
+            [routerLink]="['/orders/', dateFrom.served, user.id]"
+            [title]="'View ' + user.firstName + ' ' + user.lastName + '\'s orders'"
+            target="_blank"
+          >
+            {{user.firstName}} {{user.lastName}}
+          </a>
         </td>
         <td
           class="order-grid__cell"
