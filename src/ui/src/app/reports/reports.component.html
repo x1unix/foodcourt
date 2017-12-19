@@ -2,7 +2,7 @@
   <div class="order-report__form" *ngIf="initialized">
     <app-datepicker
       [(ngModel)]="pickedFromDate"
-      [options]="datePickerOptions"
+      [options]="dpOpsFrom"
       [showDateInput]="false"
       position="bottom-left"
       #pickerFrom
@@ -19,7 +19,7 @@
 
     <app-datepicker
       [(ngModel)]="pickedTillDate"
-      [options]="datePickerOptions"
+      [options]="dpOpsTill"
       [showDateInput]="false"
       position="bottom-left"
       #pickerTill

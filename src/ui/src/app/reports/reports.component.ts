@@ -35,7 +35,15 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
 
   pickTimeout: number;
 
-  datePickerOptions: DatepickerOptions = null;
+  dpOpsFrom: DatepickerOptions = null;
+
+  dpOpsTill: DatepickerOptions = null;
+
+  /**
+   * Common datepickers configuration
+   * @type {null}
+   */
+  commonOptions: DatepickerOptions = null;
 
   get pickedFromDate(): Date {
     return this.dateFrom.date;
@@ -43,6 +51,7 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
 
   set pickedFromDate(newDate: Date) {
     this.dateFrom.origin = moment(newDate);
+    this.updatePickerOptions();
     this.onDatePick();
   }
 
@@ -52,6 +61,7 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
 
   set pickedTillDate(newDate: Date) {
     this.dateTill.origin = moment(newDate);
+    this.updatePickerOptions();
     this.onDatePick();
   }
 
@@ -72,12 +82,6 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
   ngOnInit() {
     const today = moment();
     const dayOfWeek = today.isoWeekday();
-
-    this.datePickerOptions = {
-      minYear: today.year(),
-      firstCalendarDay: 1,
-      displayFormat: SERVED_DATE_FORMAT
-    };
 
     // Initialize days
     if (dayOfWeek >= DAY_FRIDAY) {
@@ -100,7 +104,28 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
       this.dateTill = new DateTime(endDate);
     }
 
+    this.commonOptions = {
+      minYear: today.year(),
+      firstCalendarDay: 1,
+      displayFormat: SERVED_DATE_FORMAT
+    };
+
+    this.updatePickerOptions();
+
     this.fetchInitData();
+  }
+
+
+  /**
+   * Updates datepickers limits
+   */
+  updatePickerOptions() {
+    const maxDate = new Date(this.dateTill.origin.clone().subtract(1, 'days').valueOf());
+    const minDate = new Date(this.dateFrom.origin.clone().add(1, 'days').valueOf());
+
+    this.dpOpsFrom = Object.assign({ maxDate }, this.commonOptions);
+
+    this.dpOpsTill = Object.assign({ minDate }, this.commonOptions);
   }
 
   /**
