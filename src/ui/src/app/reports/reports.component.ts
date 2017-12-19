@@ -8,6 +8,7 @@ import { DateTime } from './model/date-time';
 import {LoadStatusComponent} from '../shared/helpers';
 import {IUser} from '../shared/interfaces/user';
 import {IKeyValuePair} from '../shared/interfaces/key-value-pair';
+import {DatepickerOptions} from '../shared/components/datepicker';
 
 const DAY_FRIDAY = 5;
 const DAY_MONDAY = 1;
@@ -32,14 +33,51 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
 
   initialized = false;
 
+  pickTimeout: number;
+
+  datePickerOptions: DatepickerOptions = null;
+
+  get pickedFromDate(): Date {
+    return this.dateFrom.date;
+  }
+
+  set pickedFromDate(newDate: Date) {
+    this.dateFrom.origin = moment(newDate);
+    this.onDatePick();
+  }
+
+  get pickedTillDate(): Date {
+    return this.dateTill.date;
+  }
+
+  set pickedTillDate(newDate: Date) {
+    this.dateTill.origin = moment(newDate);
+    this.onDatePick();
+  }
 
   constructor(private users: UsersService, private reports: ReportsService, private helper: WebHelperService) {
     super();
   }
 
+  onDatePick() {
+    if (!isNil(this.pickTimeout)) {
+      clearTimeout(this.pickTimeout);
+    }
+
+    setTimeout(() => {
+      this.fetchReport();
+    }, 500);
+  }
+
   ngOnInit() {
     const today = moment();
     const dayOfWeek = today.isoWeekday();
+
+    this.datePickerOptions = {
+      minYear: today.year(),
+      firstCalendarDay: 1,
+      displayFormat: SERVED_DATE_FORMAT
+    };
 
     // Initialize days
     if (dayOfWeek >= DAY_FRIDAY) {
@@ -122,7 +160,17 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
   }
 
   fetchReport() {
-
+    this.isLoading = true;
+    this.reports.getOrderStats(this.dateFrom.served, this.dateTill.served).subscribe(
+      (data) => {
+        this.reportData = data;
+        this.buildDateLabels();
+        this.isLoaded = true;
+      }, (err) => {
+        this.error = this.helper.extractResponseError(err);
+        this.isFailed = true;
+      }
+    );
   }
 
   retry(event: Event) {

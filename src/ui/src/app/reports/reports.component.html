@@ -1,21 +1,39 @@
 <app-header-toolbar label="Order reports">
   <div class="order-report__form" *ngIf="initialized">
-    From
-    <button class="btn btn-link" [disabled]="isLoading">
-      {{dateFrom.displayed}}
-    </button>
-    till
-    <button class="btn btn-link" [disabled]="isLoading">
-      {{dateTill.displayed}}
-    </button>
+    <app-datepicker
+      [(ngModel)]="pickedFromDate"
+      [options]="datePickerOptions"
+      [showDateInput]="false"
+      position="bottom-left"
+      #pickerFrom
+    >
+      From
+      <button
+        class="btn btn-link"
+        [disabled]="isLoading"
+        (click)="pickerTill.isOpened = false; pickerFrom.toggle();"
+      >
+        {{dateFrom.displayed}}
+      </button>
+    </app-datepicker>
+
+    <app-datepicker
+      [(ngModel)]="pickedTillDate"
+      [options]="datePickerOptions"
+      [showDateInput]="false"
+      position="bottom-left"
+      #pickerTill
+    >
+      till
+      <button
+        class="btn btn-link"
+        [disabled]="isLoading"
+        (click)="pickerFrom.isOpened = false; pickerTill.toggle();"
+      >
+        {{dateTill.displayed}}
+      </button>
+    </app-datepicker>
   </div>
-  <!--<app-datepicker-->
-    <!--[(ngModel)]="pickedDate"-->
-    <!--(ngModelChange)="onDateChange($event)"-->
-    <!--[options]="datePickerOptions"-->
-    <!--[showDateInput]="false"-->
-    <!--#picker-->
-  <!--&gt;</app-datepicker>-->
 </app-header-toolbar>
 
 

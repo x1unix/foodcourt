@@ -8,6 +8,7 @@ export class DateTime {
 
   served: string;
   displayed: string;
+  date: Date;
 
   constructor(m: moment.Moment) {
     this.origin = m;
@@ -21,6 +22,7 @@ export class DateTime {
     this._origin = newVal;
     this.displayed = newVal.format(DISPLAYED_DATE_FMT);
     this.served = newVal.format(SERVED_DATE_FMT);
+    this.date = new Date(newVal.valueOf());
   }
 
   updateFromDate(date: Date) {
