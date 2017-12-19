@@ -33,3 +33,24 @@
   font-weight: bold;
   border-right: 1px solid #ccc;
 }
+
+.order-grid__legend {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border: 1px solid;
+  margin-left: 5px;
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.order-grid__legend--unordered {
+  border-color: #ccc;
+  background: white;
+}
+
+.order-grid__legend--ordered {
+  background: #feecb5;
+  border-color: #ffdc0b;
+}
