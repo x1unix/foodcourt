@@ -9,6 +9,41 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <div class="fc-wellcome">
+      <div class="fc-welcome"></div>
+    </div>
+  </app-root>
+  <style>
+    @keyframes fc-boot {
+      0% {
+        opacity: 0.3;
+      }
+
+      40% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.3;
+      }
+    }
+    .fc-welcome {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: center center url('/assets/fc-logo-wide.png') no-repeat;
+      background-color: #fafafa;
+      background-size: 312px auto;
+      cursor: progress;
+      animation: fc-boot 1.3s linear infinite;
+    }
+  </style>
 </body>
 </html>
