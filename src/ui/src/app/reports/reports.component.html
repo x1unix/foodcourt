@@ -1,6 +1,13 @@
 <app-header-toolbar label="Order reports">
-  <div class="order-report__form">
-    From <button class="btn btn-link">22/12/2017</button> till <button class="btn btn-link">29/12/2017</button>
+  <div class="order-report__form" *ngIf="initialized">
+    From
+    <button class="btn btn-link" [disabled]="isLoading">
+      {{dateFrom.displayed}}
+    </button>
+    till
+    <button class="btn btn-link" [disabled]="isLoading">
+      {{dateTill.displayed}}
+    </button>
   </div>
   <!--<app-datepicker-->
     <!--[(ngModel)]="pickedDate"-->
@@ -10,56 +17,51 @@
     <!--#picker-->
   <!--&gt;</app-datepicker>-->
 </app-header-toolbar>
-<div class="order-report__data">
-  <table class="table order-grid">
-    <thead>
+
+
+<!-- data fetch error message -->
+<app-poster
+  *ngIf="isFailed"
+  class="poster--error"
+  icon="bug"
+  label="Failed to get report"
+>
+  <code class="poster__error">{{error}}</code>
+  <a href="#" (click)="retry($event)">Try again</a>
+</app-poster>
+
+<!-- Data fetch preloader -->
+<app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
+
+<div class="order-report" *ngIf="isLoaded">
+  <div class="order-report__data">
+    <table class="table order-grid">
+      <thead>
       <tr>
         <th class="order-grid__th--client left">Client</th>
-        <th>Sun, 22 December</th>
-        <th>Mon, 23 December</th>
-        <th>Tue, 24 December</th>
-        <th>Wed, 25 December</th>
-        <th>Thu, 26 December</th>
-        <th>Fri, 27 December</th>
-        <th>Sat, 28 December</th>
+        <th *ngFor="let label of dateLabels">
+          {{label.value}}
+        </th>
       </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="left order-grid__user">Denis Sedchenko</td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of usersList;">
+        <td class="left order-grid__user">
+          {{user.firstName}} {{user.lastName}}
+        </td>
+        <td
+          class="order-grid__cell"
+          *ngFor="let day of dateLabels;"
+          [ngClass]="{'order-grid__cell--ordered': isUserOrderMade(user.id, day.key)}"
+        ></td>
       </tr>
-      <tr>
-        <td class="left order-grid__user">Max Bilichenko</td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-        <td class="order-grid__cell order-grid__cell--ordered"></td>
-      </tr>
-      <tr>
-        <td class="left order-grid__user">Oleh Suliy</td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-        <td class="order-grid__cell"></td>
-      </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
+
+
+  <p class="order-reports__disclaimer p7">
+    <b>Attention</b> - any order is considered to be committed if at least one dish was ordered in the menu
+  </p>
+
 </div>
-
-
-<p class="order-reports__disclaimer p7">
-  <b>Attention</b> - any order is considered to be committed if at least one dish was ordered in the menu
-</p>

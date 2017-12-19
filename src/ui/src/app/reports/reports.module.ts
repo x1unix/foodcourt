@@ -6,6 +6,7 @@ import { ClarityModule } from 'clarity-angular';
 import { SharedModule } from '../shared/shared.module';
 
 import { ReportsComponent } from './reports.component';
+import {ReportsService} from './reports.service';
 
 @NgModule({
   imports: [
@@ -16,6 +17,9 @@ import { ReportsComponent } from './reports.component';
     ClarityModule,
     SharedModule
   ],
-  declarations: [ReportsComponent]
+  declarations: [ReportsComponent],
+  providers: [
+    ReportsService
+  ]
 })
 export class ReportsModule { }

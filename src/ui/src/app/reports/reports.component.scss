@@ -1,5 +1,8 @@
 :host {
   padding: 24px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
 }
 
 .order-grid.table {
