@@ -71,11 +71,13 @@ export class ReportsComponent extends LoadStatusComponent implements OnInit {
    */
   buildDateLabels() {
     const start = this.dateFrom.origin.clone();
-    const daysRange = start.diff(this.dateTill.origin, 'days');
+    const daysRange = this.dateTill.origin.diff(start, 'days');
     this.dateLabels = [];
 
     for (let d = 0; d <= daysRange; d++) {
-      start.add(d, 'days');
+      if (d > 0) {
+        start.add(1, 'days');
+      }
       this.dateLabels.push({
         key: +start.format(SERVED_DATE_FORMAT),
         value: start.format(GRID_DATE_FORMAT)

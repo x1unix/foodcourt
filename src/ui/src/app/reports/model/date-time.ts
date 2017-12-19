@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 
 const SERVED_DATE_FMT = 'YYYYMMDD';
-const DISPLAYED_DATE_FMT = 'DD/YY/YYYY';
+const DISPLAYED_DATE_FMT = 'DD/MM/YYYY';
 
 export class DateTime {
   private _origin: moment.Moment;
