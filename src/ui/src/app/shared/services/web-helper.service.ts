@@ -20,9 +20,9 @@ export class WebHelperService {
       return err.error;
     }
 
-    if (isObject(err.error) && isObject(err.error.msg)) {
+    if (isObject(err.error)) {
       const msg: IMessage = <IMessage> err.error;
-      return `${msg.msg} (${err.status} ${err.statusText})`;
+      return `${msg.msg || err.message}`;
     }
 
     return `${err.message} (${err.status} ${err.statusText || ERR_DEFAULT})`;
