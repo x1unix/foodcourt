@@ -32,4 +32,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
+  onLogoutClick(event: Event) {
+    event.preventDefault();
+    this.logout.emit();
+  }
+
 }
