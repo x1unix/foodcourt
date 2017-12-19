@@ -20,6 +20,7 @@ import {
   setDay
 } from 'date-fns';
 import { ISlimScrollOptions } from 'ngx-slimscroll';
+import { isNil } from 'lodash';
 
 export interface DatepickerOptions {
   minYear?: number; // default: current year - 30
@@ -28,6 +29,8 @@ export interface DatepickerOptions {
   barTitleFormat?: string; // default: 'MMMM YYYY'
   firstCalendarDay?: number; // 0 = Sunday (default), 1 = Monday, ..
   locale?: object;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 @Component({
@@ -81,6 +84,7 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
     inThisMonth: boolean;
     isToday: boolean;
     isSelected: boolean;
+    isSelectable: boolean;
   }[];
   locale: object;
 
@@ -167,6 +171,27 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
     this.view = 'days';
   }
 
+  private isDaySelectable(date: Date): boolean {
+    if (isNil(this.options))
+    {
+      return true;
+    }
+
+    const minDateSet = !isNil(this.options.minDate);
+    const maxDateSet = !isNil(this.options.maxDate);
+    const timestamp = date.valueOf();
+
+    if (minDateSet && (timestamp < this.options.minDate.valueOf())) {
+      return false;
+    }
+
+    if (maxDateSet && (timestamp > this.options.maxDate.valueOf())) {
+      return false;
+    }
+
+    return true;
+  }
+
   init(): void {
     const start = startOfMonth(this.date);
     const end = endOfMonth(this.date);
@@ -179,6 +204,7 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
         year: getYear(date),
         inThisMonth: true,
         isToday: isToday(date),
+        isSelectable: this.isDaySelectable(date),
         isSelected: isSameDay(date, this.innerValue) && isSameMonth(date, this.innerValue) && isSameYear(date, this.innerValue)
       };
     });
@@ -192,6 +218,7 @@ export class DatepickerComponent implements ControlValueAccessor, OnInit, OnChan
         year: getYear(date),
         inThisMonth: false,
         isToday: isToday(date),
+        isSelectable: this.isDaySelectable(date),
         isSelected: isSameDay(date, this.innerValue) && isSameMonth(date, this.innerValue) && isSameYear(date, this.innerValue)
       });
     }

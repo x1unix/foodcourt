@@ -6,6 +6,7 @@ $radius: 4px
 $text: #3D495C
 $text-secondary: #A4A9B1
 $color: #1A91EB
+$text-disabled: #A4A9B1
 
 .ngx-datepicker-calendar-container
   animation-duration: 0.2s
@@ -117,6 +118,12 @@ $color: #1A91EB
           &.is-selected
             background: $color
             color: $white
+
+          &.is-disabled
+            cursor: not-allowed
+            color: $text-disabled
+            &:hover
+              background: transparent
 
       .main-calendar-years
         height: 210px
