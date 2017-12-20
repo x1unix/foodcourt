@@ -9,10 +9,11 @@ Api docs are available at [Postman Documenter](https://documenter.getpostman.com
 #### Backend (API)
 1. Install [Go compiler](https://golang.org/) (v1.9+)
 2. Install [Docker](https://www.docker.com/)
-3. Clone this project
-4. Open terminal and go to folder with this project
-5. Bootstrap docker environment with `docker-compose up -d` (once)
-6. Install all dependencies from `dependencies.txt` using `go get ...`
+3. Install [Glide](https://glide.sh/) package manager
+4. Clone this project
+5. Open terminal and go to folder with this project
+6. Bootstrap docker environment with `docker-compose up -d` (once)
+7. Install all dependencies using Glide: `glide install`
 
 **Attention** - Ensure that you've defined the `GOPATH` [global variable](https://github.com/golang/go/wiki/GOPATH).
 
