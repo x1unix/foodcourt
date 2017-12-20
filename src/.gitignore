@@ -7,4 +7,6 @@ public/**/*
 ui/node_modules
 fc-server
 fc-server.exe
+fc-run
+fc-run.exe
 vendor
