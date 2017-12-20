@@ -8,13 +8,14 @@ import (
 	"errors"
 )
 
-var log = logger.GetLogger()
 
 const logMsgSend = "Sending mail to %s ..."
 const logMsgSendOk = "Send success to %s"
 const logMsgSendFail = "Send fail to %s: %s"
 
 func SendLunchOrders() (bool, error) {
+	log := logger.GetLogger()
+
 	mails := []string{"ascii@live.ru", "foo@bar.com", "user@mail.com"}
 	done := make(chan SendResult)
 	sz := len(mails)
