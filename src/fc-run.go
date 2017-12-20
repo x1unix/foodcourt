@@ -4,7 +4,7 @@ import (
 	"./worker/cmd"
 	"./shared/logger"
 	"./shared/config"
-	"fmt"
+	"./worker/sender"
 )
 
 func main() {
@@ -12,10 +12,7 @@ func main() {
 	logger.Bootstrap("fc-worker")
 	cmd.Bootstrap()
 
-	cmd.HandleFunc("sendLunchOrders", "Some test cmd", func() (bool, error) {
-		fmt.Println("Hello world!")
-		return true, nil
-	})
+	cmd.HandleFunc("sendLunchOrders", "Some test cmd", sender.SendLunchOrders)
 
 	cmd.Run()
 }
