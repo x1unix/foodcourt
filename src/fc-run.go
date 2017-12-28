@@ -9,10 +9,10 @@ import (
 
 func main() {
 	config.Bootstrap(true)
-	logger.Bootstrap("fc-worker")
+	logger.Bootstrap("fc-run")
 	cmd.Bootstrap()
 
-	cmd.HandleFunc("sendLunchOrders", "Some test cmd", sender.SendLunchOrders)
+	cmd.HandleFunc("orders:send", "Some test cmd", sender.SendLunchOrders)
 
 	cmd.Run()
 }

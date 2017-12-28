@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"errors"
 	"../../shared/logger"
-	"flag"
+	"os"
 )
 
 // Application version (defined at build args)
@@ -33,8 +33,8 @@ func Bootstrap() {
 	Default(func() (bool, error) {
 		lines := []string{
 			fmt.Sprintf("Command worker for FoodCourt, version %s\n", version),
-			"usage: fc-worker [-run string] args...\n",
-			"  -run string : string tells what task to execute \n",
+			"usage: fc-worker [taskname] args...\n",
+			"  taskname : string tells what task to execute \n",
 			"List of available tasks:",
 		}
 
@@ -47,7 +47,7 @@ func Bootstrap() {
 				continue
 			}
 
-			fmt.Println(fmt.Sprintf("  %s : %s", taskName, commandDescriptions[taskName]))
+			fmt.Println(fmt.Sprintf("  %s - %s", taskName, commandDescriptions[taskName]))
 		}
 
 		return false, errors.New("no valid task specified")
@@ -55,10 +55,13 @@ func Bootstrap() {
 }
 
 func Run() {
-	taskName := flag.String("task", defaultCmd, "command to run")
-	flag.Parse()
+	taskName := defaultCmd
 
-	Call(*taskName)
+	if len(os.Args) > 1 {
+		taskName = os.Args[1]
+	}
+
+	Call(taskName)
 }
 
 func Call(taskName string) {
