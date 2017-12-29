@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Montserrat Italic'), local('Montserrat-Italic'), url(https://fonts.gstatic.com/s/montserrat/v12/-iqwlckIhsmvkx0N6rwPmg7aC6SjiAOpAWOKfJDfVRY.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Montserrat Italic'), local('Montserrat-Italic'), url(https://fonts.gstatic.com/s/montserrat/v12/-iqwlckIhsmvkx0N6rwPmhdwxCXfZpKo5kWAx_74bHs.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Montserrat Italic'), local('Montserrat-Italic'), url(https://fonts.gstatic.com/s/montserrat/v12/-iqwlckIhsmvkx0N6rwPmhampu5_7CjHW5spxoeN3Vs.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+        }
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 300;
+            src: local('Montserrat Light'), local('Montserrat-Light'), url(https://fonts.gstatic.com/s/montserrat/v12/IVeH6A3MiFyaSEiudUMXE5mXQ0gn0-UdQv02W-SySUA.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 300;
+            src: local('Montserrat Light'), local('Montserrat-Light'), url(https://fonts.gstatic.com/s/montserrat/v12/IVeH6A3MiFyaSEiudUMXE23PJHrlYDflBZ8jpDuHrUE.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 300;
+            src: local('Montserrat Light'), local('Montserrat-Light'), url(https://fonts.gstatic.com/s/montserrat/v12/IVeH6A3MiFyaSEiudUMXEweOulFbQKHxPa89BaxZzA0.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+        }
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v12/rBHvpRWBkgyW99dXT88n7wsYbbCjybiHxArTLjt7FRU.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v12/NX1NravqaXESu9fFv7KuqgsYbbCjybiHxArTLjt7FRU.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v12/zhcz-_WihjSQC0oHJ9TCYAzyDMXhdD8sAj6OAJTFsBI.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+        }
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            src: local('Montserrat Medium'), local('Montserrat-Medium'), url(https://fonts.gstatic.com/s/montserrat/v12/BYPM-GE291ZjIXBWrtCwemc-NtvyoWOKrfbJJwSjZGs.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            src: local('Montserrat Medium'), local('Montserrat-Medium'), url(https://fonts.gstatic.com/s/montserrat/v12/BYPM-GE291ZjIXBWrtCwehZQbSGeLTu6IhH00VRk2ws.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            src: local('Montserrat Medium'), local('Montserrat-Medium'), url(https://fonts.gstatic.com/s/montserrat/v12/BYPM-GE291ZjIXBWrtCweteM9fzAXBk846EtUMhet0E.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+        }
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Montserrat Bold'), local('Montserrat-Bold'), url(https://fonts.gstatic.com/s/montserrat/v12/IQHow_FEYlDC4Gzy_m8fcrllaL-ufMOTUcv7jfgmuJg.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Montserrat Bold'), local('Montserrat-Bold'), url(https://fonts.gstatic.com/s/montserrat/v12/IQHow_FEYlDC4Gzy_m8fcpsnFT_2ovhuEig4Dh-CBQw.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Montserrat Bold'), local('Montserrat-Bold'), url(https://fonts.gstatic.com/s/montserrat/v12/IQHow_FEYlDC4Gzy_m8fcmaVI6zN22yiurzcBKxPjFE.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+        }
+        body {
+            font-family: "Montserrat", Helvetica Neue,Arial,sans-serif;
+            font-size: 20px;
+            color: #565656;
+            margin: 0;
+            padding: 0;
+        }
+
+        div#fc-header {
+            background-color: #002538;
+            color: white;
+            padding: 15px;
+        }
+
+        a#fc-logo {
+            font-weight: 400;
+            letter-spacing: .01em;
+            color: #fafafa;
+            line-height: 2.5rem;
+            text-decoration: none;
+        }
+
+        div#fc-container {
+            padding: 15px;
+            text-align: center;
+        }
+
+        table#fc-orders{
+            width: 80%;
+            margin: 0 auto;
+            border: none;
+            border-collapse: collapse;
+        }
+
+        img.fc-img {
+            height: 64px;
+            vertical-align: middle;
+        }
+
+        tr.fc-tr {
+            border: 1px solid #ccc;
+            vertical-align: center;
+        }
+
+        td.fc-col-name {
+            text-align: left;
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 12pt;
+        }
+
+        td.fc-col-img {
+            vertical-align: middle;
+            width: 92px;
+        }
+
+        p.fc-descr {
+            margin-top: 8px;
+            margin-left: 0;
+            margin-bottom: 0;
+            margin-right: 0;
+            font-style: italic;
+            font-size: 10pt;
+        }
+
+        div#fc-foot {
+            font-size: 9px;
+            color: black;
+        }
+
+        #fc-foot {
+            margin-top: 20px;
+        }
+        .fc-container a {
+            color: #0094d2;
+        }
+    </style>
+</head>
+<body>
+    <div id="fc-header">
+        <a href="/" id="fc-logo" title="FoodCourt">
+            Limelight FoodCourt
+        </a>
+    </div>
+    <div id="fc-container">
+        <p>
+            Your order for today:
+        </p>
+        <table id="fc-orders">
+            {{range $index, $element := .Orders}}
+            <tr class="fc-tr" id="fc-order-row{{$index}}">
+                <td class="fc-col-img">
+                    <img src="{{.BaseURL}}{{$element.PhotoURL}}" alt="{{$element.Label}}" class="fc-img">
+                </td>
+                <td class="fc-col-name">
+                    {{$element.Label}}
+                    <p class="fc-descr">
+                        {{$element.Description}}
+                    </p>
+                </td>
+            </tr>
+            {{end}}
+        </table>
+        <div id="fc-foot">
+            You can view and edit your orders on <a href="{{.BaseURL}}" target="_blank">FoodCourt</a> portal.
+        </div>
+    </div>
+
+</body>
+</html>

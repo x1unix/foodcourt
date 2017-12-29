@@ -109,13 +109,26 @@ where m.date >= 20171216 and m.date <= 20171219
 	return db.Select(output, q, a...)
 }
 
-/*
-	select o.user_id,
-		count(distinct o.item_id) as count,
-		m.date
+// Gets order summary for specified date
+func GetOrderSummary(output *[]OrderSummary, orderDate string, db *sqlx.DB) error {
+	/**
+	select u.email,
+		d.label, d.photo_url, d.type
 	from orders o
 		join menu m
 			on o.item_id = m.row_id
-	where m.date = 20171219
-		group by o.user_id;
- */
+		join dishes d
+			on m.dish_id = d.id
+		join users u
+			on o.user_id = u.id
+		where m.date = 20171229;
+	 */
+	q, a, _ := squirrel.Select("u.email, d.label, d.description, d.photo_url, d.type").From(Table + " o").
+		Join(menu.Table + " m on o.item_id = m.row_id").
+		Join(dishes.Table + " d on m.dish_id = d.id").
+		Join("users u on o.user_id = u.id").
+		Where(squirrel.Eq{"m.date": orderDate}).
+		ToSql()
+
+	return db.Select(output, q, a...)
+}
