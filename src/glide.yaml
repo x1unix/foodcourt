@@ -24,3 +24,5 @@ import:
   version: ^9.9.1
 - package: github.com/ahmetb/go-linq
   version: ^3.0.0
+- package: github.com/go-gomail/gomail
+  version: ^2.0.0

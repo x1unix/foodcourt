@@ -1,8 +1,10 @@
-hash: 67d6fddf1168c4e56693042c39546fc26d5c8063bc28c71c3ff4134e6e12315b
-updated: 2017-12-29T14:08:00.554917+02:00
+hash: 5777bdd18d7f4472f1e3498771ff9f51ac04d8f433c4c45b01f018af1f029be2
+updated: 2017-12-29T17:45:22.15404+02:00
 imports:
 - name: github.com/ahmetb/go-linq
   version: 7e71c124c1f903df09ca08678f145f68b45d125e
+- name: github.com/go-gomail/gomail
+  version: 81ebce5c23dfd25c6c67194b37d3dd3f338c98b1
 - name: github.com/go-playground/locales
   version: e4cbcb5d0652150d40ad0646651076b6bd2be4f6
   subpackages:

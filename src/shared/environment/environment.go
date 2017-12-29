@@ -8,6 +8,7 @@ import (
 )
 
 const DIR_PUBLIC = "public"
+const ResourcesDir = "/resources"
 
 // Get the application root path
 func GetRoot() string {
@@ -30,4 +31,8 @@ func GetPublic(subPath ...string) string {
 	}
 
 	return publicPath
+}
+
+func GetResourcePath(path string) string {
+	return GetRoot() + "/" + ResourcesDir + "/" + path
 }
