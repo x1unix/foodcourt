@@ -22,3 +22,5 @@ import:
   - scrypt
 - package: gopkg.in/go-playground/validator.v9
   version: ^9.9.1
+- package: github.com/ahmetb/go-linq
+  version: ^3.0.0

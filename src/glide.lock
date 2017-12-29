@@ -1,6 +1,8 @@
-hash: 819c79066c6f0e09bcda8d5466677400c652b2b2b770a81e9fc68b48b2a6350a
-updated: 2017-12-20T14:41:13.986628+02:00
+hash: 67d6fddf1168c4e56693042c39546fc26d5c8063bc28c71c3ff4134e6e12315b
+updated: 2017-12-29T14:08:00.554917+02:00
 imports:
+- name: github.com/ahmetb/go-linq
+  version: 7e71c124c1f903df09ca08678f145f68b45d125e
 - name: github.com/go-playground/locales
   version: e4cbcb5d0652150d40ad0646651076b6bd2be4f6
   subpackages:
@@ -8,7 +10,7 @@ imports:
 - name: github.com/go-playground/universal-translator
   version: 71201497bace774495daed26a3874fd339e0b538
 - name: github.com/go-redis/redis
-  version: 9c885d5ba8a22f260badcffde1649915fbeebfc0
+  version: 73b70592cdaa9e6abdfcfbf97b4a90d80728c836
   subpackages:
   - internal
   - internal/consistenthash
@@ -44,7 +46,7 @@ imports:
   subpackages:
   - codes
 - name: golang.org/x/crypto
-  version: d585fd2cc9195196078f516b69daff6744ef5e84
+  version: 95a4943f35d008beabde8c11e5075a1b714e6419
   subpackages:
   - pbkdf2
   - scrypt
