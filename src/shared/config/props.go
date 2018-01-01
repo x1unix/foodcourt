@@ -34,3 +34,13 @@ const APP_KEY = "APP_KEY"
 const MAX_THREAD_COUNT = "MAX_THREAD_COUNT"
 
 const BASE_URL = "BASE_URL"
+
+const SmtpHost = "SMTP_HOST"
+
+const SmtpPort = "SMTP_PORT"
+
+const SmtpUser = "SMTP_USER"
+
+const SmtpPass = "SMTP_PASS"
+
+const SmtpFrom = "SMTP_FROM"

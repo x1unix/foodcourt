@@ -123,7 +123,7 @@ func GetOrderSummary(output *[]OrderSummary, orderDate string, db *sqlx.DB) erro
 			on o.user_id = u.id
 		where m.date = 20171229;
 	 */
-	q, a, _ := squirrel.Select("u.email, d.label, d.description, d.photo_url, d.type").From(Table + " o").
+	q, a, _ := squirrel.Select("u.email, u.firstName, u.lastName, d.label, d.description, d.photo_url, d.type").From(Table + " o").
 		Join(menu.Table + " m on o.item_id = m.row_id").
 		Join(dishes.Table + " d on m.dish_id = d.id").
 		Join("users u on o.user_id = u.id").
