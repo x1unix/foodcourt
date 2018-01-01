@@ -203,8 +203,9 @@
     </style>
 </head>
 <body>
+    {{ $baseURL := .BaseURL }}
     <div id="fc-header">
-        <a href="/" id="fc-logo" title="FoodCourt">
+        <a href="{{$baseURL}}" id="fc-logo" title="FoodCourt">
             Limelight FoodCourt
         </a>
     </div>
@@ -213,22 +214,22 @@
             Your order for today:
         </p>
         <table id="fc-orders">
-            {{range $index, $element := .Orders}}
-            <tr class="fc-tr" id="fc-order-row{{$index}}">
+            {{range .Group.Items }}
+            <tr class="fc-tr">
                 <td class="fc-col-img">
-                    <img src="{{.BaseURL}}{{$element.PhotoURL}}" alt="{{$element.Label}}" class="fc-img">
+                    <img src="{{$baseURL}}{{.PhotoUrl}}" alt="{{.Label}}" class="fc-img">
                 </td>
                 <td class="fc-col-name">
-                    {{$element.Label}}
+                    {{.Label}}
                     <p class="fc-descr">
-                        {{$element.Description}}
+                        {{.Description}}
                     </p>
                 </td>
             </tr>
             {{end}}
         </table>
         <div id="fc-foot">
-            You can view and edit your orders on <a href="{{.BaseURL}}" target="_blank">FoodCourt</a> portal.
+            You can view and edit your orders on <a href="{{$baseURL}}" target="_blank">FoodCourt</a> portal.
         </div>
     </div>
 
