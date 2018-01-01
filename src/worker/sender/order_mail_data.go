@@ -5,6 +5,7 @@ import (
 )
 
 type OrderMailData struct {
+	DisplayedDate string
 	Group orders.OrderGroup
 	BaseURL string
 }

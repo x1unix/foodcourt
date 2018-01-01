@@ -160,6 +160,7 @@
 
         img.fc-img {
             height: 64px;
+            width: 92px;
             vertical-align: middle;
         }
 
@@ -176,7 +177,9 @@
         }
 
         td.fc-col-img {
+            padding: 0;
             vertical-align: middle;
+            max-width: 92px;
             width: 92px;
         }
 
@@ -190,7 +193,7 @@
         }
 
         div#fc-foot {
-            font-size: 9px;
+            font-size: 10px;
             color: black;
         }
 
@@ -211,7 +214,8 @@
     </div>
     <div id="fc-container">
         <p>
-            Your order for today:
+            Hello, {{.Group.FullName}}<br />
+            Here is your order summary for {{.DisplayedDate}}
         </p>
         <table id="fc-orders">
             {{range .Group.Items }}

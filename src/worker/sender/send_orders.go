@@ -16,12 +16,13 @@ import (
 )
 
 const dateFmt = "20060102"
+const datePrettyFmt = "Monday, 02 January 2006"
 
 const errTplParse = "failed to parse template '%s': %v"
 const errSmtpPort = "SMTP port must be an integer"
 const errSendMail = "failed to send order mail to %s: %v"
 
-const emailSubjectTemplate = "Your order for today"
+const emailSubjectTemplate = "Your order for %s"
 
 const logMsgSent = "Message send successfully to %s"
 
@@ -102,6 +103,7 @@ func SendLunchOrders() (bool, error) {
 // Sends lunch order to specified client
 func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
 	vm := OrderMailData{
+		DisplayedDate: time.Now().Format(datePrettyFmt),
 		Group: *orderGroup,
 		BaseURL: config.Get(config.BASE_URL, "#"),
 	}
@@ -125,7 +127,7 @@ func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
 	mail := gomail.NewMessage()
 	mail.SetHeader("From", config.Get(config.SmtpFrom, "voracity"))
 	mail.SetAddressHeader("To", userEmail, vm.Group.FullName)
-	mail.SetHeader("Subject", emailSubjectTemplate)
+	mail.SetHeader("Subject", fmt.Sprintf(emailSubjectTemplate, vm.DisplayedDate))
 	mail.SetBody("text/html", htmlText)
 
 	if err := gomail.Send(*sender, mail); err != nil {
