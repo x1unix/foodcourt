@@ -6,11 +6,9 @@ import (
 	"../../shared/database"
 	"../../shared/environment"
 	"../../shared/config"
-	. "github.com/ahmetb/go-linq"
 	"html/template"
 	"time"
 	"fmt"
-	"strings"
 	"errors"
 	"github.com/op/go-logging"
 	"gopkg.in/gomail.v2"
@@ -19,7 +17,7 @@ import (
 
 const dateFmt = "20060102"
 
-const errTplParse = "failed to parse template '%s': %s"
+const errTplParse = "failed to parse template '%s': %v"
 const errSmtpPort = "SMTP port must be an integer"
 const errSendMail = "failed to send order mail to %s: %v"
 
@@ -65,52 +63,57 @@ func SendLunchOrders() (bool, error) {
 		return false, senderErr
 	}
 
-	orderTemplate = template.New("orderTemplate")
+	orderTemplate, err = template.ParseFiles(orderTemplatePath)
 
-	From(ordersList).GroupBy(func(order interface{}) interface{} {
-		return order.(orders.OrderSummary).Email
-	}, func(order interface{}) interface{} {
-		return order.(orders.OrderSummary)
-	}).ForEach(func (i interface{}) {
-		group := i.(Group)
-		email := group.Key.(string)
-		success := sendLunchOrder(sender, email, group.Group)
+	if err != nil {
+		log.Error(fmt.Sprintf(errTplParse, orderTemplatePath, err))
+		return false, err
+	}
 
-		if !success {
-			failedMails = append(failedMails, email)
+	ptrGroup := *orders.GroupOrders(&ordersList)
+
+	for _, orderGroup := range ptrGroup {
+		if success := sendLunchOrder(&orderGroup, sender); !success {
+			failedMails = append(failedMails, orderGroup.Email)
 		}
-	})
+	}
+
+	//From(ordersList).GroupBy(func(order interface{}) interface{} {
+	//	return order.(orders.OrderSummary).Email
+	//}, func(order interface{}) interface{} {
+	//	return order.(orders.OrderSummary)
+	//}).ForEach(func (i interface{}) {
+	//	group := i.(Group)
+	//	email := group.Key.(string)
+	//	success := sendLunchOrder(sender, email, group.Group)
+	//
+	//	if !success {
+	//		failedMails = append(failedMails, email)
+	//	}
+	//})
 
 	if len(failedMails) > 0 {
-		return false, errors.New(fmt.Sprintf("failed to deliver emails: %s", strings.Join(failedMails, ", ")))
+		return false, errors.New(fmt.Sprintf("failed to deliver emails %v", failedMails))
 	}
 
 	return true, nil
 }
 
 // Sends lunch order to specified client
-func sendLunchOrder(sender *gomail.Sender, email string, items []interface{}) bool {
+func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
 	vm := OrderMailData{
-		Email: email,
+		Group: *orderGroup,
 		BaseURL: config.Get(config.BASE_URL, "#"),
-		Orders: items,
 	}
 
-	// Extract first-name and last-name
-	order := items[0].(orders.OrderSummary)
-	fullName := fmt.Sprintf("%s %s", order.FirstName, order.LastName)
+	userEmail := vm.Group.Email
 
 	// Compose email using html template
-	_, err := orderTemplate.ParseFiles(orderTemplatePath)
-
-	if err != nil {
-		log.Error(fmt.Sprintf(errTplParse, orderTemplatePath, err.Error()))
-		return false
-	}
+	// tpl, err := orderTemplate.ParseFiles(orderTemplatePath)
 
 	var tplBuff bytes.Buffer
 
-	if err = orderTemplate.Execute(&tplBuff, vm); err != nil {
+	if err := orderTemplate.Execute(&tplBuff, vm); err != nil {
 		log.Error(fmt.Sprintf(errTplParse, orderTemplatePath, err.Error()))
 		return false
 	}
@@ -121,16 +124,16 @@ func sendLunchOrder(sender *gomail.Sender, email string, items []interface{}) bo
 	// Compose email
 	mail := gomail.NewMessage()
 	mail.SetHeader("From", config.Get(config.SmtpFrom, "voracity"))
-	mail.SetAddressHeader("To", email, fullName)
+	mail.SetAddressHeader("To", userEmail, vm.Group.FullName)
 	mail.SetHeader("Subject", emailSubjectTemplate)
 	mail.SetBody("text/html", htmlText)
 
-	if err = gomail.Send(*sender, mail); err != nil {
-		log.Error(fmt.Sprintf(errSendMail, email, err))
+	if err := gomail.Send(*sender, mail); err != nil {
+		log.Error(fmt.Sprintf(errSendMail, userEmail, err))
 		return false
 	}
 
-	log.Info(fmt.Sprintf(logMsgSent, email))
+	log.Info(fmt.Sprintf(logMsgSent, userEmail))
 
 	return true
 }

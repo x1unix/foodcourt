@@ -1,7 +1,10 @@
 package sender
 
+import (
+	"../../shared/orders"
+)
+
 type OrderMailData struct {
-	Email string
+	Group orders.OrderGroup
 	BaseURL string
-	Orders []interface{}
 }
