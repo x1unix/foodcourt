@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"errors"
 	"../../shared/logger"
 	"os"
 )
@@ -50,7 +49,7 @@ func Bootstrap() {
 			fmt.Println(fmt.Sprintf("  %s - %s", taskName, commandDescriptions[taskName]))
 		}
 
-		return false, errors.New("no valid task specified")
+		return false, nil
 	})
 }
 
@@ -72,12 +71,14 @@ func Call(taskName string) {
 		taskName = defaultCmd
 	}
 
-	_, err := commands[taskName]();
+	result, err := commands[taskName]();
 
 	if err != nil {
 		log.Error(fmt.Sprintf("Command '%s' ran with error: %s", originalCmd, err.Error()))
 		return
 	}
 
-	log.Info(fmt.Sprintf("Command '%s' ran successfuly", taskName))
+	if result {
+		log.Info(fmt.Sprintf("Command '%s' ran successfuly", taskName))
+	}
 }

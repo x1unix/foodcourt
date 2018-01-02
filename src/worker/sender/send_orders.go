@@ -79,20 +79,6 @@ func SendLunchOrders() (bool, error) {
 		}
 	}
 
-	//From(ordersList).GroupBy(func(order interface{}) interface{} {
-	//	return order.(orders.OrderSummary).Email
-	//}, func(order interface{}) interface{} {
-	//	return order.(orders.OrderSummary)
-	//}).ForEach(func (i interface{}) {
-	//	group := i.(Group)
-	//	email := group.Key.(string)
-	//	success := sendLunchOrder(sender, email, group.Group)
-	//
-	//	if !success {
-	//		failedMails = append(failedMails, email)
-	//	}
-	//})
-
 	if len(failedMails) > 0 {
 		return false, errors.New(fmt.Sprintf("failed to deliver emails %v", failedMails))
 	}
@@ -111,7 +97,6 @@ func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
 	userEmail := vm.Group.Email
 
 	// Compose email using html template
-	// tpl, err := orderTemplate.ParseFiles(orderTemplatePath)
 
 	var tplBuff bytes.Buffer
 
@@ -125,7 +110,7 @@ func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
 
 	// Compose email
 	mail := gomail.NewMessage()
-	mail.SetHeader("From", config.Get(config.SmtpFrom, "voracity"))
+	mail.SetHeader("From", fmt.Sprintf("FoodCourt <%s>", config.Get(config.SmtpFrom, "voracity")))
 	mail.SetAddressHeader("To", userEmail, vm.Group.FullName)
 	mail.SetHeader("Subject", fmt.Sprintf(emailSubjectTemplate, vm.DisplayedDate))
 	mail.SetBody("text/html", htmlText)
