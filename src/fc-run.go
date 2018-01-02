@@ -12,7 +12,7 @@ func main() {
 	logger.Bootstrap("fc-run")
 	cmd.Bootstrap()
 
-	cmd.HandleFunc("orders:send", "Some test cmd", sender.SendLunchOrders)
+	cmd.HandleFunc("orders:send", "sends order report to all users", sender.SendLunchOrders)
 
 	cmd.Run()
 }
