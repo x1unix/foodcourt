@@ -1,14 +1,205 @@
 <app-header-toolbar label="System settings">
-  <button type="button" class="btn btn-success">
+  <button
+    *ngIf="isLoaded"
+    type="button"
+    class="btn btn-success"
+  >
     <clr-icon shape="plus"></clr-icon>
     <span>Save</span>
   </button>
 </app-header-toolbar>
 
 <app-poster
+  *ngIf="isFailed"
   class="poster--error"
   icon="bug"
-  label="Under Construction"
+  label="Failed to fetch data"
 >
-  <span class="poster__error">Entry is not available yet</span>
+  <span class="poster__error">{{error}}</span>
 </app-poster>
+
+<app-spinner *ngIf="isLoading" style="height: 100%"></app-spinner>
+
+<form
+  *ngIf="isLoaded"
+  class="form"
+  [formGroup]="settings"
+  (ngSubmit)="onSubmit()"
+  autocomplete="off"
+>
+  <section class="form-block">
+    <label>Core</label>
+    <div class="form-group">
+      <label for="baseUrl">Application URL</label>
+      <label
+        for="baseUrl"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('baseUrl')"
+      >
+        <input
+          id="baseUrl"
+          type="url"
+          maxlength="64"
+          formControlName="baseUrl"
+        >
+        <span class="tooltip-content">
+          URL is required.
+        </span>
+      </label>
+    </div>
+  </section>
+  <section class="form-block" formGroupName="smtp">
+    <label>SMTP</label>
+    <div class="form-group">
+      <label for="host">Host</label>
+      <label
+        for="host"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('smtp.host')"
+      >
+        <input
+          id="host"
+          type="text"
+          maxlength="64"
+          formControlName="host"
+          [pattern]="hostPattern"
+        >
+        <span class="tooltip-content">
+          Hostname or IP is required.
+        </span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="port">Port</label>
+      <label
+        for="port"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('smtp.port')"
+      >
+        <input
+          id="port"
+          type="number"
+          max="65535"
+          formControlName="port"
+        >
+        <span class="tooltip-content">
+          Valid port number required
+        </span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <label
+        for="username"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('smtp.username')"
+      >
+        <input
+          id="username"
+          type="text"
+          maxLength="64"
+          formControlName="username"
+          autocomplete="off"
+        >
+        <span class="tooltip-content">
+          Username is required
+        </span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <label
+        for="password"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('smtp.password')"
+      >
+        <input
+          id="password"
+          type="password"
+          maxLength="64"
+          formControlName="password"
+          autocomplete="off"
+        >
+        <span class="tooltip-content">
+          Value is required
+        </span>
+      </label>
+    </div>
+  </section>
+  <section class="form-block" formGroupName="sender">
+    <label>Email notifications</label>
+    <div class="form-group">
+      <label for="email">Sender's email</label>
+      <label
+        for="email"
+        aria-haspopup="true"
+        role="tooltip"
+        class="tooltip tooltip-validation tooltip-sm"
+        [class.invalid]="isInvalid('sender.email')"
+      >
+        <input
+          id="email"
+          type="email"
+          maxLength="64"
+          formControlName="email"
+        >
+        <span class="tooltip-content">
+          Email is required
+        </span>
+      </label>
+    </div>
+    <div class="form-group" formArrayName="orderRecipients">
+      <label>Order recipients</label>
+      <div>
+        <div *ngFor="let recipient of recipients.controls; let i = index;">
+          <label
+            [for]="'recipient-' + i"
+            aria-haspopup="true"
+            role="tooltip"
+            class="tooltip tooltip-validation tooltip-sm"
+            [class.invalid]="recipient.invalid && (recipient.dirty || recipient.touched)"
+          >
+            <input
+              [id]="'recipient-' + i"
+              type="email"
+              maxLength="64"
+              [formControlName]="i"
+            >
+            <span class="tooltip-content">
+              Email is required
+            </span>
+          </label>
+          <button
+            type="button"
+            *ngIf="i > 0"
+            class="btn btn-link text-danger"
+            (click)="recipients.controls.splice(i, 1)"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <p>
+      <button
+        *ngIf="recipients.controls.length < 5"
+        type="button"
+        class="btn btn-success"
+        (click)="addRecipient()"
+      >
+        Add email
+      </button>
+    </p>
+  </section>
+</form>
