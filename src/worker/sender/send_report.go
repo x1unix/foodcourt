@@ -5,15 +5,21 @@ import (
 	"../../shared/logger"
 	"../../shared/database"
 	"../../shared/dishes"
+	"../../shared/settings"
+	"../../shared/environment"
 	. "github.com/ahmetb/go-linq"
 	"gopkg.in/gomail.v2"
 	"html/template"
 	"time"
 	"fmt"
 	"strings"
+	"bytes"
 )
 
 const errFetchReportData = "failed to fetch orders from the db: %v (%s)"
+const orderReportTemplateName = "order-summary-mail.html"
+const orderMailDateFormat = "01.02.2006"
+const orderReportSubject = "Order report for %s"
 
 type OrderReportMailData struct {
 	DateString string
@@ -23,6 +29,29 @@ type OrderReportMailData struct {
 
 func SendOrderReport() (bool, error) {
 	log := logger.GetLogger()
+
+	// Read settings
+	cfgPtr, err := settings.GetSettings()
+
+	if err != nil {
+		log.Error(fmt.Sprintf("Failed to get settings: %v", err))
+		return false, err
+	}
+
+	// System settings
+	cfg := *cfgPtr
+
+	// Check if notifications are enabled
+	if !cfg.Sender.Enable {
+		log.Warning(msgSenderDisabled)
+		return false, nil
+	}
+
+	if len(cfg.Sender.ReportRecipients) == 0 {
+		log.Warning("No food vendor mails are defined. Please define them in System settings")
+		return false, nil
+	}
+
 	today := time.Now().Format(dateFmt)
 
 	db := database.GetInstance()
@@ -37,13 +66,64 @@ func SendOrderReport() (bool, error) {
 
 	merged := mergeOrders(&ordersList)
 
-	fmt.Println(*merged)
-
-	return true, nil
+	if err = sendOrderMail(cfgPtr, merged); err != nil {
+		return false, err
+	} else {
+		return true, nil
+	}
 }
 
-func sendOrderMail(date string, receivers []string, items *map[string] int) error {
-	tpl :=
+func sendOrderMail(cfgPtr *settings.Settings, items *map[string] int) error {
+
+	// Extract settings
+	cfg := *cfgPtr
+
+	// Get mail sender
+	sender, err := getMailSender(cfgPtr)
+
+	if err != nil {
+		return err
+	}
+
+	// Read template
+	orderReportTemplatePath := environment.GetResourcePath(orderReportTemplateName)
+	tpl, err := template.ParseFiles(orderReportTemplatePath)
+
+	if err != nil {
+		log.Error(fmt.Sprintf(errTplParse, orderReportTemplatePath, err.Error()))
+		return err
+	}
+
+	mailData := OrderReportMailData{
+		DateString: time.Now().Format(orderMailDateFormat),
+		Orders: *items,
+	}
+
+	// Compose email using html template
+	var tplBuff bytes.Buffer
+
+	if err := orderTemplate.Execute(&tplBuff, mailData); err != nil {
+		log.Error(fmt.Sprintf(errTplParse, orderTemplatePath, err.Error()))
+		return err
+	}
+
+	// Parse email template
+	htmlText := tplBuff.String()
+
+	// Compose email
+	mail := gomail.NewMessage()
+	mail.SetHeader("From", fmt.Sprintf("FoodCourt <%s>", cfg.Sender.Email))
+	mail.SetHeader("To", cfg.Sender.ReportRecipients...)
+	mail.SetHeader("Subject", fmt.Sprintf(orderReportSubject, mailData.DateString))
+	mail.SetBody("text/html", htmlText)
+
+	if err := gomail.Send(*sender, mail); err != nil {
+		log.Error(fmt.Sprintf("Failed to send order report to %v: %v", cfg.Sender.ReportRecipients, err))
+		return err
+	}
+
+	log.Info(fmt.Sprintf("Order report sent to %v", cfg.Sender.ReportRecipients))
+	return nil
 }
 
 // Merges orders by dish type (main+garnish) and counts

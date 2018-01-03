@@ -5,7 +5,7 @@ import (
 	"../../shared/orders"
 	"../../shared/database"
 	"../../shared/environment"
-	"../../shared/config"
+	"../../shared/settings"
 	"html/template"
 	"time"
 	"fmt"
@@ -33,6 +33,21 @@ var log *logging.Logger
 func SendLunchOrders() (bool, error) {
 
 	log = logger.GetLogger()
+	cfgPtr, err := settings.GetSettings()
+
+	if err != nil {
+		log.Error(fmt.Sprintf("Failed to get settings: %v", err))
+		return false, err
+	}
+
+	// System settings
+	cfg := *cfgPtr
+
+	if !cfg.Sender.Enable {
+		log.Warning(msgSenderDisabled)
+		return false, nil
+	}
+
 	today := time.Now().Format(dateFmt)
 
 	log.Info(fmt.Sprintf("Processing orders for date: %s", today))
@@ -42,7 +57,7 @@ func SendLunchOrders() (bool, error) {
 
 	var ordersList []orders.OrderSummary
 
-	err := orders.GetOrderSummary(&ordersList, today, db)
+	err = orders.GetOrderSummary(&ordersList, today, db)
 
 	if err != nil {
 		log.Error(fmt.Sprintf("Failed to fetch orders for %s: %s", today, err.Error()))
@@ -57,7 +72,7 @@ func SendLunchOrders() (bool, error) {
 	failedMails := make([]string, 0)
 
 	// Get mail sender
-	sender, senderErr := getMailSender()
+	sender, senderErr := getMailSender(cfgPtr)
 
 	if senderErr != nil {
 		log.Error(senderErr)
@@ -74,7 +89,7 @@ func SendLunchOrders() (bool, error) {
 	ptrGroup := *orders.GroupOrders(&ordersList)
 
 	for _, orderGroup := range ptrGroup {
-		if success := sendLunchOrder(&orderGroup, sender); !success {
+		if success := sendLunchOrder(&orderGroup, sender, cfgPtr); !success {
 			failedMails = append(failedMails, orderGroup.Email)
 		}
 	}
@@ -87,17 +102,17 @@ func SendLunchOrders() (bool, error) {
 }
 
 // Sends lunch order to specified client
-func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
+func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender, configPtr *settings.Settings) bool {
+	cfg := &configPtr
 	vm := OrderMailData{
 		DisplayedDate: time.Now().Format(datePrettyFmt),
 		Group: *orderGroup,
-		BaseURL: config.Get(config.BASE_URL, "#"),
+		BaseURL: cfg.BaseURL,
 	}
 
 	userEmail := vm.Group.Email
 
 	// Compose email using html template
-
 	var tplBuff bytes.Buffer
 
 	if err := orderTemplate.Execute(&tplBuff, vm); err != nil {
@@ -110,7 +125,7 @@ func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender) bool {
 
 	// Compose email
 	mail := gomail.NewMessage()
-	mail.SetHeader("From", fmt.Sprintf("FoodCourt <%s>", config.Get(config.SmtpFrom, "voracity")))
+	mail.SetHeader("From", fmt.Sprintf("FoodCourt <%s>", cfg.Sender.Email))
 	mail.SetAddressHeader("To", userEmail, vm.Group.FullName)
 	mail.SetHeader("Subject", fmt.Sprintf(emailSubjectTemplate, vm.DisplayedDate))
 	mail.SetBody("text/html", htmlText)

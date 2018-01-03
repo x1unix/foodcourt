@@ -1,38 +1,24 @@
 package sender
 
 import (
-	"../../shared/config"
-	"errors"
+	"../../shared/settings"
 	"gopkg.in/gomail.v2"
-	"strconv"
 	"fmt"
 )
 
 const errSmtpDial = "failed to contact with SMTP server: %s"
+const msgSenderDisabled = "Email notifications are disabled. Please enable notifications in System settings";
 
 
-func getMailSender() (*gomail.Sender, error) {
-
-	// Read SMTP configuration
-	params := make(map[string] string)
-	err := config.GetMultiple(&params, config.SmtpHost, config.SmtpPort, config.SmtpUser, config.SmtpPass)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// Parse SMTP port (string -> int)
-	var smtpPort int
-	smtpPort, err = strconv.Atoi(params[config.SmtpPort])
-
-	if err != nil {
-		return nil, errors.New(errSmtpPort)
-	}
+func getMailSender(configPtr *settings.Settings) (*gomail.Sender, error) {
+	// Get configuration from pointer
+	cfg := *configPtr
 
 	// Create mail sender instance
-	dialer := gomail.NewDialer(params[config.SmtpHost], smtpPort, params[config.SmtpUser], params[config.SmtpPass])
+	dialer := gomail.NewDialer(cfg.SMTP.Host, cfg.SMTP.Port, cfg.SMTP.User, cfg.SMTP.Password)
 
 	var sender gomail.Sender
+	var err error
 
 	// Contact with SMTP server
 	if sender, err = dialer.Dial(); err != nil {
