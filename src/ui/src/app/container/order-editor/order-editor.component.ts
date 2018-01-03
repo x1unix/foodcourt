@@ -163,7 +163,7 @@ export class OrderEditorComponent extends LoadStatusComponent implements OnInit,
     this.routeParams$ = this.route.params.subscribe(params => {
       // Read route params (date & user id) (optional)
       this.userId = isNil(params[PARAM_UID]) ? this.session.userId : params[PARAM_UID];
-      this.date = isNil(params[PARAM_DATE]) ? moment().utc() : moment(params[PARAM_DATE], SERVED_DATE_FORMAT);
+      this.date = isNil(params[PARAM_DATE]) ? moment() : moment(params[PARAM_DATE], SERVED_DATE_FORMAT);
 
       // Check user mode
       this.asDifferentUser = `${this.userId}` !== `${this.session.userId}`;

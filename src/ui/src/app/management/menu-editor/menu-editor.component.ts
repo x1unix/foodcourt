@@ -150,7 +150,7 @@ export class MenuEditorComponent implements OnInit {
   constructor(private dishesCatalogue: DishesService, private helper: WebHelperService, private menu: MenuService) {}
 
   ngOnInit() {
-    this.date = moment().utc();
+    this.date = moment();
     this.pickedDate = this.date.toDate();
     this.initDatePickerOptions();
     this.getAllDishes();
