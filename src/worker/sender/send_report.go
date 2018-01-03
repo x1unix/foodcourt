@@ -22,7 +22,7 @@ const orderMailDateFormat = "01.02.2006"
 const orderReportSubject = "Order report for %s"
 
 type OrderReportMailData struct {
-	DateString string
+	DisplayedDate string
 	Orders map[string] int
 }
 
@@ -66,14 +66,14 @@ func SendOrderReport() (bool, error) {
 
 	merged := mergeOrders(&ordersList)
 
-	if err = sendOrderMail(cfgPtr, merged); err != nil {
+	if err = sendOrderReportMail(cfgPtr, merged); err != nil {
 		return false, err
 	} else {
 		return true, nil
 	}
 }
 
-func sendOrderMail(cfgPtr *settings.Settings, items *map[string] int) error {
+func sendOrderReportMail(cfgPtr *settings.Settings, items *map[string] int) error {
 	log := logger.GetLogger()
 
 	// Extract settings
@@ -96,7 +96,7 @@ func sendOrderMail(cfgPtr *settings.Settings, items *map[string] int) error {
 	}
 
 	mailData := OrderReportMailData{
-		DateString: time.Now().Format(orderMailDateFormat),
+		DisplayedDate: time.Now().Format(orderMailDateFormat),
 		Orders: *items,
 	}
 
@@ -115,7 +115,7 @@ func sendOrderMail(cfgPtr *settings.Settings, items *map[string] int) error {
 	mail := gomail.NewMessage()
 	mail.SetHeader("From", fmt.Sprintf("FoodCourt <%s>", cfg.Sender.Email))
 	mail.SetHeader("To", cfg.Sender.ReportRecipients...)
-	mail.SetHeader("Subject", fmt.Sprintf(orderReportSubject, mailData.DateString))
+	mail.SetHeader("Subject", fmt.Sprintf(orderReportSubject, mailData.DisplayedDate))
 	mail.SetBody("text/html", htmlText)
 
 	if err := gomail.Send(*sender, mail); err != nil {
