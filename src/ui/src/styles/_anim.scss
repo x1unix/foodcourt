@@ -31,3 +31,9 @@
     transform: scale(1);
   }
 }
+
+.anim-fade-in {
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: anim-fade-zoon-in;
+}

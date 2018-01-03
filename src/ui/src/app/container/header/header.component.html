@@ -1,7 +1,8 @@
 <header class="header-6">
-  <div class="branding">
+  <div class="branding" id="appBranding">
     <a class="nav-link" routerLink="/">
-      <span class="title">{{title}}</span>
+      <span class="title v-xs-show">FC</span>
+      <span class="title v-xs-hide">{{title}}</span>
     </a>
   </div>
   <div class="header-nav">
@@ -10,7 +11,10 @@
       routerLinkActive="active"
       class="nav-link nav-text"
     >
-      Orders
+      <span class="v-xs-hide">
+        Orders
+      </span>
+      <clr-icon shape="shopping-cart" class="v-xs-show"></clr-icon>
     </a>
     <a
       *ngIf="isAdmin"
@@ -18,7 +22,10 @@
       routerLinkActive="active"
       class="nav-link nav-text"
     >
-      Management
+      <span class="v-xs-hide">
+        Management
+      </span>
+      <clr-icon shape="tools" class="v-xs-show"></clr-icon>
     </a>
     <a
       *ngIf="isAdmin"
@@ -26,11 +33,14 @@
       routerLinkActive="active"
       class="nav-link nav-text"
     >
-      Reports
+      <span class="v-xs-hide">
+        Reports
+      </span>
+      <clr-icon shape="pinboard" class="v-xs-show"></clr-icon>
     </a>
   </div>
   <div class="header-actions">
-    <b class="nav-link nav-text">Wellcome, {{user.firstName}} {{user.lastName}}</b>
+    <b class="nav-link nav-text v-xs-hide">Welcome, {{user.firstName}} {{user.lastName}}</b>
     <clr-dropdown>
       <button class="nav-icon" clrDropdownTrigger>
         <clr-icon shape="user"></clr-icon>

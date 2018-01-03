@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12" [ngClass]="{'col-sm-6': !smaller, 'col-sm-7': smaller}">
-    <h1 style="margin-top: 0" *ngIf="!smaller">{{label}}</h1>
-    <h2 style="margin-top: 0" *ngIf="smaller">{{label}}</h2>
+    <h1 class="v-xs-small" style="margin-top: 0" *ngIf="!smaller">{{label}}</h1>
+    <h2 class="v-xs-small" style="margin-top: 0" *ngIf="smaller">{{label}}</h2>
   </div>
   <div class="col-xs-12" style="text-align: right" [ngClass]="{'col-sm-6': !smaller, 'col-sm-5': smaller}">
     <ng-content></ng-content>

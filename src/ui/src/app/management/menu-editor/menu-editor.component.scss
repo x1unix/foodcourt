@@ -51,3 +51,22 @@
 .menu-editor__item {
 
 }
+
+// === Mobile styles
+@media (max-width: 800px) {
+  .menu-editor__sidenav {
+    height: 250px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: initial;
+    background: #fafafaeb;
+  }
+
+  .menu-editor__container {
+    flex: initial;
+    max-width: initial;
+    width: 100%;
+  }
+}
