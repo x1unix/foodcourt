@@ -32,3 +32,10 @@
   padding: 64px;
   text-align: center;
 }
+
+// mobile styles
+@media (max-width: 800px) {
+  .order-editor__header {
+    position: initial;
+  }
+}
