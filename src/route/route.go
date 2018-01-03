@@ -129,6 +129,14 @@ func Bootstrap() *mux.Router {
 
 
 
+	// == Settings ==
+
+	// Set
+	r.HandleFunc("/api/settings", RequireAdmin(controller.SaveSettings)).Methods("POST")
+
+	// Get
+	r.HandleFunc("/api/settings", RequireAdmin(controller.GetSettings)).Methods("GET")
+
 
 
 
