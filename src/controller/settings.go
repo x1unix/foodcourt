@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"gopkg.in/go-playground/validator.v9"
 	"../shared/settings"
 	"../shared/rest"
 	"encoding/json"
@@ -26,6 +27,13 @@ func SaveSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	validate := validator.New()
+
+	if err = validate.Struct(data); err != nil {
+		rest.HttpError(err, http.StatusBadRequest).Write(&w)
+		return
+	}
+
 	if err = settings.SetSettings(&data); err != nil {
 		log.Error(fmt.Sprintf(errSettings, "save", err))
 		rest.HttpError(err, http.StatusInternalServerError).Write(&w)
@@ -38,7 +46,10 @@ func SaveSettings(w http.ResponseWriter, r *http.Request) {
 // Get settings
 // (GET - /api/settings)
 func GetSettings(w http.ResponseWriter, r *http.Request) {
-	data := settings.GetSettings()
+	if data, err := settings.GetSettings(); err != nil {
+		rest.HttpError(err, http.StatusInternalServerError).Write(&w)
+	} else {
+		rest.Success(data).Write(&w)
+	}
 
-	rest.Success(data).Write(&w)
 }

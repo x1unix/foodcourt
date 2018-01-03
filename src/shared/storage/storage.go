@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 	"github.com/vmihailenco/msgpack"
+	"github.com/go-redis/redis"
+	"errors"
 )
 
 const keyPrefix = "com.foodcourt."
@@ -13,6 +15,7 @@ const keyPrefix = "com.foodcourt."
 const errChkExists = "Failed to check if value exists on key '%s': %v"
 const errGet = "Failed to get value on key '%s': %v"
 const errDeserialize = "Failed to deserialize value to '%s' (key: %s) (data: %s): %v"
+const warnNoKey = "Requested key value doesn't exists ('%s'), a default value provided"
 
 const magicPropEmpty = "@EMPTY"
 
@@ -30,10 +33,15 @@ func Exists(key string) bool {
 	}
 }
 
-func GetString(key string, otherwize string) string {
+func GetString(key string, otherwise string) string {
 	if raw, err := cache.Client.Get(prop(key)).Result(); err != nil {
-		logger.GetLogger().Error(fmt.Sprintf(errGet, key, err))
-		return otherwize
+		log := logger.GetLogger()
+		if err != redis.Nil {
+			log.Warning(fmt.Sprintf(warnNoKey, key))
+		} else {
+			log.Error(fmt.Sprintf(errGet, key, err))
+		}
+		return otherwise
 	} else {
 		return raw
 	}
@@ -49,19 +57,17 @@ func GetBoolean(key string, otherwize bool) bool {
 	}
 }
 
-func Get(key string, otherwize interface{}) interface{} {
-	raw := GetString(key, magicPropEmpty)
-	var output interface{}
-
-	if raw == magicPropEmpty {
-		return otherwize
-	}
-
-	if err := msgpack.Unmarshal([]byte(raw), &output); err != nil {
-		logger.GetLogger().Error(fmt.Sprintf(errDeserialize, "interface{}", key, err))
-		return otherwize
+func Get(key string) (string, error) {
+	rdKey := prop(key)
+	data := ""
+	if raw, err := cache.Client.Get(rdKey).Result(); err != nil {
+		if err != redis.Nil {
+			return data, err
+		} else {
+			return data, errors.New(fmt.Sprintf("Requested key value not exists: '%s'", rdKey))
+		}
 	} else {
-		return output
+		return raw, nil
 	}
 }
 
@@ -71,6 +77,10 @@ func SetString(key string, val string) error {
 
 func SetBoolean(key string, val bool) error {
 	return SetString(key, strconv.FormatBool(val))
+}
+
+func SetRaw(key string, val []byte) error {
+	return cache.Client.Set(prop(key), val, 0).Err()
 }
 
 func Set(key string, val interface{}) error {
