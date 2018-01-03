@@ -3,8 +3,10 @@
     *ngIf="isLoaded"
     type="button"
     class="btn btn-success"
+    [disabled]="(!settings.dirty) || settings.invalid || saveStatus.isLoading"
+    (click)="onSubmit()"
   >
-    <clr-icon shape="plus"></clr-icon>
+    <clr-icon shape="floppy"></clr-icon>
     <span>Save</span>
   </button>
 </app-header-toolbar>
@@ -27,6 +29,23 @@
   (ngSubmit)="onSubmit()"
   autocomplete="off"
 >
+  <app-alert
+    *ngIf="saveStatus.isFailed"
+    type="danger"
+    icon="exclamation-circle"
+    [dismissable]="false"
+  >
+    Failed to save settings: {{saveStatus.error}}
+  </app-alert>
+
+  <app-alert
+    *ngIf="saveStatus.isLoaded"
+    type="success"
+    icon="check-circle"
+    [dismissable]="false"
+  >
+    Settings saved successfully
+  </app-alert>
   <section class="form-block">
     <label>Core</label>
     <div class="form-group">
@@ -139,6 +158,13 @@
   <section class="form-block" formGroupName="sender">
     <label>Email notifications</label>
     <div class="form-group">
+      <label for="enable">Enable notifications</label>
+      <div class="toggle-switch">
+        <input type="checkbox" id="enable" formControlName="enable">
+        <label for="enable"></label>
+      </div>
+    </div>
+    <div class="form-group">
       <label for="email">Sender's email</label>
       <label
         for="email"
@@ -159,7 +185,7 @@
       </label>
     </div>
     <div class="form-group" formArrayName="orderRecipients">
-      <label>Order recipients</label>
+      <label>Food vendor email</label>
       <div>
         <div *ngFor="let recipient of recipients.controls; let i = index;">
           <label
@@ -188,18 +214,18 @@
             Remove
           </button>
         </div>
+        <p>
+          <button
+            *ngIf="recipients.controls.length < 5"
+            type="button"
+            class="btn btn-primary-outline btn-block"
+            (click)="addRecipient()"
+          >
+            <clr-icon shape="plus"></clr-icon>
+            Add email
+          </button>
+        </p>
       </div>
-
     </div>
-    <p>
-      <button
-        *ngIf="recipients.controls.length < 5"
-        type="button"
-        class="btn btn-success"
-        (click)="addRecipient()"
-      >
-        Add email
-      </button>
-    </p>
   </section>
 </form>

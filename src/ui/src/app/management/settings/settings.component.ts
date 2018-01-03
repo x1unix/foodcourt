@@ -7,7 +7,7 @@ import {WebHelperService} from '../../shared/services';
 import {ISettings} from './interfaces/settings';
 
 /*tslint:disable-next-line:max-line-length */
-const HOST_IP_PATTERN = '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)+([A-Za-z]|[A-Za-z][A-Za-z0-9\\-]*[A-Za-z0-9])$\n';
+const HOST_IP_PATTERN = '^[A-Za-z0-9-\.]+$';
 
 @Component({
   selector: 'app-settings',
@@ -67,6 +67,7 @@ export class SettingsComponent extends LoadStatusComponent implements OnInit {
         password: new FormControl(settings.smtp.password, Validators.required)
       }),
       sender: new FormGroup({
+        enable: new FormControl(settings.sender.enable, Validators.required),
         email: new FormControl(settings.sender.email, Validators.compose([Validators.required, Validators.email])),
         orderRecipients: new FormArray(this.getRecipientsList(settings))
       })
@@ -96,6 +97,29 @@ export class SettingsComponent extends LoadStatusComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.settings.dirty && this.settings.valid) {
+      this.settings.disable({onlySelf: false, emitEvent: false});
+      const data = <ISettings> this.settings.value;
+
+      this.saveStatus.isLoading = true;
+
+      this.settingsService.saveSettings(data).subscribe(
+        () => {
+          this.saveStatus.isLoaded = true;
+          this.settings.enable({onlySelf: false, emitEvent: false});
+
+          setTimeout(() => {
+            this.saveStatus.isIdle = true;
+          }, 5000);
+        }, (error) => {
+          this.saveStatus.error = this.helper.extractResponseError(error);
+          this.saveStatus.isFailed = true;
+          this.settings.enable({onlySelf: false, emitEvent: false});
+        }
+      );
+
+      return false;
+    }
 
   }
 

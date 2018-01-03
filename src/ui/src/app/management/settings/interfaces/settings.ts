@@ -7,6 +7,7 @@ export interface ISettings {
     password: string;
   };
   sender: {
+    enable: boolean;
     email: string;
     orderRecipients: string[];
   };
