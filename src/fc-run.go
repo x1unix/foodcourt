@@ -4,11 +4,13 @@ import (
 	"./worker/cmd"
 	"./shared/logger"
 	"./shared/config"
+	"./shared/cache"
 	"./worker/sender"
 )
 
 func main() {
 	config.Bootstrap(true)
+	cache.Bootstrap()
 	logger.Bootstrap("fc-run")
 	cmd.Bootstrap()
 
