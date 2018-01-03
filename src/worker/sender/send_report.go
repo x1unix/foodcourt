@@ -74,6 +74,7 @@ func SendOrderReport() (bool, error) {
 }
 
 func sendOrderMail(cfgPtr *settings.Settings, items *map[string] int) error {
+	log := logger.GetLogger()
 
 	// Extract settings
 	cfg := *cfgPtr
