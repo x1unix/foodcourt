@@ -102,8 +102,8 @@ func sendOrderMail(cfgPtr *settings.Settings, items *map[string] int) error {
 	// Compose email using html template
 	var tplBuff bytes.Buffer
 
-	if err := orderTemplate.Execute(&tplBuff, mailData); err != nil {
-		log.Error(fmt.Sprintf(errTplParse, orderTemplatePath, err.Error()))
+	if err := tpl.Execute(&tplBuff, mailData); err != nil {
+		log.Error(fmt.Sprintf(errTplParse, orderReportTemplatePath, err))
 		return err
 	}
 
