@@ -132,3 +132,26 @@ func GetOrderSummary(output *[]OrderSummary, orderDate string, db *sqlx.DB) erro
 
 	return db.Select(output, q, a...)
 }
+
+// Gets
+func GetTotalOrderedDishes(output *[]Order, orderDate string, db *sqlx.DB) error {
+	/*
+		select o.user_id,
+				m.date,
+				d.label,
+				d.type
+		from orders o
+			join menu m
+				on o.item_id = m.row_id
+			join dishes d
+				on m.dish_id = d.id
+		where m.date = 20180102;
+	 */
+	q, a, _ := squirrel.Select("o.user_id, m.date, d.label, d.type").From(Table + " o").
+		Join(menu.Table + " m on o.item_id = m.row_id").
+		Join(dishes.Table + " d on m.dish_id = d.id").
+		Where(squirrel.Eq{"m.date": orderDate}).
+		ToSql()
+
+	return db.Select(output, q, a...)
+}
