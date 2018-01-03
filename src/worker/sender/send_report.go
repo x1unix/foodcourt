@@ -18,7 +18,7 @@ import (
 
 const errFetchReportData = "failed to fetch orders from the db: %v (%s)"
 const orderReportTemplateName = "order-summary-mail.html"
-const orderMailDateFormat = "01.02.2006"
+const orderMailDateFormat = "02.01.2006"
 const orderReportSubject = "Order report for %s"
 
 type OrderReportMailData struct {
