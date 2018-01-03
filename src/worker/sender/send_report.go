@@ -24,6 +24,7 @@ const orderReportSubject = "Order report for %s"
 type OrderReportMailData struct {
 	DisplayedDate string
 	Orders map[string] int
+	BaseURL string
 }
 
 
@@ -96,6 +97,7 @@ func sendOrderReportMail(cfgPtr *settings.Settings, items *map[string] int) erro
 	}
 
 	mailData := OrderReportMailData{
+		BaseURL: cfg.BaseURL,
 		DisplayedDate: time.Now().Format(orderMailDateFormat),
 		Orders: *items,
 	}
