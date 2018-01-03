@@ -124,19 +124,19 @@ func SetMenuLockStatus(lockState bool, date int) error {
 
 	rdKey := getMenuLockKey(date)
 
-	if isLocked {
-
-		// Skip if menu is already been locked
-		if lockState == true {
-			return nil
+	if lockState {
+		if !isLocked {
+			// Set lock key
+			_, err := cache.Client.Set(rdKey, true, 0).Result()
+			return err
 		}
-
-		// Set lock key
-		_, err := cache.Client.Set(rdKey, true, 0).Result()
-		return err
 	} else {
-		// Unset lock key
-		_, err := cache.Client.Del(rdKey).Result()
-		return err
+		if isLocked {
+			// Unset lock key
+			_, err := cache.Client.Del(rdKey).Result()
+			return err
+		}
 	}
+
+	return nil
 }
