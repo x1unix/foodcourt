@@ -26,3 +26,5 @@ import:
   version: ^3.0.0
 - package: github.com/go-gomail/gomail
   version: ^2.0.0
+- package: gopkg.in/gomail.v2
+  version: ^2.0.0

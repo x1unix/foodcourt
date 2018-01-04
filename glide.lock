@@ -1,5 +1,5 @@
-hash: 5777bdd18d7f4472f1e3498771ff9f51ac04d8f433c4c45b01f018af1f029be2
-updated: 2017-12-29T17:45:22.15404+02:00
+hash: f2dd33917c2155616477d0c2293a064faf7a9fce3d67f345bba09a014a5dc42e
+updated: 2018-01-04T17:22:39.461007Z
 imports:
 - name: github.com/ahmetb/go-linq
   version: 7e71c124c1f903df09ca08678f145f68b45d125e
@@ -29,6 +29,8 @@ imports:
   version: 1ea25387ff6f684839d82767c1733ff4d4d15d0a
 - name: github.com/gorilla/mux
   version: 7f08801859139f86dfafd1c296e2cba9a80d292e
+- name: github.com/jinzhu/now
+  version: d939ba741945c047cac69c329c5fb0d6b4a06520
 - name: github.com/jmoiron/sqlx
   version: de8647470aafe4854c976707c431dbe1eb2822c6
   subpackages:
@@ -48,7 +50,7 @@ imports:
   subpackages:
   - codes
 - name: golang.org/x/crypto
-  version: 95a4943f35d008beabde8c11e5075a1b714e6419
+  version: 0fcca4842a8d74bfddc2c96a073bd2a4d2a7a2e8
   subpackages:
   - pbkdf2
   - scrypt
@@ -59,6 +61,7 @@ imports:
 - name: google.golang.org/appengine
   version: 5bee14b453b4c71be47ec1781b0fa61c2ea182db
   subpackages:
+  - cloudsql
   - datastore
   - internal
   - internal/app_identity
@@ -67,6 +70,10 @@ imports:
   - internal/log
   - internal/modules
   - internal/remote_api
+- name: gopkg.in/alexcesaro/quotedprintable.v3
+  version: 2caba252f4dc53eaf6b553000885530023f54623
 - name: gopkg.in/go-playground/validator.v9
   version: b1f51f36f1c98cc97f777d6fc9d4b05eaa0cabb5
+- name: gopkg.in/gomail.v2
+  version: 81ebce5c23dfd25c6c67194b37d3dd3f338c98b1
 testImports: []
