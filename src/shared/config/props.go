@@ -9,6 +9,8 @@ const HTTP_HOST = "HTTP_HOST"
 // Log file location property
 const LOG_PATH = "LOG_PATH"
 
+const LOG_LEVEL = "LOG_LEVEL"
+
 const TMP_PATH = "TMP_PATH"
 
 const DB_NAME = "DB_NAME"

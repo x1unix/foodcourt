@@ -6,6 +6,7 @@ import (
 	"github.com/op/go-logging"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Log file name
@@ -21,6 +22,28 @@ var consoleFormatter = logging.MustStringFormatter(
 var fileFormatter = logging.MustStringFormatter(
 	`%{time:15:04:05.000} %{module}:%{shortfunc}/%{level:.6s}: %{message}`,
 )
+
+var LogLevels = []string{"critical", "error", "warning", "notice", "info", "debug"}
+
+// Gets log level from the configuration
+func GetLogLevel() logging.Level {
+	logLevel := strings.ToLower(config.Get(config.LOG_LEVEL, "ALL"))
+
+	switch logLevel {
+		case "info":
+			return logging.INFO
+		case "notice":
+			return logging.NOTICE
+		case "warning":
+			return logging.WARNING
+		case "error":
+			return logging.ERROR
+		case "critical":
+			return logging.CRITICAL
+		default:
+			return logging.DEBUG
+	}
+}
 
 // Gets location of logs directory
 func GetLogPath() string {
@@ -74,7 +97,9 @@ func Bootstrap(logName string) *logging.Logger {
 
 	// Only errors and more severe messages should be sent to log file
 	fileBackendLeveled := logging.AddModuleLevel(fileBackendFormatter)
-	fileBackendLeveled.SetLevel(logging.ERROR, "")
+
+	logLevel := GetLogLevel()
+	fileBackendLeveled.SetLevel(logLevel, "")
 
 	// Set the backends to be used.
 	logging.SetBackend(fileBackendLeveled, consoleBackendFormatter)
