@@ -45,7 +45,7 @@ func GetDishById(w http.ResponseWriter, r *http.Request) {
 	searchErr, exists := dishes.Exists(id, db)
 
 	if searchErr != nil {
-		logger.GetLogger().Error(searchErr)
+		logger.GetLogger().Error(searchErr.Error())
 		rest.Error(searchErr).Write(&w)
 		return
 	}
@@ -59,7 +59,7 @@ func GetDishById(w http.ResponseWriter, r *http.Request) {
 	err := dishes.FindById(id, &dish, db)
 
 	if err != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(err.Error())
 		rest.Error(err).Write(&w)
 	} else {
 		rest.Success(dish).Write(&w)
@@ -76,7 +76,7 @@ func DeleteDishById(w http.ResponseWriter, r *http.Request) {
 	err := dishes.Delete(id, db)
 
 	if err != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(err.Error())
 		rest.Error(err).Write(&w)
 	} else {
 		rest.Echo("OK").Write(&w)

@@ -1,10 +1,8 @@
-hash: f2dd33917c2155616477d0c2293a064faf7a9fce3d67f345bba09a014a5dc42e
-updated: 2018-01-04T17:22:39.461007Z
+hash: ebc90c42696d8115b3c7966cd9c965560ff3ab61ffd17d3088c7e95dc456d1c1
+updated: 2018-01-04T22:50:12.1456693Z
 imports:
 - name: github.com/ahmetb/go-linq
   version: 7e71c124c1f903df09ca08678f145f68b45d125e
-- name: github.com/go-gomail/gomail
-  version: 81ebce5c23dfd25c6c67194b37d3dd3f338c98b1
 - name: github.com/go-playground/locales
   version: e4cbcb5d0652150d40ad0646651076b6bd2be4f6
   subpackages:
@@ -61,7 +59,6 @@ imports:
 - name: google.golang.org/appengine
   version: 5bee14b453b4c71be47ec1781b0fa61c2ea182db
   subpackages:
-  - cloudsql
   - datastore
   - internal
   - internal/app_identity

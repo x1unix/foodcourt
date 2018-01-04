@@ -75,7 +75,7 @@ func SendLunchOrders() (bool, error) {
 	sender, senderErr := getMailSender(cfgPtr)
 
 	if senderErr != nil {
-		log.Error(senderErr)
+		log.Error(senderErr.Error())
 		return false, senderErr
 	}
 

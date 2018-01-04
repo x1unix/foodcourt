@@ -22,7 +22,7 @@ func LockMenu() (bool, error) {
 	err := menu.SetMenuLockStatus(true, dateToBlock)
 
 	if err != nil {
-		log.Error(err)
+		log.Error(err.Error())
 		return false, err
 	}
 

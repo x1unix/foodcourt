@@ -25,7 +25,7 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 	err, data := auth.FindById(con, userId)
 
 	if err != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(err.Error())
 		rest.Error(err).Write(&w)
 	} else {
 		rest.Success(data).Write(&w)
@@ -43,7 +43,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	db.Close()
 
 	if err != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(err.Error())
 		rest.Error(err).Write(&w)
 	} else {
 		rest.Success(data).Write(&w)
@@ -61,7 +61,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	// Check if error occurred on user id check
 	if err != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(err.Error())
 		rest.Error(err).Write(&w)
 		return
 	}
@@ -90,7 +90,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	// Write error if occurred
 	if createErr != nil {
-		logger.GetLogger().Error(createErr)
+		logger.GetLogger().Error(createErr.Error())
 		rest.Error(createErr).Write(&w)
 		return
 	}
@@ -110,7 +110,7 @@ func DropUser(w http.ResponseWriter, r *http.Request) {
 
 	// Check if error occurred on user id check
 	if err != nil {
-		logger.GetLogger().Error(err)
+		logger.GetLogger().Error(err.Error())
 		rest.Error(err).Write(&w)
 		return
 	}

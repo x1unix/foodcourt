@@ -204,7 +204,7 @@ func AddMenuItem(w http.ResponseWriter, r *http.Request) {
 
 	// Handle exists query error
 	if exErr != nil {
-		log.Error(exErr)
+		log.Error(exErr.Error())
 		rest.Error(exErr).Write(&w)
 		return
 	}
@@ -221,7 +221,7 @@ func AddMenuItem(w http.ResponseWriter, r *http.Request) {
 
 	// Check query errors
 	if itemExErr != nil {
-		log.Error(itemExErr)
+		log.Error(itemExErr.Error())
 		rest.Error(itemExErr).Write(&w)
 		return
 	}
@@ -238,7 +238,7 @@ func AddMenuItem(w http.ResponseWriter, r *http.Request) {
 
 	// Handle errors
 	if err != nil {
-		log.Error(err)
+		log.Error(err.Error())
 		rest.Error(err).Write(&w)
 		return
 	}

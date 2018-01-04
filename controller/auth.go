@@ -39,7 +39,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// Search error
 	if searchErr != nil {
-		logger.GetLogger().Error(searchErr)
+		logger.GetLogger().Error(searchErr.Error())
 		rest.HttpError(searchErr, http.StatusInternalServerError).Write(&w)
 		return
 	}
@@ -54,7 +54,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// Check query error
 	if matchErr != nil {
-		logger.GetLogger().Error(matchErr)
+		logger.GetLogger().Error(matchErr.Error())
 		rest.HttpError(matchErr, http.StatusInternalServerError).Write(&w)
 		return
 	}
@@ -71,7 +71,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	sessionData, sessErr := vault.NewSession(token, cuser)
 
 	if sessErr != nil {
-		logger.GetLogger().Error(sessErr)
+		logger.GetLogger().Error(sessErr.Error())
 		rest.Error(sessErr).Write(&w)
 		return
 	}
