@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"../shared/database"
+	"foodcourt/database"
 	"net/http"
 	"strconv"
 )

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"./route"
-	"./shared/app"
-	"./shared/config"
-	"./shared/logger"
-	"./shared/manifest"
+	"foodcourt/route"
+	"foodcourt/app"
+	"foodcourt/config"
+	"foodcourt/logger"
+	"foodcourt/manifest"
 	"fmt"
 )
 

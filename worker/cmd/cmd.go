@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"../../shared/logger"
+	"foodcourt/logger"
 	"os"
 )
 

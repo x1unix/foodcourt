@@ -1,11 +1,11 @@
 package sender
 
 import (
-	"../../shared/logger"
-	"../../shared/orders"
-	"../../shared/database"
-	"../../shared/environment"
-	"../../shared/settings"
+	"foodcourt/logger"
+	"foodcourt/orders"
+	"foodcourt/database"
+	"foodcourt/environment"
+	"foodcourt/settings"
 	"html/template"
 	"time"
 	"fmt"

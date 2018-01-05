@@ -1,12 +1,12 @@
 package main
 
 import (
-	"./worker/cmd"
-	"./shared/logger"
-	"./shared/config"
-	"./shared/cache"
-	"./worker/sender"
-	"./worker/control"
+	"foodcourt/worker/cmd"
+	"foodcourt/logger"
+	"foodcourt/config"
+	"foodcourt/cache"
+	"foodcourt/worker/sender"
+	"foodcourt/worker/control"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package sender
 
 import (
-	"../../shared/orders"
+	"foodcourt/orders"
 )
 
 type OrderMailData struct {

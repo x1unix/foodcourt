@@ -1,8 +1,8 @@
 package control
 
 import (
-	"../../shared/logger"
-	"../../shared/menu"
+	"foodcourt/logger"
+	"foodcourt/menu"
 	"github.com/jinzhu/now"
 	"time"
 	"fmt"

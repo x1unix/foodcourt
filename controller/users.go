@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"../shared/auth"
-	"../shared/database"
-	"../shared/logger"
-	"../shared/rest"
+	"foodcourt/auth"
+	"foodcourt/database"
+	"foodcourt/logger"
+	"foodcourt/rest"
 	"encoding/json"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"

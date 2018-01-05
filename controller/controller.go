@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"../shared/logger"
-	"../shared/rest"
-	"../shared/manifest"
+	"foodcourt/logger"
+	"foodcourt/manifest"
+	"foodcourt/rest"
 	"net/http"
 )
 

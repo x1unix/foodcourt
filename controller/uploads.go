@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"../shared/environment"
-	"../shared/logger"
-	"../shared/rest"
+	"foodcourt/environment"
+	"foodcourt/logger"
+	"foodcourt/rest"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"

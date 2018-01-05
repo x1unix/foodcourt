@@ -1,12 +1,12 @@
 package sender
 
 import (
-	"../../shared/orders"
-	"../../shared/logger"
-	"../../shared/database"
-	"../../shared/dishes"
-	"../../shared/settings"
-	"../../shared/environment"
+	"foodcourt/orders"
+	"foodcourt/logger"
+	"foodcourt/database"
+	"foodcourt/dishes"
+	"foodcourt/settings"
+	"foodcourt/environment"
 	. "github.com/ahmetb/go-linq"
 	"gopkg.in/gomail.v2"
 	"html/template"
