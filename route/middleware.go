@@ -1,14 +1,15 @@
 package route
 
 import (
-	"../shared/auth"
-	"../shared/database"
-	"../shared/rest"
-	"../shared/vault"
-	"github.com/gorilla/context"
+	"foodcourt/auth"
+	"foodcourt/database"
+	"foodcourt/rest"
+	"foodcourt/vault"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gorilla/context"
 )
 
 const TokenQueryParam = "token"
@@ -108,7 +109,6 @@ func RequireLevel(userLevel int, strict bool, handler rest.RequestHandler) rest.
 func RequireAdmin(handler rest.RequestHandler) rest.RequestHandler {
 	return RequireAuth(RequireLevel(0, true, handler))
 }
-
 
 // Middleware checks if the passed date in request is correct
 func RequireValidDate(handler rest.RequestHandler) rest.RequestHandler {

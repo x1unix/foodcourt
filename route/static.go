@@ -1,7 +1,7 @@
 package route
 
 import (
-	"../shared/rest"
+	"foodcourt/rest"
 	"net/http"
 	"os"
 	"path"

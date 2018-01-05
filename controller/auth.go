@@ -1,14 +1,15 @@
 package controller
 
 import (
-	"../shared/auth"
-	"../shared/database"
-	"../shared/logger"
-	"../shared/rest"
-	"../shared/vault"
 	"encoding/json"
-	sq "github.com/Masterminds/squirrel"
+	"foodcourt/auth"
+	"foodcourt/database"
+	"foodcourt/logger"
+	"foodcourt/rest"
+	"foodcourt/vault"
 	"net/http"
+
+	sq "github.com/Masterminds/squirrel"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {

@@ -1,15 +1,15 @@
 package controller
 
 import (
-	"net/http"
 	"encoding/json"
-	"strconv"
-	"../shared/logger"
-	"../shared/rest"
-	"../shared/database"
-	"../shared/menu"
-	"../shared/dishes"
 	"fmt"
+	"foodcourt/database"
+	"foodcourt/dishes"
+	"foodcourt/logger"
+	"foodcourt/menu"
+	"foodcourt/rest"
+	"net/http"
+	"strconv"
 )
 
 const menuParamDate = "date"
@@ -111,7 +111,6 @@ func ClearMenu(w http.ResponseWriter, r *http.Request) {
 	rest.Ok(&w)
 	return
 }
-
 
 // Update list of dishes for specific date
 // (POST /api/menu/{date: [0-9]{8}+}/dishes)

@@ -1,11 +1,12 @@
 package route
 
 import (
-	"../controller"
-	"../shared/environment"
-	"../shared/rest"
-	"github.com/gorilla/mux"
+	"foodcourt/controller"
+	"foodcourt/environment"
+	"foodcourt/rest"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func Bootstrap() *mux.Router {
@@ -18,9 +19,6 @@ func Bootstrap() *mux.Router {
 	// Get server api information
 	r.HandleFunc("/api", controller.GetServerInfo).Methods("GET")
 
-
-
-
 	// == AUTH ==
 
 	// Login
@@ -31,10 +29,6 @@ func Bootstrap() *mux.Router {
 
 	// Session info
 	r.HandleFunc("/api/session", RequireAuth(controller.GetSessionInfo)).Methods("GET")
-
-
-
-
 
 	// === USERS ===
 
@@ -56,10 +50,6 @@ func Bootstrap() *mux.Router {
 	// Update a user
 	r.HandleFunc("/api/users/{id:[0-9]+}", RequireAuth(controller.UpdateUser)).Methods("PUT")
 
-
-
-
-
 	// == Dishes ==
 
 	// Get all dishes
@@ -76,11 +66,6 @@ func Bootstrap() *mux.Router {
 
 	// Delete multiple dishes
 	r.HandleFunc("/api/dishes/purge", RequireAuth(controller.DeleteMultipleDishes)).Methods("POST")
-
-
-
-
-
 
 	// == Menu ==
 
@@ -99,10 +84,6 @@ func Bootstrap() *mux.Router {
 	// Get menu status
 	r.HandleFunc("/api/menu/{date:[0-9]+}/status", RequireAuth(RequireValidDate(controller.GetMenuLockState))).Methods("GET")
 
-
-
-
-
 	// == Orders ==
 
 	// Make an order
@@ -117,17 +98,13 @@ func Bootstrap() *mux.Router {
 	// Get ordered dishes
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}/dishes", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.GetOrderedDishes)))).Methods("GET")
 
-
 	// Get order stats for period
 	r.HandleFunc("/api/orders/report", RequireAuth(controller.GetOrdersReport)).Methods("GET")
-
 
 	// == Files ==
 
 	// Upload an image
 	r.HandleFunc("/api/media", RequireAdmin(controller.UploadFile)).Methods("POST")
-
-
 
 	// == Settings ==
 
@@ -136,9 +113,6 @@ func Bootstrap() *mux.Router {
 
 	// Get
 	r.HandleFunc("/api/settings", RequireAdmin(controller.GetSettings)).Methods("GET")
-
-
-
 
 	// === ETC ===
 

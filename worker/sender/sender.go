@@ -1,7 +1,7 @@
 package sender
 
 import (
-	"../../shared/settings"
+	"foodcourt/settings"
 	"gopkg.in/gomail.v2"
 	"fmt"
 )

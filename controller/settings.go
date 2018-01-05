@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"gopkg.in/go-playground/validator.v9"
-	"../shared/settings"
-	"../shared/rest"
 	"encoding/json"
-	"net/http"
 	"fmt"
+	"foodcourt/rest"
+	"foodcourt/settings"
+	"gopkg.in/go-playground/validator.v9"
+	"net/http"
 )
 
 const errSettings = "Failed to %s settings: %v"

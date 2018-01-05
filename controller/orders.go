@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"net/http"
-	"../shared/rest"
-	"../shared/orders"
-	"../shared/database"
-	"../shared/dishes"
 	"encoding/json"
 	"fmt"
+	"foodcourt/database"
+	"foodcourt/dishes"
+	"foodcourt/orders"
+	"foodcourt/rest"
+	"net/http"
 	"strconv"
 )
 
@@ -33,7 +33,6 @@ func OrderDishes(w http.ResponseWriter, r *http.Request) {
 		// Break if menu is in read-only mode. Response already built
 		return
 	}
-
 
 	// Extract request payload
 	var dishes []int
