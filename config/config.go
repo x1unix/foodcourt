@@ -24,7 +24,7 @@ func Bootstrap(quiet bool) {
 	if err != nil {
 		errMsg := fmt.Sprintf("Environment file does not exist (%s).", fileDir)
 
-		if quiet {
+		if !quiet {
 			panic(errMsg)
 		} else {
 			fmt.Println("config:Bootstrap/WARN: " + errMsg)
