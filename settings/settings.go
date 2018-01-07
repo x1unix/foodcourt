@@ -2,6 +2,7 @@ package settings
 
 import (
 	"foodcourt/storage"
+	"foodcourt/logger"
 
 	"github.com/vmihailenco/msgpack"
 )
@@ -14,8 +15,21 @@ type Settings struct {
 
 const StorageKey = "settings"
 
+var DefaultSettings = Settings{
+	BaseURL: "http://localhost",
+	Sender: SenderSettings{
+		Enable: false,
+	},
+}
+
 func GetSettings() (*Settings, error) {
 	var settings Settings
+
+	if !storage.Exists(StorageKey) {
+		logger.GetLogger().Warning("Settings are not initialized, please configure the app in system settings")
+		return &DefaultSettings, nil
+	}
+
 	data, err := storage.Get(StorageKey)
 
 	if err != nil {
