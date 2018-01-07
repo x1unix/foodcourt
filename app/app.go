@@ -34,8 +34,9 @@ func (app *Application) Run(httpHost string, httpPort string) {
 	if checkConnection {
 		// Test db connection if required
 		app.testSQLConnection()
-		app.initializeCache()
 	}
+
+	app.initializeCache(checkConnection)
 
 	app.initializeHTTPServer(httpAddr)
 }
@@ -64,8 +65,12 @@ func (app *Application) checkAppKey() {
 	}
 }
 
-func (app *Application) initializeCache() {
+func (app *Application) initializeCache(checkConnection bool) {
 	cache.Bootstrap()
+
+	if !checkConnection {
+		return
+	}
 
 	app.Log.Info("Checking connection to the Redis cache...")
 	err := cache.TestConnection()
