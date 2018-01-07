@@ -5,31 +5,23 @@
 Api docs are available at [Postman Documenter](https://documenter.getpostman.com/view/1108844/voracity/77mZMFv). In the future will be moved to Swagger
 
 ## Development
+
+### Files
+
+* `fc-server.go` - Web-server
+* `fc-run.go` - Command runner
+
 ### Installation
-#### Backend (API)
+
 1. Install [Go compiler](https://golang.org/) (v1.9+)
 2. Install [Docker](https://www.docker.com/)
-3. Install [Glide](https://glide.sh/) package manager
-4. Clone this project
-5. Open terminal and go to folder with this project
-6. Bootstrap docker environment with `docker-compose up -d` (once)
-7. Install all dependencies using Glide: `glide install`
+3. Install [dep](https://github.com/golang/dep) dependency manager
+4. Define `GOPATH` variable (if not defined)
+5. Clone this project to `$GOPATH/src/foodcourt`
+6. Install all dependencies using Glide: `dep ensure`
 
 **Attention** - Ensure that you've defined the `GOPATH` [global variable](https://github.com/golang/go/wiki/GOPATH).
 
-#### Frontend (UI)
-1. Install [Node.js](https://nodejs.org/en/) (LTS recommended)
-2. Install [Yarn](https://yarnpkg.com/en/)
-3. Open the terminal and navigate to the `src/ui` folder
-4. Install all dependencies using `yarn install`
-5. Build Angular project using `yarn build` command
-
-### Running
-1. Open terminal and navigate to the project
-2. Start docker containers with `docker-compose start`
-3. Start web-server using `go run fc-server.go` (or compile it using `go build`)
-
-**Tip** - To shutdown Docker containers, use `docker-compose stop`
 
 ### Dev-environment and demo data
 By default, web-server starts at `http://localhost:8000` and configuration is provided at `.env` file.
@@ -55,5 +47,3 @@ Archive:  photos.zip
   ...
 ===== IMPORT FINISH ======
 ```
-
-**Tip** - You need to import demo data only *after* the UI part was build. During UI build, `public` directory will be overwriten and all photos will be removed.
