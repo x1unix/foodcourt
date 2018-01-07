@@ -27,6 +27,7 @@ Api docs are available at [Postman Documenter](https://documenter.getpostman.com
 By default, web-server starts at `http://localhost:8000` and configuration is provided at `.env` file.
 
 Default credentials are:
+
 * **Email** - `admin@llnw.com`
 * **Password** - `q1w2e3`
 
