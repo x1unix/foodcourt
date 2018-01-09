@@ -2,7 +2,7 @@ package environment
 
 import (
 	"fmt"
-	"path"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -12,13 +12,14 @@ const ResourcesDir = "/resources"
 
 // Get the application root path
 func GetRoot() string {
-	filename, err := filepath.Abs(".")
+
+	exePath, err := os.Executable()
 
 	if err != nil {
-		panic(fmt.Sprintf("Failed to get document root path: %s", err.Error()))
+		panic(fmt.Sprintf("Failed to get executable path: %v", err))
 	}
 
-	return path.Dir(filename)
+	return filepath.Dir(exePath)
 }
 
 // Get path of file(s) in 'public' directory.
