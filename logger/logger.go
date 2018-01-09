@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"foodcourt/config"
+	"foodcourt/environment"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +49,7 @@ func GetLogLevel() logging.Level {
 // Gets location of logs directory
 func GetLogPath() string {
 	// Get log path from the config
-	logPathOrigin := config.Get(config.LOG_PATH, ".")
+	logPathOrigin := config.Get(config.LOG_PATH, environment.GetRoot())
 
 	// Get absolute log path
 	logPath, _ := filepath.Abs(logPathOrigin)
