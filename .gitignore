@@ -13,3 +13,4 @@ fc-server.exe
 fc-run
 fc-run.exe
 vendor
+.env
