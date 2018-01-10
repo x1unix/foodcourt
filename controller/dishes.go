@@ -2,12 +2,14 @@ package controller
 
 import (
 	"encoding/json"
+	"strconv"
 	"foodcourt/database"
 	"foodcourt/dishes"
 	"foodcourt/logger"
 	"foodcourt/rest"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
+	"fmt"
 )
 
 var dishValidator = validator.New()
@@ -115,7 +117,7 @@ func DeleteMultipleDishes(w http.ResponseWriter, r *http.Request) {
 }
 
 // Add new dish
-// (POST /api/users/)
+// (POST /api/dishes/)
 func AddDish(w http.ResponseWriter, r *http.Request) {
 	// Source model
 	var dish dishes.Dish
@@ -150,4 +152,50 @@ func AddDish(w http.ResponseWriter, r *http.Request) {
 	} else {
 		rest.Echo("Success").Write(&w)
 	}
+}
+
+// Update existing dish
+// (PUT /api/dishes/{id:[0-9]+})
+func UpdateDish(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(rest.Params(r).GetString(VarID))
+
+	if err != nil {
+		rest.BadRequest(&w, "Invalid dish ID format")
+		return
+	}
+
+	// Source model
+	var dish dishes.Dish
+
+	// Extract request JSON data
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&dish)
+	defer r.Body.Close()
+
+	if err != nil {
+		rest.BadRequest(&w, err.Error())
+		return
+	}
+
+	if (dish.Type < dishes.Soup) || (dish.Type > dishes.Special) {
+		rest.BadRequest(&w, "Invalid dish type (0~4)")
+		return
+	}
+
+	// Validate data
+	if err := dishValidator.Struct(&dish); err != nil {
+		rest.BadRequest(&w, err.Error())
+		return
+	}
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	if err := dishes.Update(id, &dish, db); err != nil {
+		logger.GetLogger().Error(fmt.Sprintf("Failed to update dish #%d: %v", id, err))
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Ok(&w)
 }

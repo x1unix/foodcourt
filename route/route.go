@@ -61,6 +61,9 @@ func Bootstrap() *mux.Router {
 	// Add new dish
 	r.HandleFunc("/api/dishes", RequireAdmin(controller.AddDish)).Methods("POST")
 
+	// Update dish
+	r.HandleFunc("/api/dishes/{id:[0-9]+}", RequireAdmin(controller.UpdateDish)).Methods("PUT")
+
 	// Delete by id
 	r.HandleFunc("/api/dishes/{id:[0-9]+}", RequireAuth(controller.DeleteDishById)).Methods("DELETE")
 

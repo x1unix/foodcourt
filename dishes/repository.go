@@ -66,3 +66,15 @@ func Add(dish *Dish, db *sqlx.DB) error {
 
 	return err
 }
+
+func Update(id int, dish *Dish, db *sqlx.DB) error {
+	_, err := sq.Update(Table).Where(sq.Eq{"id": id}).
+		Set("label", dish.Label).
+		Set("description", dish.Description).
+		Set("type", dish.Type).
+		Set("photo_url", dish.PhotoUrl).
+		RunWith(db.DB).
+		Query()
+
+	return err
+}
