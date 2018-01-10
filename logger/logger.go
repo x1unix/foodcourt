@@ -81,9 +81,6 @@ func Bootstrap(logName string) *logging.Logger {
 		logFilePath,
 	}
 
-	// Purge log file if it exists
-	logFileWriter.PurgeFile()
-
 	// Log file writer backend
 	fileBackend := logging.NewLogBackend(logFileWriter, "", 0)
 
