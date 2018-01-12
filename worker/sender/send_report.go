@@ -7,6 +7,7 @@ import (
 	"foodcourt/dishes"
 	"foodcourt/settings"
 	"foodcourt/environment"
+	"foodcourt/utils"
 	. "github.com/ahmetb/go-linq"
 	"gopkg.in/gomail.v2"
 	"html/template"
@@ -53,16 +54,22 @@ func SendOrderReport() (bool, error) {
 		return false, nil
 	}
 
-	today := time.Now().Format(dateFmt)
+	today := time.Now()
+	dayToProcess := utils.GetNextDay(today)
+	fDate := dayToProcess.Format(dateFmt)
 
 	db := database.GetInstance()
 	defer db.Close()
 
 	var ordersList []orders.Order
 
-	if err := orders.GetTotalOrderedDishes(&ordersList, today, db); err != nil {
+	if err := orders.GetTotalOrderedDishes(&ordersList, fDate, db); err != nil {
 		log.Error(fmt.Sprintf(errFetchReportData, err, today))
 		return false, err
+	}
+
+	if len(ordersList) == 0 {
+		log.Warning(fmt.Sprintf("No orders found for '%s'", fDate))
 	}
 
 	merged := mergeOrders(&ordersList)
