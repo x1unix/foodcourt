@@ -74,15 +74,17 @@ func SendOrderReport() (bool, error) {
 
 	merged := mergeOrders(&ordersList)
 
-	if err = sendOrderReportMail(cfgPtr, merged); err != nil {
+	if err = sendOrderReportMail(&dayToProcess, cfgPtr, merged); err != nil {
 		return false, err
 	} else {
 		return true, nil
 	}
 }
 
-func sendOrderReportMail(cfgPtr *settings.Settings, items *map[string] int) error {
+func sendOrderReportMail(orderTime *time.Time, cfgPtr *settings.Settings, items *map[string] int) error {
 	log := logger.GetLogger()
+
+	day := &orderTime
 
 	// Extract settings
 	cfg := *cfgPtr
@@ -105,7 +107,7 @@ func sendOrderReportMail(cfgPtr *settings.Settings, items *map[string] int) erro
 
 	mailData := OrderReportMailData{
 		BaseURL: cfg.BaseURL,
-		DisplayedDate: time.Now().Format(orderMailDateFormat),
+		DisplayedDate: day.Format(orderMailDateFormat),
 		Orders: *items,
 	}
 
