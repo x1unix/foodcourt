@@ -84,7 +84,7 @@ func SendOrderReport() (bool, error) {
 func sendOrderReportMail(orderTime *time.Time, cfgPtr *settings.Settings, items *map[string] int) error {
 	log := logger.GetLogger()
 
-	day := &orderTime
+	day := *orderTime
 
 	// Extract settings
 	cfg := *cfgPtr
