@@ -164,6 +164,15 @@
             vertical-align: middle;
         }
 
+        img.fc-img:before {
+          content: ' ';
+          display: block;
+          position: absolute;
+          height: 64px;
+          width: 92px;
+          background: #fff;
+        }
+
         tr.fc-tr {
             border: 1px solid #ccc;
             vertical-align: center;
@@ -221,7 +230,7 @@
             {{range .Group.Items }}
             <tr class="fc-tr">
                 <td class="fc-col-img">
-                    <img src="{{$baseURL}}{{.PhotoUrl}}" alt="{{.Label}}" class="fc-img">
+                    <img src="{{$baseURL}}{{.PhotoUrl}}" alt="" class="fc-img">
                 </td>
                 <td class="fc-col-name">
                     {{.Label}}
