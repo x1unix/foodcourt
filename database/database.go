@@ -60,11 +60,10 @@ func TestConnection() (bool, error) {
 
 	connection, err := sqlx.Connect("mysql", sqlDsn)
 
-	defer connection.Close()
-
 	if err != nil {
 		return false, err
 	} else {
+		defer connection.Close()
 		return true, nil
 	}
 }
