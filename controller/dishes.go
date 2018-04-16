@@ -86,7 +86,7 @@ func DeleteDishById(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete multiple dishes by id
-// (DELETE /api/dishes)
+// (POST /api/dishes/purge)
 func DeleteMultipleDishes(w http.ResponseWriter, r *http.Request) {
 	// ID's
 	var ids []int
