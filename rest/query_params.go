@@ -1,22 +1,30 @@
 package rest
 
 import (
-	"github.com/gorilla/mux"
-	"net/http"
+	"net/url"
 	"strconv"
+	"net/http"
 )
 
-// Query params reader wrapper
-type RouteParams struct {
-	Params map[string]string
+type QueryParamsJar struct {
+	params url.Values
 }
 
-func (q *RouteParams) GetString(key string) string {
-	return q.Params[key]
+func (q *QueryParamsJar) GetSingle(key string) string {
+	return q.params[key][0]
 }
 
-func (q *RouteParams) GetInt(key string) int {
-	val, err := strconv.Atoi(q.GetString(key))
+func (q *QueryParamsJar) Get(key string) []string {
+	return q.params[key]
+}
+
+func (q *QueryParamsJar) Has(key string) bool {
+	keys, ok := q.params[key]
+	return ok && (len(keys) > 0)
+}
+
+func (q *QueryParamsJar) GetInt(key string) int {
+	val, err := strconv.Atoi(q.GetSingle(key))
 
 	if err != nil {
 		return 0
@@ -26,10 +34,9 @@ func (q *RouteParams) GetInt(key string) int {
 }
 
 // Read query params from the request
-func Params(request *http.Request) *RouteParams {
-	qp := RouteParams{
-		Params: mux.Vars(request),
-	}
+func QueryParams(request *http.Request) *QueryParamsJar {
+	qp := QueryParamsJar{request.URL.Query()}
 
 	return &qp
 }
+

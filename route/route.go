@@ -72,6 +72,9 @@ func Bootstrap() *mux.Router {
 
 	// == Menu ==
 
+	// Get menu by period
+	r.HandleFunc("/api/menu/period/dishes", RequireAuth(controller.SelectRangeMenu)).Methods("GET")
+
 	// Get dishes by day
 	r.HandleFunc("/api/menu/{date:[0-9]+}/dishes", RequireAuth(RequireValidDate(controller.GetMenuForTheDay))).Methods("GET")
 
