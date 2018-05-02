@@ -50,7 +50,7 @@ func BadRequest(w *http.ResponseWriter, err string) {
 		err = msgBadRequest
 	}
 
-	ErrorFromString(err, 404).Write(w)
+	ErrorFromString(err, 400).Write(w)
 }
 
 func Ok(w *http.ResponseWriter) {

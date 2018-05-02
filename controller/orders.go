@@ -68,6 +68,40 @@ func OrderDishes(w http.ResponseWriter, r *http.Request) {
 	rest.Ok(&w)
 }
 
+// Gets orders for period for specific user
+// (GET /api/orders/users/{userId:[0-9]+}?from=YYYYMMDD&till=YYYYMMDD)
+func GetOrdersForPeriod(w http.ResponseWriter, r *http.Request) {
+	// Get user id
+	userId := rest.Params(r).GetInt(paramUserId)
+
+	// Extract query params
+	params := rest.QueryParams(r)
+
+	if !params.Has("from") || !params.Has("till") {
+		rest.BadRequest(&w, "no start or end date provided")
+		return
+	}
+
+	// Extract range points
+	dateFrom := params.GetInt("from")
+	dateTill := params.GetInt("till")
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	// Try to get data
+	orders, err := orders.GetUserOrdersForPeriod(userId, dateFrom, dateTill, db)
+
+	// Handle error
+	if err != nil {
+		log.Error("failed to get period order [%d - %d] (u:%d): %v", dateFrom, dateTill, userId, err)
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Success(*orders).Write(&w)
+}
+
 // Get ordered dish ids for specific user
 // (GET /api/orders/{date:[0-9]+}/users/{userId:[0-9]+})
 func GetOrderedMenuItems(w http.ResponseWriter, r *http.Request) {

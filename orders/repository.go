@@ -56,6 +56,39 @@ func GetUserOrderMenuItems(output *[]int, userID int, date int, db *sqlx.DB) err
 	return db.Select(output, q, a...)
 }
 
+// GetUserOrdersForPeriod gets ids of ordered items for specified period
+func GetUserOrdersForPeriod(userID int, dateFrom int, dateTill int, db *sqlx.DB) (*map[int][]int, error) {
+	out := make(map[int][]int)
+
+	q, a, _ := squirrel.Select("m.dish_id, m.date").From(menu.Table + " m").
+		Join(Table + " o on o.item_id = m.row_id").
+		Where("m.date >= ? and m.date <= ?", dateFrom, dateTill).
+		Where(squirrel.Eq{"o.user_id": userID}).
+		ToSql()
+
+	// Run query
+	rows, err := db.Query(q, a...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Iterate through each dish and group by date
+	for rows.Next() {
+		var dishId int
+		var date int
+
+		if err = rows.Scan(&dishId, &date); err != nil {
+			return nil, err
+		}
+
+		out[date] = append(out[date], dishId)
+	}
+
+
+	return &out, err
+}
+
 // DeleteOrder deletes order
 func DeleteOrder(date int, userID int, db *sqlx.DB) error {
 	_, err := db.Query(sqOrdersPurge, date, userID)

@@ -92,6 +92,9 @@ func Bootstrap() *mux.Router {
 
 	// == Orders ==
 
+	// Get orders by period
+	r.HandleFunc("/api/orders/users/{userId:[0-9]+}", RequireAuth(OnlySelfOrManager(controller.GetOrdersForPeriod))).Methods("GET")
+
 	// Make an order
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.OrderDishes)))).Methods("POST")
 
