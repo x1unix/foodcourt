@@ -173,7 +173,6 @@ func GetMenusLockStatus(dates []int) (*map[int]bool, error) {
 	}
 
 	for i, value := range data {
-		fmt.Printf("%v %T", value, value)
 		out[dates[i]] = value != nil;
 	}
 
