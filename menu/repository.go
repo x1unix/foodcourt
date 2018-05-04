@@ -156,6 +156,30 @@ func getMenuLockKey(date int) string {
 	return fmt.Sprintf(rdKeyMenuPrefix, date)
 }
 
+// GetMenusLockStatus returns lock status for each menu
+func GetMenusLockStatus(dates []int) (*map[int]bool, error) {
+	keys := make([]string, len(dates))
+	out := make(map[int]bool)
+
+	// Convert date to redis key
+	for i, date := range dates {
+		keys[i] = getMenuLockKey(date)
+	}
+
+	data, err := cache.Client.MGet(keys...).Result();
+
+	if err != nil {
+		return nil, err
+	}
+
+	for i, value := range data {
+		fmt.Printf("%v %T", value, value)
+		out[dates[i]] = value != nil;
+	}
+
+	return &out, nil
+}
+
 // Check if menu is locked for the new orders
 func GetMenuLockStatus(date int) (bool, error) {
 	key := getMenuLockKey(date)

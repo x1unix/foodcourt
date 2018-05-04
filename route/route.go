@@ -87,6 +87,9 @@ func Bootstrap() *mux.Router {
 	// Clear menu for specific date
 	r.HandleFunc("/api/menu/{date:[0-9]+}", RequireAdmin(RequireValidDate(controller.ClearMenu))).Methods("DELETE")
 
+	// Get bulk menus status
+	r.HandleFunc("/api/menu/status", RequireAuth(controller.GetMenusStatus)).Methods("GET")
+
 	// Get menu status
 	r.HandleFunc("/api/menu/{date:[0-9]+}/status", RequireAuth(RequireValidDate(controller.GetMenuLockState))).Methods("GET")
 
