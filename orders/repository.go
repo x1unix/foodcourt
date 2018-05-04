@@ -45,6 +45,46 @@ func OrderDishes(dishIds []int, date int, userId int, db *sqlx.DB) error {
 	return commitErr
 }
 
+// Bulk order
+func BulkOrderDishes(orders *BulkOrderBundle, userId int, db *sqlx.DB) error {
+	// Start transaction
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	for date, orderIds := range *orders {
+		// Remove order for a day
+		if _, err = tx.Exec(sqOrdersPurge, date, userId); err != nil {
+			return fmt.Errorf("failed to remove orders of uid %d on date %d - %v", userId, date, err)
+		}
+
+		// Build insertion que`ry
+		q, args, _ := squirrel.Insert(Table).Columns(ItemId, UserId).
+			Select(squirrel.Select("m.row_id, u.id").From(menu.Table + " m").Join("users u").
+			Where(squirrel.Eq{"m.dish_id": orderIds, "m.date": date, "u.id": userId})).ToSql()
+
+		// Execute insert
+		if _, err = tx.Exec(q, args...); err != nil {
+			return fmt.Errorf("failed to insert order of uid %d for %d - %v", userId, date, err)
+		}
+	}
+
+	// Execute transaction and pray
+	if err = tx.Commit(); err != nil {
+
+		// Try to rollback
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			log.Error("failed to rollback failed bulk order transaction (uid:%d) - %v", userId, rollbackErr)
+		}
+
+		return fmt.Errorf("failed to commit bulk order of uid %d", userId, err)
+	}
+
+	return err
+}
+
 // Get list of ordered dishes
 func GetUserOrderMenuItems(output *[]int, userID int, date int, db *sqlx.DB) error {
 	// SELECT m.dish_id FROM `menu` m JOIN `orders` o on o.`item_id` = m.`row_id` where  WHERE m.`date`=? AND o.`user_id`=?
@@ -54,6 +94,39 @@ func GetUserOrderMenuItems(output *[]int, userID int, date int, db *sqlx.DB) err
 		ToSql()
 
 	return db.Select(output, q, a...)
+}
+
+// GetUserOrdersForPeriod gets ids of ordered items for specified period
+func GetUserOrdersForPeriod(userID int, dateFrom int, dateTill int, db *sqlx.DB) (*map[int][]int, error) {
+	out := make(map[int][]int)
+
+	q, a, _ := squirrel.Select("m.dish_id, m.date").From(menu.Table + " m").
+		Join(Table + " o on o.item_id = m.row_id").
+		Where("m.date >= ? and m.date <= ?", dateFrom, dateTill).
+		Where(squirrel.Eq{"o.user_id": userID}).
+		ToSql()
+
+	// Run query
+	rows, err := db.Query(q, a...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Iterate through each dish and group by date
+	for rows.Next() {
+		var dishId int
+		var date int
+
+		if err = rows.Scan(&dishId, &date); err != nil {
+			return nil, err
+		}
+
+		out[date] = append(out[date], dishId)
+	}
+
+
+	return &out, err
 }
 
 // DeleteOrder deletes order

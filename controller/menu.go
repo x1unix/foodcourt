@@ -20,6 +20,59 @@ const errMenuCommon = "Date: %d, Error: %s"
 
 const errMenuStatus = "Failed to check menu lock status - " + errMenuCommon
 
+func SelectRangeMenu(w http.ResponseWriter, r *http.Request) {
+	params := rest.QueryParams(r)
+
+	if !params.Has("from") || !params.Has("till") {
+		rest.BadRequest(&w, "No date provided")
+		return
+	}
+
+	dateFrom := params.GetInt("from")
+	dateTill := params.GetInt("till")
+
+	db := database.GetInstance()
+	defer db.Close()
+
+	items, err := menu.GetMenuForPeriod(dateFrom, dateTill, db)
+
+	if err != nil {
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Success(items).Write(&w)
+
+}
+
+// Get lock status for specified dates
+// (GET /api/menu/status?dates[]=...)
+func GetMenusStatus(w http.ResponseWriter, r *http.Request) {
+
+	params := rest.QueryParams(r)
+
+	if !params.Has("dates[]") {
+		rest.BadRequest(&w, "no dates specified")
+		return
+	}
+
+	dates, count := params.GetBulkInt("dates[]")
+
+	if count == 0 {
+		rest.BadRequest(&w, "no valid dates provided")
+		return
+	}
+
+	status, err := menu.GetMenusLockStatus(*dates)
+
+	if err != nil {
+		log.Error("error on getting menu status for %v: %v", dates, err)
+		rest.Error(err).Write(&w);
+	}
+
+	rest.Success(status).Write(&w)
+}
+
 // Get list of dishes for specific day
 // (GET /api/menu/{date: [0-9]{8}+}/dishes)
 func GetMenuForTheDay(w http.ResponseWriter, r *http.Request) {

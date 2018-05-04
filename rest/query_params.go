@@ -1,22 +1,50 @@
 package rest
 
 import (
-	"github.com/gorilla/mux"
-	"net/http"
+	"net/url"
 	"strconv"
+	"net/http"
 )
 
-// Query params reader wrapper
-type RouteParams struct {
-	Params map[string]string
+type QueryParamsJar struct {
+	params url.Values
 }
 
-func (q *RouteParams) GetString(key string) string {
-	return q.Params[key]
+func (q *QueryParamsJar) GetSingle(key string) string {
+	return q.params[key][0]
 }
 
-func (q *RouteParams) GetInt(key string) int {
-	val, err := strconv.Atoi(q.GetString(key))
+func (q *QueryParamsJar) Get(key string) []string {
+	return q.params[key]
+}
+
+// Has checks if query parameter was provided
+func (q *QueryParamsJar) Has(key string) bool {
+	keys, ok := q.params[key]
+	return ok && (len(keys) > 0)
+}
+
+// GetBulkInt returns array of int params provided in GET request
+func (q *QueryParamsJar) GetBulkInt(key string) (*[]int, int) {
+	params := q.Get(key)
+	output := make([]int, 0)
+	count := 0
+
+	for _, strval := range params {
+		val, err := strconv.Atoi(strval)
+
+		if err == nil {
+			output = append(output, val)
+			count++
+		}
+	}
+
+	return &output, count
+}
+
+// GetInt returns a first value of query parameter
+func (q *QueryParamsJar) GetInt(key string) int {
+	val, err := strconv.Atoi(q.GetSingle(key))
 
 	if err != nil {
 		return 0
@@ -26,10 +54,9 @@ func (q *RouteParams) GetInt(key string) int {
 }
 
 // Read query params from the request
-func Params(request *http.Request) *RouteParams {
-	qp := RouteParams{
-		Params: mux.Vars(request),
-	}
+func QueryParams(request *http.Request) *QueryParamsJar {
+	qp := QueryParamsJar{request.URL.Query()}
 
 	return &qp
 }
+

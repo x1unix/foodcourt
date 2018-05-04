@@ -9,6 +9,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+type MenuPeriod map[int][]dishes.Dish
+
 // Table name
 const Table = "menu"
 
@@ -24,6 +26,56 @@ const rdKeyMenuPrefix = "menu_lock_%d"
 // Gets list of dishes in menu at specific date
 func GetDishesInMenu(output *[]dishes.Dish, date int, db *sqlx.DB) error {
 	return db.Select(output, sqlQueryMenuDishes, date)
+}
+
+// GetMenuForPeriod returns menu for specific period
+func GetMenuForPeriod(dateFrom int, dateTill int, db *sqlx.DB) (*MenuPeriod, error) {
+	// Select all dishes in menu for specific period
+	q, a, _ := squirrel.Select("d.label", "d.description", "d.photo_url", "d.type", "m.dish_id as id, m.date").
+		From(dishes.Table + " d").
+		Join("menu m on d.id = m.dish_id").
+		Where("m.date >= ? and m.date <= ?", dateFrom, dateTill).
+		OrderBy("m.date ASC").
+		ToSql()
+
+	rows, err := db.Query(q, a...)
+
+	// Check for query errors
+	if err != nil {
+		return nil, err
+	}
+
+	// Prepare output result
+	results := make(MenuPeriod)
+
+	// Iterate through each row to group by date
+	for rows.Next() {
+		var id int
+		var label string
+		var description string
+		var photoUrl string
+		var dishType int
+		var date int
+
+		// Extract row values
+		if err = rows.Scan(&label, &description, &photoUrl, &dishType, &id, &date); err != nil {
+			return nil, err
+		}
+
+		// Put dish
+		results[date] = append(results[date], dishes.Dish{
+			Id: id,
+			Label: label,
+			Description: description,
+			PhotoUrl: photoUrl,
+			Type: dishType,
+		})
+	}
+
+	// Put connection back to the pool
+	rows.Close()
+
+	return &results, err
 }
 
 // Delete all dishes from the menu
@@ -102,6 +154,30 @@ func GetMenuItemsIds(output *[]int, dishIds []int, date int, db *sqlx.DB) error 
 
 func getMenuLockKey(date int) string {
 	return fmt.Sprintf(rdKeyMenuPrefix, date)
+}
+
+// GetMenusLockStatus returns lock status for each menu
+func GetMenusLockStatus(dates []int) (*map[int]bool, error) {
+	keys := make([]string, len(dates))
+	out := make(map[int]bool)
+
+	// Convert date to redis key
+	for i, date := range dates {
+		keys[i] = getMenuLockKey(date)
+	}
+
+	data, err := cache.Client.MGet(keys...).Result();
+
+	if err != nil {
+		return nil, err
+	}
+
+	for i, value := range data {
+		fmt.Printf("%v %T", value, value)
+		out[dates[i]] = value != nil;
+	}
+
+	return &out, nil
 }
 
 // Check if menu is locked for the new orders

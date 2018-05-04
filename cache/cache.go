@@ -35,3 +35,7 @@ func getConnectionOptions() *redis.Options {
 		DB:       DefaultDB,
 	}
 }
+
+func IsNil(value interface{}) bool {
+	return value == redis.Nil
+}

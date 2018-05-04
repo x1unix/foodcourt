@@ -5,6 +5,8 @@ import (
 	"foodcourt/dishes"
 )
 
+type BulkOrderBundle map[int][]int
+
 type OrderGroup struct {
 	FullName string
 	Email    string

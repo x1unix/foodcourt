@@ -72,6 +72,9 @@ func Bootstrap() *mux.Router {
 
 	// == Menu ==
 
+	// Get menu by period
+	r.HandleFunc("/api/menu/period/dishes", RequireAuth(controller.SelectRangeMenu)).Methods("GET")
+
 	// Get dishes by day
 	r.HandleFunc("/api/menu/{date:[0-9]+}/dishes", RequireAuth(RequireValidDate(controller.GetMenuForTheDay))).Methods("GET")
 
@@ -84,10 +87,19 @@ func Bootstrap() *mux.Router {
 	// Clear menu for specific date
 	r.HandleFunc("/api/menu/{date:[0-9]+}", RequireAdmin(RequireValidDate(controller.ClearMenu))).Methods("DELETE")
 
+	// Get bulk menus status
+	r.HandleFunc("/api/menu/status", RequireAuth(controller.GetMenusStatus)).Methods("GET")
+
 	// Get menu status
 	r.HandleFunc("/api/menu/{date:[0-9]+}/status", RequireAuth(RequireValidDate(controller.GetMenuLockState))).Methods("GET")
 
 	// == Orders ==
+
+	// Get orders by period
+	r.HandleFunc("/api/orders/users/{userId:[0-9]+}", RequireAuth(OnlySelfOrManager(controller.GetOrdersForPeriod))).Methods("GET")
+
+	// Make bulk order
+	r.HandleFunc("/api/orders/users/{userId:[0-9]+}", RequireAuth(OnlySelfOrManager(controller.MakeBulkOrder))).Methods("POST")
 
 	// Make an order
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.OrderDishes)))).Methods("POST")
