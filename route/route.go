@@ -98,6 +98,9 @@ func Bootstrap() *mux.Router {
 	// Get orders by period
 	r.HandleFunc("/api/orders/users/{userId:[0-9]+}", RequireAuth(OnlySelfOrManager(controller.GetOrdersForPeriod))).Methods("GET")
 
+	// Make bulk order
+	r.HandleFunc("/api/orders/users/{userId:[0-9]+}", RequireAuth(OnlySelfOrManager(controller.MakeBulkOrder))).Methods("POST")
+
 	// Make an order
 	r.HandleFunc("/api/orders/{date:[0-9]+}/users/{userId:[0-9]+}", RequireAuth(RequireValidDate(OnlySelfOrManager(controller.OrderDishes)))).Methods("POST")
 

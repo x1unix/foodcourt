@@ -54,13 +54,43 @@ func OrderDishes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create DB connection
+	// Get DB connection
 	db := database.GetInstance()
 	defer db.Close()
 
 	err = orders.OrderDishes(dishes, date, targetUser, db)
 
 	if err != nil {
+		rest.Error(err).Write(&w)
+		return
+	}
+
+	rest.Ok(&w)
+}
+
+// Commit bulk order for several days
+// (POST /api/orders/users/{userId:[0-9]+})
+func MakeBulkOrder(w http.ResponseWriter, r *http.Request) {
+	// Get user id
+	userId := rest.Params(r).GetInt(paramUserId)
+
+	// Extract request payload
+	var ordersBundle orders.BulkOrderBundle
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&ordersBundle)
+	defer r.Body.Close()
+
+	if err != nil {
+		rest.BadRequest(&w, err.Error())
+		return
+	}
+
+	// Get DB connection
+	db := database.GetInstance()
+	defer db.Close()
+
+	if err = orders.BulkOrderDishes(&ordersBundle, userId, db); err != nil {
+		log.Error(err.Error())
 		rest.Error(err).Write(&w)
 		return
 	}
