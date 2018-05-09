@@ -103,6 +103,7 @@ func SendLunchOrders() (bool, error) {
 
 // Sends lunch order to specified client
 func sendLunchOrder(orderGroup *orders.OrderGroup, sender *gomail.Sender, configPtr *settings.Settings) bool {
+	// TODO: replace with "foodcourt/mails" MailSender
 	cfg := *configPtr
 	vm := OrderMailData{
 		DisplayedDate: time.Now().Format(datePrettyFmt),

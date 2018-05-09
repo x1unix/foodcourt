@@ -3,7 +3,6 @@ package sender
 import (
 	"foodcourt/settings"
 	"gopkg.in/gomail.v2"
-	"fmt"
 )
 
 const errSmtpDial = "failed to contact with SMTP server: %s"
@@ -22,7 +21,7 @@ func getMailSender(configPtr *settings.Settings) (*gomail.Sender, error) {
 
 	// Contact with SMTP server
 	if sender, err = dialer.Dial(); err != nil {
-		log.Error(fmt.Sprintf(errSmtpDial, err.Error()))
+		log.Error(errSmtpDial, err.Error())
 		return nil, err
 	}
 

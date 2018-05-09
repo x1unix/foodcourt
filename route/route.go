@@ -19,6 +19,9 @@ func Bootstrap() *mux.Router {
 	// Get server api information
 	r.HandleFunc("/api", controller.GetServerInfo).Methods("GET")
 
+	// Restore password
+	r.HandleFunc("/auth/recovery", controller.PasswordRecovery).Methods("POST")
+
 	// == AUTH ==
 
 	// Login

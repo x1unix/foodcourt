@@ -16,3 +16,7 @@ func Password(pass string) string {
 
 	return hexPass
 }
+
+func EncryptString(str string) string {
+	return Password(str)
+}
