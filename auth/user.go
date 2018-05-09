@@ -1,5 +1,7 @@
 package auth
 
+const NilUserLevel = -1
+
 // Application user (`users`)
 type User struct {
 	ID        int    `db:"id" json:"id" msgpack:"id"`
@@ -25,4 +27,12 @@ func (u *User) IsManager() bool {
 
 func (u *User) IsClient() bool {
 	return u.IsInGroup(LEVEL_USER)
+}
+
+// GetUserBoilerplate returns user structure boilerplate with uninitialized values.
+// Necessary for user edit action (check if user level was changed, etc), because
+// only changed values are passed.
+func NewUser() (u User) {
+	u.Level = NilUserLevel
+	return u
 }

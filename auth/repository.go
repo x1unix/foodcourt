@@ -115,6 +115,10 @@ func UpdateUser(db *sqlx.DB, u *User) error {
 		builder = builder.Set("password", password)
 	}
 
+	if u.Level > NilUserLevel {
+		builder = builder.Set("level", u.Level)
+	}
+
 	_, err := builder.RunWith(db.DB).Query()
 
 	return err

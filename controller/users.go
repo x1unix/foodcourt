@@ -73,7 +73,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract request data
-	user := auth.User{}
+	user := auth.NewUser()
 	decoder := json.NewDecoder(r.Body)
 	decodeErr := decoder.Decode(&user)
 	defer r.Body.Close()
