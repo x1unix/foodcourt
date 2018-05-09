@@ -97,7 +97,7 @@ func AddUser(db *sqlx.DB, u *User) error {
 func UpdateUser(db *sqlx.DB, u *User) error {
 	builder := sq.Update(T_USERS).Where(sq.Eq{"id": u.ID})
 
-	// TODO: add method to autofill UPDATE query with non-empty fields
+	// Check for empty fields to update only filled props
 	if u.Email != "" {
 		builder = builder.Set("email", u.Email)
 	}
