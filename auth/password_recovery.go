@@ -113,7 +113,7 @@ func SendRestoreCode(email string) error {
 
 	// Just print code to log if debug mode is enabled
 	if config.GetBool("DEBUG") {
-		logger.GetLogger().Info("Reset code is %s", code)
+		logger.GetLogger().Debug("Reset code is %s", code)
 		return nil
 	}
 
