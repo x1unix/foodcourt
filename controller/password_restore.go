@@ -47,7 +47,7 @@ func handlePasswordReset(r *http.Request, w *http.ResponseWriter, action *auth.R
 		return
 	}
 
-	if err := auth.ResetPassword(password, coreToken, r.Header.Get("User-Agent"), r.RemoteAddr); err != nil {
+	if err := auth.ResetPassword(password, coreToken, r.Header.Get("User-Agent"), rest.GetClientIP(r)); err != nil {
 		log.Error("failed to reset password for token %s: %v", coreToken, err)
 		rest.ErrorFromString("Cannot reset password, internal error", 500).Write(w)
 	}
@@ -68,16 +68,25 @@ func handleCodeSubmit(r *http.Request, w *http.ResponseWriter, action *auth.Reco
 		return
 	}
 
-	if valid, err := auth.ResetCodeValid(email, code); err != nil {
+	valid, err := auth.ResetCodeValid(email, code);
+
+	if err != nil {
 		rest.Error(fmt.Errorf("Cannot check if reset code is valid, internal error")).Write(w)
-		log.Error("cannot check if reset code %s of %s is valid: %v", w)
-		return
-	} else if !valid {
-		rest.BadRequest(w, "Invalid code")
+		log.Error("cannot check if reset code of %s is valid: %v", email, err)
 		return
 	}
 
-	token, err := auth.CreateResetTokenFromCode(email, code, r.Header.Get("User-Agent"), r.RemoteAddr)
+	if !valid {
+		rest.BadRequest(w, "Invalid or expired code")
+		return
+	}
+
+	token, err := auth.CreateResetTokenFromCode(
+		email,
+		code,
+		r.Header.Get("User-Agent"),
+		rest.GetClientIP(r),
+	)
 
 	if err != nil {
 		log.Error("cannot create reset password token for user %s by code %s: %v", email, code, err)
@@ -106,7 +115,8 @@ func handleCodeRequest(w *http.ResponseWriter, action *auth.RecoveryAction) {
 		}
 
 		if err := auth.SendRestoreCode(email); err != nil {
-			rest.Error(err).Write(w)
+			log.Error("failed to send recovery code to '%s': %v", email, err)
+			rest.ErrorFromString("Failed to send recovery email, internal error", 500).Write(w)
 			return
 		}
 

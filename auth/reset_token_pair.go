@@ -6,7 +6,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-const recoveryTokenMinutesTTL = 5
+const recoveryTokenMinutesTTL = 15
 const resetTokenKeyPrefix = "resettoken__"
 
 type ResetTokenPair struct {

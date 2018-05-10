@@ -26,13 +26,13 @@ type MailRecipient struct {
 func (m *MailSender) Init() error {
 	dialer := gomail.NewDialer(m.Settings.Host, m.Settings.Port, m.Settings.User, m.Settings.Password)
 
-	if sender, err := dialer.Dial(); err != nil {
+	sender, err := dialer.Dial();
+
+	if err != nil {
 		return err
-	} else {
-		m.sender = sender
-		return nil
 	}
 
+	m.sender = sender
 	m.connected = true
 
 	tpl, err := template.ParseFiles(m.TemplatePath)
@@ -94,6 +94,7 @@ func NewMailSender(templatePath string) (*MailSender, error) {
 
 	var sender MailSender
 	sender.Settings = cfg.SMTP
+	sender.TemplatePath = templatePath
 
 	return sender.From("FoodCourt", cfg.Sender.Email), nil
 }

@@ -6,14 +6,13 @@ import (
 	"math/rand"
 	"strconv"
 	"foodcourt/database"
-	"github.com/go-redis/redis"
 	"foodcourt/mails"
 	"fmt"
 	"foodcourt/environment"
 )
 
 // Password recovery code TTL in seconds
-const recoveryCodeSecondsTTL = 30
+const recoveryCodeSecondsTTL = 60
 const recoveryCodeLength = 6
 const restoreEmailFileName = "restore-password-mail.html"
 
@@ -118,6 +117,8 @@ func SendRestoreCode(email string) error {
 		return err
 	}
 
+	mailSender.SetSubject("FoodCount - Your password reset code")
+
 	if err = mailSender.Init(); err != nil {
 		return err
 	}
@@ -127,15 +128,14 @@ func SendRestoreCode(email string) error {
 
 func ResetCodeValid(email string, code string) (bool, error) {
 	key := getResetCodeKey(email)
-	code, err := cache.Client.Get(key).Result()
+	correctCode, err := cache.Client.Get(key).Result()
 
-	if err == redis.Nil {
-		return false, nil
-	} else {
+	if err != nil {
 		return false, err
 	}
 
-	return (code == code), nil
+	isValid := code == correctCode
+	return isValid, nil
 }
 
 // HasResetCode checks if password reset code was generated for email
