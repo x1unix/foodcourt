@@ -51,6 +51,8 @@ func handlePasswordReset(r *http.Request, w *http.ResponseWriter, action *auth.R
 		log.Error("failed to reset password for token %s: %v", coreToken, err)
 		rest.ErrorFromString("Cannot reset password, internal error", 500).Write(w)
 	}
+
+	rest.Ok(w)
 }
 
 func handleCodeSubmit(r *http.Request, w *http.ResponseWriter, action *auth.RecoveryAction) {

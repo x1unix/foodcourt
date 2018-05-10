@@ -78,3 +78,13 @@ func GetInt(key string) int {
 		return i
 	}
 }
+
+func GetBool(key string) bool {
+	val := Get(key, "false")
+
+	if i, e := strconv.ParseBool(val); e != nil {
+		return false
+	} else {
+		return i
+	}
+}

@@ -6,8 +6,10 @@ import (
 	"math/rand"
 	"strconv"
 	"foodcourt/database"
-	"foodcourt/mails"
 	"fmt"
+	"foodcourt/config"
+	"foodcourt/logger"
+	"foodcourt/mails"
 	"foodcourt/environment"
 )
 
@@ -107,6 +109,12 @@ func SendRestoreCode(email string) error {
 
 	if err != nil {
 		return err
+	}
+
+	// Just print code to log if debug mode is enabled
+	if config.GetBool("DEBUG") {
+		logger.GetLogger().Info("Reset code is %s", code)
+		return nil
 	}
 
 	mailSender, err := mails.NewMailSender(

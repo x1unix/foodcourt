@@ -3,7 +3,6 @@ package auth
 import (
 	"time"
 	"foodcourt/cache"
-	"github.com/go-redis/redis"
 )
 
 const recoveryTokenMinutesTTL = 15
@@ -36,9 +35,7 @@ func (t *ResetTokenPair) Reveal() {
 func (t *ResetTokenPair) GetTokenOwner() (string, error) {
 	email, err := cache.Client.Get(t.GetRedisKey()).Result()
 
-	if err == redis.Nil {
-		return "Invalid token", nil
-	} else {
+	if err != nil {
 		return "", err
 	}
 

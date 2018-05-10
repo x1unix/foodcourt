@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"bytes"
+	"crypto/tls"
 )
 
 type MailSender struct {
@@ -25,6 +26,7 @@ type MailRecipient struct {
 
 func (m *MailSender) Init() error {
 	dialer := gomail.NewDialer(m.Settings.Host, m.Settings.Port, m.Settings.User, m.Settings.Password)
+	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	sender, err := dialer.Dial();
 
