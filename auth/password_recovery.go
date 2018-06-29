@@ -56,7 +56,7 @@ func ResetPassword(newPassword string, coreToken string, userAgent string, ip st
 		return err
 	}
 
-	user := User{}
+	user := NewUser()
 	user.ID = userId
 	user.Password = newPassword
 
