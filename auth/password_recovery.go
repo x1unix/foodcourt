@@ -3,7 +3,6 @@ package auth
 import (
 	"foodcourt/cache"
 	"time"
-	"math/rand"
 	"strconv"
 	"foodcourt/database"
 	"fmt"
@@ -11,11 +10,13 @@ import (
 	"foodcourt/logger"
 	"foodcourt/mails"
 	"foodcourt/environment"
+	"crypto/rand"
+	"math/big"
 )
 
 // Password recovery code TTL in seconds
 const recoveryCodeSecondsTTL = 60
-const recoveryCodeLength = 6
+const recoveryCodePairSizeCount = 2
 const restoreEmailFileName = "restore-password-mail.html"
 
 type RecoveryCodeMail struct {
@@ -56,7 +57,7 @@ func ResetPassword(newPassword string, coreToken string, userAgent string, ip st
 		return err
 	}
 
-	user := User{}
+	user := NewUser()
 	user.ID = userId
 	user.Password = newPassword
 
@@ -94,13 +95,19 @@ func CanRequestCode(email string) (bool, string, error) {
 	return true, "", nil
 }
 
-func generateRecoveryCode() (code string) {
-	count := 1
-	for {
-		code += strconv.Itoa(rand.Intn(9))
-		if count == recoveryCodeLength { break }
-		count++
+func getCodePair() int64 {
+	nBig, err := rand.Int(rand.Reader, big.NewInt(27))
+	if err != nil {
+		panic(err)
 	}
+	return nBig.Int64()
+}
+
+func generateRecoveryCode() (code string) {
+	for i := 0; i <= recoveryCodePairSizeCount; i++ {
+		code += strconv.Itoa(int(getCodePair()))
+	}
+
 	return code
 }
 
